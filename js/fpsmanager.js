@@ -13,3 +13,5 @@ FPSManager.prototype.render = function(ctx) {
 		this.game.ctx.fillText("FPS: " + this.delta.toFixed(2), 20, 20); //.toFixed(2), 20, 20);
 	}
 };
+
+module.exports = FPSManager;

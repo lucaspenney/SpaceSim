@@ -27,3 +27,5 @@ EventManager.prototype.addEventListener = function(eventName, listener) {
 		}
 	}
 };
+
+module.exports = EventManager;

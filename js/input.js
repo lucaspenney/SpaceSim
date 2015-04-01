@@ -93,3 +93,4 @@ InputManager.prototype.handleInteractions = function() {
 };
 
 */
+module.exports = InputManager;

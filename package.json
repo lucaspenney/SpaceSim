@@ -1,5 +1,5 @@
 {
-  "name": "LudumDare31",
+  "name": "SpaceSim",
   "version": "1.0.0",
   "devDependencies": {
     "grunt": "~0.4.2",
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "ws": "~0.7.1",
-    "crypto": "0.0.3"
+    "crypto": "0.0.3",
+    "lodash-node": "~3.6.0"
   }
 }

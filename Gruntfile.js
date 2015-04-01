@@ -5,14 +5,14 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     watch: {
       scripts: {
-        files: ['js/*.js'],
-        tasks: ['concat']
+        files: ['js/*.js', 'client.js'],
+        tasks: ['browserify'],
       }
     },
     concat: {
       compile: {
-        src: ['js/entity.js',
-          'js/*'
+        src: ['!js/server', 'js/entity.js',
+          'js/*.js'
         ],
         dest: 'compiled.js'
       }
@@ -26,28 +26,13 @@ module.exports = function(grunt) {
         dest: 'build/compiled.js'
       }
     },
-    copy: {
-      build: {
-        files: [{
-          src: 'images/**',
-          dest: 'build/'
-        }, {
-          src: 'sounds/**',
-          dest: 'build/'
-        }, {
-          src: 'maps/*',
-          dest: 'build/'
-        }, {
-          src: 'game.html',
-          dest: 'build/'
-        }, {
-          src: 'style.css',
-          dest: 'build/'
-        }]
-      }
-    }
+    browserify: {
+      options: {},
+      'compiled.js': ['client.js']
+    },
   });
 
+  grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
