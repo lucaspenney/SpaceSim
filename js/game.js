@@ -2,15 +2,28 @@ require('./class');
 var Player = require('./player');
 
 var Game = Class.extend({
+  entityId: 0,
   init: function() {
     this.entities = [];
+    this.deletedEntities = [];
     this.debugMode = false;
     for (var i = 0; i < 50; i++) {
       //new Asteroid(this, (Math.random() * 6000) - 3000, (Math.random() * 6000) - 3000);
     }
-    this.update();
   },
   update: function() {
+    if (this.deletedEntities.length > 0) {
+      for (var i = 0; i < this.entities.length; i++) {
+        for (var k = 0; k < this.deletedEntities.length; k++) {
+          if (this.entities[i].id === this.deletedEntities[k].id) {
+            this.entities.splice(i, 1);
+            i = 0;
+            k = 0;
+          }
+        }
+      }
+      this.deletedEntities = [];
+    }
     for (var i = 0; i < this.entities.length; i++) {
       this.entities[i].update();
     }
@@ -33,6 +46,10 @@ var Game = Class.extend({
     for (var i = 0; i < this.entities.length; i++) {
       this.entities[i].render(ctx, screen);
     }
-  }
+  },
+  newEntityId: function() {
+    this.entityId++;
+    return this.entityId;
+  },
 });
 module.exports = Game;

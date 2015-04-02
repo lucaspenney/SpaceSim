@@ -8,6 +8,7 @@ var Game = require('./js/game');
 
 var clients = [];
 var newEntities = [];
+var deletedEntities = [];
 
 var game = new Game();
 
@@ -26,23 +27,45 @@ wss.on('connection', function(ws) {
 		entity: null,
 	}
 	clients.push(client);
-	//client.socket.send(JSON.stringify(client.token));
-	newEntities.push(new Player(game, 50, 50));
+	var cplayer = new Player(game, 50, 50)
+	newEntities.push(cplayer);
+	client.entity = cplayer;
+	handshake(client);
 	ws.on('message', function(message) {
 		console.log("Received client message from client" + client.id + ":" + message);
 	});
 
 });
 wss.on('close', function(ws) {
+	disconnectClient(ws);
+});
+
+function disconnectClient(socket) {
 	for (var i = 0; i < clients.length; i++) {
-		if (clients[i].socket == ws) {
+		if (clients[i].socket == socket) {
+			clients[i].entity.destroy();
+			deletedEntities.push(clients[i].entity);
 			clients.splice(i, 1);
 		}
 	}
+	console.log("Client disconnected");
+}
+wss.on('error', function(ws) {
+	console.log("Client disconnecting");
+	disconnectClient(ws);
 });
 
+var handshake = function(client) {
+	var data = {
+		handshake: {
+			entities: game.entities,
+			token: client.token,
+		},
+	};
+	client.socket.send(JSON.stringify(data));
+}
+
 var tick = function() {
-	game.update();
 	for (var x = 0; x < game.entities.length; x++) {
 		game.entities[x].x += 1;
 		game.entities[x].y += 1;
@@ -50,15 +73,23 @@ var tick = function() {
 	for (var i = 0; i < clients.length; i++) {
 		var update = {
 			updatedEntities: game.entities,
+			deletedEntities: _.union(deletedEntities, game.deletedEntities),
 			newEntities: newEntities,
 			timestamp: new Date(),
 		};
-		clients[i].socket.send(JSON.stringify(update));
-		_.forEach(newEntities, function(entity) {
-			game.entities.push(entity);
-		});
-		newEntities = [];
+		try {
+			clients[i].socket.send(JSON.stringify(update));
+		} catch (e) {
+			//Was unable to send client update, disconnect them
+			disconnectClient(clients[i].socket);
+		}
 	}
+	_.forEach(newEntities, function(entity) {
+		game.entities.push(entity);
+	});
+	newEntities = [];
+	game.update();
+
 	setTimeout(function() {
 		tick();
 	}, 32);

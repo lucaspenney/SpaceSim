@@ -4,7 +4,7 @@ var Physics = require('./physics');
 
 var Player = Entity.extend({
 	init: function(game, x, y) {
-		this._super(x, y);
+		this._super(game, x, y);
 		this.game = game;
 		this.width = 32;
 		this.height = 32;
@@ -23,8 +23,7 @@ var Player = Entity.extend({
 	},
 	update: function() {
 		this._super();
-		this.x += 1;
-		this.y += 1;
+
 		/*
 		this.enginesOn = false;
 		if (input.keys[38] || input.keys[87]) {
@@ -53,6 +52,7 @@ var Player = Entity.extend({
 	toJSON: function() {
 		return {
 			classname: "Player",
+			id: this.id,
 			x: this.x,
 			y: this.y,
 		};
