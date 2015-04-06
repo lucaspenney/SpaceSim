@@ -21,8 +21,9 @@ var Client = Class.extend({
     this.fpsManager = new FPSManager(this);
     this.input = new InputManager(this);
     this.screen = new Screen(this);
-    this.connection = new Connection(this.game);
+    this.connection = new Connection(this, this.game);
     this.tick();
+    this.debug = true;
   },
   tick: function() {
     var _this = this;
@@ -35,8 +36,15 @@ var Client = Class.extend({
       _this.fpsManager.then = this.fpsManager.now - (this.fpsManager.delta % this.fpsManager.interval);
       _this.game.render(this.ctx, this.screen);
       _this.game.update(this.input);
+      _this.debugOutput();
     }
-  }
+  },
+  debugOutput: function() {
+    if (this.debug) {
+      this.ctx.fillStyle = "#FFF";
+      this.ctx.fillText("Message Size: " + this.connection.lastPacketLength, 10, 10);
+    }
+  },
 });
 
 new Client("#game");

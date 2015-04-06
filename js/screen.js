@@ -1,8 +1,8 @@
 function Screen(game) {
     this.xOffset = 0;
     this.yOffset = 0;
-    this.width = 600;
-    this.height = 450;
+    this.width = 800;
+    this.height = 600;
 
 }
 

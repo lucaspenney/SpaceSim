@@ -32,8 +32,8 @@ var Sprite = Class.extend({
 	draw: function(ctx, screen, x, y) {
 		if (this.loaded) {
 			//Draw relative to screen
-			//x -= screen.xOffset;
-			//y -= screen.yOffset;
+			x -= screen.xOffset;
+			y -= screen.yOffset;
 			//Perform the draw
 			ctx.save();
 			ctx.translate(x + this.rotationXOffset, y + this.rotationYOffset);

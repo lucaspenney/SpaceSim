@@ -1,15 +1,20 @@
 require('./class');
 var Player = require('./player');
+var Asteroid = require('./asteroid');
+var LZString = require('./lz-string');
 
 var Connection = Class.extend({
     lastUpdate: 0,
     latency: 0,
-    init: function(game) {
+    init: function(client, game) {
+        this.client = client;
         this.game = game;
         this.server = new WebSocket("ws://127.0.0.1:8080");
         this.token = null;
+        this.lastPacketLength = 0;
         var _this = this;
         this.server.onmessage = function(message) {
+            _this.lastPacketLength = message.data.length;
             var data = JSON.parse(message.data);
             if (data.handshake !== undefined) {
                 _this.handshake(data.handshake);
@@ -26,8 +31,10 @@ var Connection = Class.extend({
             //Perform entity updates
             _.forEach(entities, function(ent) {
                 if (ent.id === entity.id) {
-                    ent.x = entity.x;
-                    ent.y = entity.y;
+                    _.forOwn(entity, function(value, prop) {
+                        ent[prop] = value;
+
+                    });
                 }
             })
         });
@@ -35,7 +42,6 @@ var Connection = Class.extend({
             //Create new entity with this entity id and properties
             _this.createEntityFromJSON(entity);
         });
-        console.log(data.deletedEntities);
         _.forEach(data.deletedEntities, function(entity) {
             //Create new entity with this entity id and properties
 
@@ -43,6 +49,14 @@ var Connection = Class.extend({
         });
         this.lastUpdate = Date.now();
         this.latency = this.lastUpdate - data.timestamp;
+        this.send();
+    },
+    send: function() {
+        var data = {
+            token: this.token,
+            input: this.client.input.getInputState(),
+        };
+        this.server.send(JSON.stringify(data));
     },
     handshake: function(data) {
         this.token = data.token;
@@ -53,8 +67,11 @@ var Connection = Class.extend({
     },
     createEntityFromJSON: function(entity) {
         if (entity.classname === "Player") {
-            //console.log(entity);
             var nent = new Player(this.game, entity.x, entity.y);
+            nent.id = entity.id;
+            this.game.entities.push(nent);
+        } else if (entity.classname === "Asteroid") {
+            var nent = new Asteroid(this.game, entity.x, entity.y);
             nent.id = entity.id;
             this.game.entities.push(nent);
         }

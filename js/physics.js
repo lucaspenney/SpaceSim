@@ -9,7 +9,7 @@ var Physics = Class.extend({
     this.yv = 0;
     this.rv = 0;
     this.maxVelocity = 8;
-    this.weight = 100;
+    this.mass = 100;
     this.boundingBox = new BoundingBox(game, entity);
     this.collidesWith = [];
   },
@@ -20,7 +20,6 @@ var Physics = Class.extend({
       if (collisionResult = this.boundingBox.wouldCollide(this.xv, this.yv, this.game.entities[i])) {
         //Basic reflecting collisions
         this.collide(this.game.entities[i], collisionResult);
-
       }
     }
     this.entity.x += this.xv;
@@ -28,16 +27,16 @@ var Physics = Class.extend({
     this.entity.rotation += this.rv;
   },
   collide: function(entity, collision) {
-    if (this.collidesWith.indexOf(entity.className) === -1) return;
+    if (this.collidesWith.indexOf(entity.toJSON().classname) === -1) return;
     if (Math.abs(entity.physics.xv) + Math.abs(entity.physics.yv) > Math.abs(this.xv) + Math.abs(this.yv)) {
-      var xVel = (entity.physics.xv / 2) * (entity.physics.weight / 100);
-      var yVel = (entity.physics.yv / 2) * (entity.physics.weight / 100);
+      var xVel = (entity.physics.xv / 2) * (entity.physics.mass / 100);
+      var yVel = (entity.physics.yv / 2) * (entity.physics.mass / 100);
       this.addVelocity(xVel, yVel);
 
       entity.physics.addVelocity(this.xv * -1.5, this.yv * -1.5);
     } else {
-      var xVel = (this.xv / 2) * (this.weight / 100);
-      var yVel = (this.yv / 2) * (this.weight / 100);
+      var xVel = (this.xv / 2) * (this.mass / 100);
+      var yVel = (this.yv / 2) * (this.mass / 100);
       entity.physics.addVelocity(xVel, yVel);
 
       this.addVelocity(entity.physics.xv * -1.5, entity.physics.yv * -1.5);
@@ -47,7 +46,6 @@ var Physics = Class.extend({
       this.xv *= -0.5;
       this.yv *= -0.5;
     }
-    this.onCollision();
   },
   addVelocity: function(x, y, r) {
     x = x || 0;

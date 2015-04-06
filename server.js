@@ -1,98 +1,112 @@
 var SERVER = true;
 
 var _ = require('lodash-node');
+var LZString = require('lz-string');
 
+require('./js/class');
 var Entity = require('./js/entity');
 var Player = require('./js/player');
+var Asteroid = require('./js/asteroid');
 var Game = require('./js/game');
 
-var clients = [];
-var newEntities = [];
-var deletedEntities = [];
+var Server = Class.extend({
+	init: function(port) {
+		var _this = this;
+		var WebSocketServer = require('ws').Server;
+		this.websocket = new WebSocketServer({
+			port: port
+		});
+		this.game = new Game();
+		this.clients = [];
+		this.newEntities = [];
+		this.deletedEntities = [];
+		this.websocket.on('connection', function(ws) {
+			console.log("Client connected");
+			_this.onConnect(ws);
+		});
+		this.websocket.on('close', function(ws) {
+			_this.disconnectClient(ws);
+		});
+		this.websocket.on('error', function(ws) {
+			_this.disconnectClient(ws);
+		});
 
-var game = new Game();
-
-var WebSocketServer = require('ws').Server,
-	wss = new WebSocketServer({
-		port: 8080
-	});
-
-wss.on('connection', function(ws) {
-	console.log("Client connected");
-	var client = {
-		id: _.uniqueId(),
-		socket: ws,
-		name: "Player " + clients.length,
-		token: require('crypto').randomBytes(32).toString('hex'),
-		entity: null,
-	}
-	clients.push(client);
-	var cplayer = new Player(game, 50, 50)
-	newEntities.push(cplayer);
-	client.entity = cplayer;
-	handshake(client);
-	ws.on('message', function(message) {
-		console.log("Received client message from client" + client.id + ":" + message);
-	});
-
-});
-wss.on('close', function(ws) {
-	disconnectClient(ws);
-});
-
-function disconnectClient(socket) {
-	for (var i = 0; i < clients.length; i++) {
-		if (clients[i].socket == socket) {
-			clients[i].entity.destroy();
-			deletedEntities.push(clients[i].entity);
-			clients.splice(i, 1);
+		for (var i = 0; i < 50; i++) {
+			var a = new Asteroid(this.game, Math.random() * 500, Math.random() * 500);
+			this.newEntities.push(a);
 		}
-	}
-	console.log("Client disconnected");
-}
-wss.on('error', function(ws) {
-	console.log("Client disconnecting");
-	disconnectClient(ws);
-});
-
-var handshake = function(client) {
-	var data = {
-		handshake: {
-			entities: game.entities,
-			token: client.token,
-		},
-	};
-	client.socket.send(JSON.stringify(data));
-}
-
-var tick = function() {
-	for (var x = 0; x < game.entities.length; x++) {
-		game.entities[x].x += 1;
-		game.entities[x].y += 1;
-	}
-	for (var i = 0; i < clients.length; i++) {
-		var update = {
-			updatedEntities: game.entities,
-			deletedEntities: _.union(deletedEntities, game.deletedEntities),
-			newEntities: newEntities,
-			timestamp: new Date(),
+		this.tick();
+	},
+	onConnect: function(ws) {
+		var client = {
+			id: _.uniqueId(),
+			socket: ws,
+			name: "Player " + this.clients.length,
+			token: require('crypto').randomBytes(32).toString('hex'),
+			entity: null,
+		}
+		this.clients.push(client);
+		var cplayer = new Player(this.game, 50, 50)
+		this.newEntities.push(cplayer);
+		client.entity = cplayer;
+		this.handshake(client);
+		ws.on('message', function(message) {
+			var data = JSON.parse(message);
+			if (data.token === client.token) {
+				client.entity.setInput(data.input);
+			}
+		});
+	},
+	disconnectClient: function(socket) {
+		for (var i = 0; i < this.clients.length; i++) {
+			if (this.clients[i].socket == socket) {
+				this.clients[i].entity.destroy();
+				this.deletedEntities.push(this.clients[i].entity);
+				this.clients.splice(i, 1);
+			}
+		}
+		console.log("Client disconnected");
+	},
+	packageData: function(data, compress) {
+		if (compress) return LZString.compressToUTF16(JSON.stringify(data));
+		return JSON.stringify(data);
+	},
+	handshake: function(client) {
+		var data = {
+			handshake: {
+				entities: this.game.entities,
+				token: client.token,
+			},
 		};
-		try {
-			clients[i].socket.send(JSON.stringify(update));
-		} catch (e) {
-			//Was unable to send client update, disconnect them
-			disconnectClient(clients[i].socket);
+		client.socket.send(this.packageData(data));
+	},
+	tick: function() {
+		var _this = this;
+		for (var i = 0; i < this.clients.length; i++) {
+			var update = {
+				updatedEntities: this.game.entities,
+				deletedEntities: _.union(this.deletedEntities, this.game.deletedEntities),
+				newEntities: this.newEntities,
+				timestamp: new Date(),
+			};
+			try {
+				this.clients[i].socket.send(this.packageData(update));
+			} catch (e) {
+				//Was unable to send client update, disconnect them
+				this.disconnectClient(this.clients[i].socket);
+			}
 		}
-	}
-	_.forEach(newEntities, function(entity) {
-		game.entities.push(entity);
-	});
-	newEntities = [];
-	game.update();
+		_.forEach(this.newEntities, function(entity) {
+			_this.game.entities.push(entity);
+		});
+		this.newEntities = [];
+		this.deletedEntities = [];
+		this.game.update();
+		var _this = this;
+		setTimeout(function() {
+			_this.tick();
+		}, 32);
+	},
+});
 
-	setTimeout(function() {
-		tick();
-	}, 32);
-};
-
-tick();
+new Server(8080);

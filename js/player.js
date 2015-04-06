@@ -1,6 +1,7 @@
 var Entity = require('./entity');
 var Sprite = require('./sprite');
 var Physics = require('./physics');
+var Trail = require('./trail');
 
 var Player = Entity.extend({
 	init: function(game, x, y) {
@@ -9,12 +10,13 @@ var Player = Entity.extend({
 		this.width = 32;
 		this.height = 32;
 		this.rotation = 0;
+		this.input = {};
 		this.sprite = new Sprite(this, "img/player.png");
 		this.physics = new Physics(this.game, this);
-		this.physics.collidesWith = ['Asteroid'];
+		this.physics.collidesWith = ['Asteroid', 'Player'];
 		this.physics.weight = 50;
 		this.layer = 100;
-		//this.trail = new Trail(this.game, 0, 0, this, 16);
+		this.trail = new Trail(this.game, this, 16);
 		this.enginesOn = false;
 		//this.weapon = new Weapon(this.game, this);
 		//this.engine = new Engine(this.game, this);
@@ -23,31 +25,29 @@ var Player = Entity.extend({
 	},
 	update: function() {
 		this._super();
-
-		/*
-		this.enginesOn = false;
-		if (input.keys[38] || input.keys[87]) {
-			this.enginesOn = true;
+		this.physics.update();
+		if (this.input.up) {
 			var xVel = Math.cos(degToRad(this.rotation - 90)) * this.mainThrust;
 			var yVel = Math.sin(degToRad(this.rotation - 90)) * this.mainThrust;
 			this.physics.addVelocity(xVel, yVel);
 		}
-		if (input.keys[37] || input.keys[65]) { //Left Arrow
+		if (this.input.left) { //Left Arrow
 			this.enginesOn = true;
 			this.physics.addVelocity(0, 0, this.turnThrust * -1);
 		}
-		if (input.keys[39] || input.keys[68]) { //right arrow
+		if (this.input.right) { //Right Arrow
 			this.enginesOn = true;
 			this.physics.addVelocity(0, 0, this.turnThrust);
 		}
-		if (input.keys[32]) {
-			this.fire();
-		}
-		this.physics.update();
-
-		this.game.screen.setXOffset(this.x - 350);
-		this.game.screen.setYOffset(this.y - 350);
-		*/
+	},
+	render: function(ctx, screen) {
+		this.trail.render(ctx, screen);
+		screen.setXOffset(this.x - 350);
+		screen.setYOffset(this.y - 350);
+		this._super(ctx, screen);
+	},
+	setInput: function(input) {
+		this.input = input;
 	},
 	toJSON: function() {
 		return {
@@ -55,8 +55,17 @@ var Player = Entity.extend({
 			id: this.id,
 			x: this.x,
 			y: this.y,
+			rotation: this.rotation,
 		};
 	}
 });
+
+function degToRad(angle) {
+	return ((angle * Math.PI) / 180);
+}
+
+function radToDeg(angle) {
+	return ((angle * 180) / Math.PI);
+}
 
 module.exports = Player;
