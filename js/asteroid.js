@@ -12,6 +12,7 @@ var Asteroid = Entity.extend({
         this.physics.setVelocity(Math.random(), Math.random(), (Math.random() - 0.5) * 5);
         this.physics.collidesWith = ['Asteroid', 'Player'];
         this.physics.boundingBox.setOffset(5, 5);
+        this.physics.mass = 5000;
     },
     update: function() {
         this.physics.update();
@@ -23,8 +24,10 @@ var Asteroid = Entity.extend({
         return {
             classname: "Asteroid",
             id: this.id,
-            x: this.x,
-            y: this.y,
+            pos: {
+                x: this.pos.x,
+                y: this.pos.y,
+            },
             rotation: this.rotation,
         };
     }

@@ -1,4 +1,4 @@
-require('./class');
+var Class = require('./class');
 var Player = require('./player');
 var Asteroid = require('./asteroid');
 var LZString = require('./lz-string');
@@ -12,6 +12,7 @@ var Connection = Class.extend({
         this.server = new WebSocket("ws://127.0.0.1:8080");
         this.token = null;
         this.lastPacketLength = 0;
+        this.lastPacket = null;
         var _this = this;
         this.server.onmessage = function(message) {
             _this.lastPacketLength = message.data.length;
@@ -19,9 +20,12 @@ var Connection = Class.extend({
             if (data.handshake !== undefined) {
                 _this.handshake(data.handshake);
             } else {
-                _this.receive(data);
+                if (this.lastPacket === null) {
+                    this.lastPacked = data;
+                } else {
+                    _this.receive(data);
+                }
             }
-
         }
     },
     receive: function(data) {
@@ -30,10 +34,17 @@ var Connection = Class.extend({
         _.forEach(data.updatedEntities, function(entity) {
             //Perform entity updates
             _.forEach(entities, function(ent) {
+                if (ent.id === data.focus.id) {
+                    _this.client.screen.focusedEntity = ent;
+                }
                 if (ent.id === entity.id) {
                     _.forOwn(entity, function(value, prop) {
-                        ent[prop] = value;
-
+                        if (prop === "pos") {
+                            ent[prop].x = value.x;
+                            ent[prop].y = value.y;
+                        } else {
+                            ent[prop] = value;
+                        }
                     });
                 }
             })
@@ -63,7 +74,7 @@ var Connection = Class.extend({
         var _this = this;
         _.forEach(data.entities, function(entity) {
             _this.createEntityFromJSON(entity);
-        })
+        });
     },
     createEntityFromJSON: function(entity) {
         if (entity.classname === "Player") {

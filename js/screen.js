@@ -3,7 +3,7 @@ function Screen(game) {
     this.yOffset = 0;
     this.width = 800;
     this.height = 600;
-
+    this.focusedEntity = null;
 }
 
 Screen.prototype.update = function() {

@@ -1,4 +1,4 @@
-require('./class');
+var Class = require('./class');
 var Player = require('./player');
 
 var Game = Class.extend({

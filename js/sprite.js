@@ -1,4 +1,4 @@
-require('./class');
+var Class = require('./class');
 
 if (typeof window === "undefined") {
 	//Workaround for node loading a file that has no browser stuff

@@ -1,5 +1,5 @@
 //input.js
-require('./class');
+var Class = require('./class');
 
 var InputManager = Class.extend({
 	init: function(game) {

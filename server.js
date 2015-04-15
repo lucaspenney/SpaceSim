@@ -2,8 +2,9 @@ var SERVER = true;
 
 var _ = require('lodash-node');
 var LZString = require('lz-string');
+var Crypto = require('crypto');
 
-require('./js/class');
+var Class = require('./js/class');
 var Entity = require('./js/entity');
 var Player = require('./js/player');
 var Asteroid = require('./js/asteroid');
@@ -31,8 +32,8 @@ var Server = Class.extend({
 			_this.disconnectClient(ws);
 		});
 
-		for (var i = 0; i < 50; i++) {
-			var a = new Asteroid(this.game, Math.random() * 500, Math.random() * 500);
+		for (var i = 0; i < 1; i++) {
+			var a = new Asteroid(this.game, 300, 300);
 			this.newEntities.push(a);
 		}
 		this.tick();
@@ -60,7 +61,6 @@ var Server = Class.extend({
 	disconnectClient: function(socket) {
 		for (var i = 0; i < this.clients.length; i++) {
 			if (this.clients[i].socket == socket) {
-				this.clients[i].entity.destroy();
 				this.deletedEntities.push(this.clients[i].entity);
 				this.clients.splice(i, 1);
 			}
@@ -82,12 +82,17 @@ var Server = Class.extend({
 	},
 	tick: function() {
 		var _this = this;
+		for (var i = 0; i < this.game.entities.length; i++) {
+			//this.game.entities[i].pos.y += 4;
+		}
 		for (var i = 0; i < this.clients.length; i++) {
 			var update = {
 				updatedEntities: this.game.entities,
 				deletedEntities: _.union(this.deletedEntities, this.game.deletedEntities),
 				newEntities: this.newEntities,
 				timestamp: new Date(),
+				packet: Crypto.randomBytes(16).toString('hex'),
+				focus: this.clients[i].entity,
 			};
 			try {
 				this.clients[i].socket.send(this.packageData(update));

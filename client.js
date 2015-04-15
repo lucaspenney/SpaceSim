@@ -1,4 +1,4 @@
-require('./js/class');
+var Class = require('./js/class');
 var FPSManager = require('./js/fpsmanager');
 var Screen = require('./js/screen');
 var EventManager = require('./js/eventmanager');
@@ -35,7 +35,7 @@ var Client = Class.extend({
     if (this.fpsManager.delta > this.fpsManager.interval) {
       _this.fpsManager.then = this.fpsManager.now - (this.fpsManager.delta % this.fpsManager.interval);
       _this.game.render(this.ctx, this.screen);
-      _this.game.update(this.input);
+      //_this.game.update(this.input);
       _this.debugOutput();
     }
   },

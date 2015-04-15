@@ -1,4 +1,4 @@
-require('./class');
+var Class = require('./class');
 
 var Trail = Class.extend({
 	init: function(game, parent, centerOffset) {
@@ -20,8 +20,8 @@ var Trail = Class.extend({
 		}
 
 		//Update positions 
-		this.x = this.parent.x + ((Math.cos(degToRad(this.parent.rotation - 90)) * -4) + this.centerOffset);
-		this.y = this.parent.y + ((Math.sin(degToRad(this.parent.rotation - 90)) * -4) + this.centerOffset);
+		this.x = this.parent.pos.x + ((Math.cos(degToRad(this.parent.rotation - 90)) * -4) + this.centerOffset);
+		this.y = this.parent.pos.y + ((Math.sin(degToRad(this.parent.rotation - 90)) * -4) + this.centerOffset);
 
 		this.positions.push({
 			x: this.x,
