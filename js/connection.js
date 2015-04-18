@@ -1,6 +1,7 @@
 var Class = require('./class');
 var Player = require('./player');
 var Asteroid = require('./asteroid');
+var Planet = require('./planet');
 var LZString = require('./lz-string');
 
 var Connection = Class.extend({
@@ -83,6 +84,10 @@ var Connection = Class.extend({
             this.game.entities.push(nent);
         } else if (entity.classname === "Asteroid") {
             var nent = new Asteroid(this.game, entity.x, entity.y);
+            nent.id = entity.id;
+            this.game.entities.push(nent);
+        } else if (entity.classname === "Planet") {
+            var nent = new Planet(this.game, entity.x, entity.y);
             nent.id = entity.id;
             this.game.entities.push(nent);
         }

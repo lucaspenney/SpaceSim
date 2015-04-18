@@ -1,5 +1,6 @@
 var Class = require('./class');
 var Player = require('./player');
+var Stars = require('./stars');
 
 var Game = Class.extend({
   entityId: 0,
@@ -7,9 +8,7 @@ var Game = Class.extend({
     this.entities = [];
     this.deletedEntities = [];
     this.debugMode = false;
-    for (var i = 0; i < 50; i++) {
-      //new Asteroid(this, (Math.random() * 6000) - 3000, (Math.random() * 6000) - 3000);
-    }
+    this.stars = new Stars();
   },
   update: function() {
     if (this.deletedEntities.length > 0) {
@@ -32,6 +31,7 @@ var Game = Class.extend({
     if (!ctx || !screen) return;
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, screen.width, screen.height);
+    this.stars.render(ctx, screen);
     this.entities.sort(function(a, b) {
       if (a === null) return 1;
       if (b === null) return -1;

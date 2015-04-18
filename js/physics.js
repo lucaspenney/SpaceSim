@@ -14,9 +14,11 @@ var Physics = Class.extend({
     this.mass = 100;
     this.boundingBox = new BoundingBox(game, entity);
     this.collidesWith = [];
+    this.static = false;
   },
   update: function(entities) {
     this.boundingBox.update();
+    if (this.static) return;
     //Add gravity to acceleration
     var nearbys = [];
     for (var i = 0; i < this.game.entities.length; i++) {

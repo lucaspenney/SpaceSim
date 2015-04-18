@@ -1,6 +1,7 @@
 var Class = require('./js/class');
 var FPSManager = require('./js/fpsmanager');
 var Screen = require('./js/screen');
+var Stars = require('./js/stars');
 var EventManager = require('./js/eventmanager');
 var InputManager = require('./js/input');
 var Player = require('./js/player');

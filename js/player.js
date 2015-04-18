@@ -14,7 +14,7 @@ var Player = Entity.extend({
 		this.sprite = new Sprite(this, "img/player.png");
 		this.physics = new Physics(this.game, this);
 		this.physics.collidesWith = ['Asteroid', 'Player'];
-		this.physics.weight = 50;
+		this.physics.mass = 10;
 		this.layer = 100;
 		this.trail = new Trail(this.game, this, 16);
 		this.enginesOn = false;
@@ -43,7 +43,7 @@ var Player = Entity.extend({
 	},
 	render: function(ctx, screen) {
 		this.trail.render(ctx, screen);
-		if (screen.focusedEntity.id === this.id) {
+		if (screen.focusedEntity && screen.focusedEntity.id === this.id) {
 			screen.setXOffset(this.pos.x - 350);
 			screen.setYOffset(this.pos.y - 350);
 		}

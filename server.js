@@ -8,6 +8,7 @@ var Class = require('./js/class');
 var Entity = require('./js/entity');
 var Player = require('./js/player');
 var Asteroid = require('./js/asteroid');
+var Planet = require('./js/planet');
 var Game = require('./js/game');
 
 var Server = Class.extend({
@@ -32,10 +33,11 @@ var Server = Class.extend({
 			_this.disconnectClient(ws);
 		});
 
-		for (var i = 0; i < 1; i++) {
-			var a = new Asteroid(this.game, 300, 300);
-			this.newEntities.push(a);
+		for (var i = 0; i < 10; i++) {
+			var a = new Asteroid(this.game, 300 + Math.random() * 300, 300);
+			//this.newEntities.push(a);
 		}
+		this.newEntities.push(new Planet(this.game, 500, 600));
 		this.tick();
 	},
 	onConnect: function(ws) {
