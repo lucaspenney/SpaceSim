@@ -11,18 +11,6 @@ var Game = Class.extend({
     this.stars = new Stars();
   },
   update: function() {
-    if (this.deletedEntities.length > 0) {
-      for (var i = 0; i < this.entities.length; i++) {
-        for (var k = 0; k < this.deletedEntities.length; k++) {
-          if (this.entities[i].id === this.deletedEntities[k].id) {
-            this.entities.splice(i, 1);
-            i = 0;
-            k = 0;
-          }
-        }
-      }
-      this.deletedEntities = [];
-    }
     for (var i = 0; i < this.entities.length; i++) {
       this.entities[i].update();
     }

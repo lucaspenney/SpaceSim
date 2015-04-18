@@ -20,8 +20,6 @@ var Server = Class.extend({
 		});
 		this.game = new Game();
 		this.clients = [];
-		this.newEntities = [];
-		this.deletedEntities = [];
 		this.websocket.on('connection', function(ws) {
 			console.log("Client connected");
 			_this.onConnect(ws);
@@ -35,9 +33,8 @@ var Server = Class.extend({
 
 		for (var i = 0; i < 10; i++) {
 			var a = new Asteroid(this.game, 300 + Math.random() * 300, 300);
-			//this.newEntities.push(a);
 		}
-		this.newEntities.push(new Planet(this.game, 500, 600));
+		this.game.entities.push(new Planet(this.game, 500, 600));
 		this.tick();
 	},
 	onConnect: function(ws) {
@@ -50,7 +47,7 @@ var Server = Class.extend({
 		}
 		this.clients.push(client);
 		var cplayer = new Player(this.game, 50, 50)
-		this.newEntities.push(cplayer);
+		this.game.entities.push(cplayer);
 		client.entity = cplayer;
 		this.handshake(client);
 		ws.on('message', function(message) {
@@ -63,7 +60,7 @@ var Server = Class.extend({
 	disconnectClient: function(socket) {
 		for (var i = 0; i < this.clients.length; i++) {
 			if (this.clients[i].socket == socket) {
-				this.deletedEntities.push(this.clients[i].entity);
+				this.clients[i].entity.destroy();
 				this.clients.splice(i, 1);
 			}
 		}
@@ -89,9 +86,7 @@ var Server = Class.extend({
 		}
 		for (var i = 0; i < this.clients.length; i++) {
 			var update = {
-				updatedEntities: this.game.entities,
-				deletedEntities: _.union(this.deletedEntities, this.game.deletedEntities),
-				newEntities: this.newEntities,
+				entities: this.game.entities,
 				timestamp: new Date(),
 				packet: Crypto.randomBytes(16).toString('hex'),
 				focus: this.clients[i].entity,
@@ -106,8 +101,7 @@ var Server = Class.extend({
 		_.forEach(this.newEntities, function(entity) {
 			_this.game.entities.push(entity);
 		});
-		this.newEntities = [];
-		this.deletedEntities = [];
+
 		this.game.update();
 		var _this = this;
 		setTimeout(function() {

@@ -32,12 +32,24 @@ var Connection = Class.extend({
     receive: function(data) {
         var _this = this;
         var entities = this.game.entities;
-        _.forEach(data.updatedEntities, function(entity) {
-            //Perform entity updates
+        //First, delete any removed entities
+        _.forEach(entities, function(entity, index) {
+            var removed = true;
+            _.forEach(data.entities, function(sEnt) {
+                if (sEnt.id === entity.id) removed = false;
+            });
+            if (removed) {
+                //This entity was not in the server's update - remove it
+                _this.game.entities.splice(index, 1);
+            }
+        });
+        //Update existing entities
+        _.forEach(data.entities, function(entity) {
             _.forEach(entities, function(ent) {
                 if (ent.id === data.focus.id) {
                     _this.client.screen.focusedEntity = ent;
                 }
+                //First, delete any removed entities
                 if (ent.id === entity.id) {
                     _.forOwn(entity, function(value, prop) {
                         if (prop === "pos") {
@@ -50,14 +62,14 @@ var Connection = Class.extend({
                 }
             })
         });
-        _.forEach(data.newEntities, function(entity) {
+        //Create any new entities
+        _.forEach(data.entities, function(entity) {
             //Create new entity with this entity id and properties
-            _this.createEntityFromJSON(entity);
-        });
-        _.forEach(data.deletedEntities, function(entity) {
-            //Create new entity with this entity id and properties
-
-            _this.game.deletedEntities.push(entity);
+            var exists = false;
+            _.forEach(entities, function(ent) {
+                if (ent.id === entity.id) exists = true;
+            })
+            if (!exists) _this.createEntityFromJSON(entity);
         });
         this.lastUpdate = Date.now();
         this.latency = this.lastUpdate - data.timestamp;
