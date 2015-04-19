@@ -80,6 +80,12 @@ Vector.prototype = {
       y: mag
     });
   },
+  scale: function(s) {
+    return this.set(
+      this.x * s,
+      this.y * s
+    );
+  },
   limit: function(x, y) {
     if (this.x > x) {
       this.set({

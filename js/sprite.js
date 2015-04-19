@@ -25,8 +25,8 @@ var Sprite = Class.extend({
 			_this.height = _this.img.height;
 			_this.frameWidth = _this.img.width;
 			_this.frameHeight = _this.img.height;
-			_this.rotationXOffset = (_this.img.width / 2);
-			_this.rotationYOffset = (_this.img.height / 2);
+			_this.rotationXOffset = 0;
+			_this.rotationYOffset = 0;
 		}
 	},
 	draw: function(ctx, screen, x, y) {

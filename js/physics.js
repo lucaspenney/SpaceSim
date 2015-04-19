@@ -12,13 +12,11 @@ var Physics = Class.extend({
     this.ra = 0;
     this.maxVelocity = 15;
     this.mass = 100;
-    this.boundingBox = new BoundingBox(game, entity);
+    this.bounds = new BoundingBox(game, entity);
     this.collidesWith = [];
     this.static = false;
   },
   update: function(entities) {
-    this.boundingBox.update();
-    if (this.static) return;
     //Add gravity to acceleration
     var nearbys = [];
     for (var i = 0; i < this.game.entities.length; i++) {
@@ -46,19 +44,22 @@ var Physics = Class.extend({
 
     for (var i = 0; i < nearbys.length; i++) {
       //Check for collisions
-      var collision = this.boundingBox.wouldCollide(this.vel, nearbys[i]);
+      var collision = this.bounds.wouldCollide(this.vel, nearbys[i]);
       if (collision) {
         this.collide(nearbys[i], collision);
       }
     }
 
-    //Move entity based on velocity
-    this.entity.pos.add(this.vel);
-    this.entity.rotation += this.rv;
+    if (!this.static) {
+      //Move entity based on velocity
+      this.entity.pos.add(this.vel);
+      this.entity.rotation += this.rv;
+    }
 
     //Reset acceleration as it's now been applied to the current velocity
     this.accel = new Vector(0, 0);
     this.ra = 0;
+    this.bounds.update();
   },
   collide: function(entity, collision) {
     //if (this.collidesWith.indexOf(entity.toJSON().classname) === -1) return;
@@ -86,7 +87,7 @@ var Physics = Class.extend({
     }
     */
     //Check to ensure we don't have collision issue still
-    if (this.boundingBox.wouldCollide(this.vel.x, this.vel.y, entity)) {
+    if (this.bounds.wouldCollide(this.vel.x, this.vel.y, entity)) {
       //this.vel.x *= -0.5;
       //this.vel.y *= -0.5;
     }

@@ -1,18 +1,18 @@
 var Entity = require('./entity');
 var Physics = require('./physics');
 var Sprite = require('./sprite');
+var BoundingCircle = require('./boundingcircle');
 
 var Planet = Entity.extend({
     init: function(game, x, y) {
-        console.log('created');
         this._super(game, x, y);
         this.width = 128;
         this.height = 128;
         this.sprite = new Sprite(this, "img/planet.png");
         this.physics = new Physics(game, this);
+        this.physics.bounds = new BoundingCircle(this.game, this, 64);
         this.physics.setVelocity(Math.random(), Math.random(), (Math.random() - 0.5) * 5);
         this.physics.collidesWith = ['Asteroid', 'Player'];
-        this.physics.boundingBox.setOffset(5, 5);
         this.physics.mass = 10000;
         this.physics.static = true;
     },
@@ -20,7 +20,9 @@ var Planet = Entity.extend({
         this.physics.update();
     },
     render: function(ctx, screen) {
+        ctx.fillStyle = "#FFF";
         this._super(ctx, screen);
+        //this.physics.bounds.render(ctx, screen);
     },
     toJSON: function() {
         return {

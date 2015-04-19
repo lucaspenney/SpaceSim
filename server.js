@@ -34,7 +34,7 @@ var Server = Class.extend({
 		for (var i = 0; i < 10; i++) {
 			var a = new Asteroid(this.game, 300 + Math.random() * 300, 300);
 		}
-		this.game.entities.push(new Planet(this.game, 500, 600));
+		this.game.entities.push(new Planet(this.game, 300, 300));
 		this.tick();
 	},
 	onConnect: function(ws) {

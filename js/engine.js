@@ -1,7 +1,13 @@
-function Engine(game, player) {
-	this.game = game;
-	this.player = player;
-	this.mainThrust = 0.4;
-	this.turnThrust = 0.35;
-	this.particles = new ParticleSystem(this.game);
-}
+var Class = require('./class');
+
+var Engine = Class.extend({
+    init: function(player) {
+        this.player = player;
+        this.game = player.game;
+        this.mainOn = false;
+        this.leftOn = false;
+        this.rightOn = false;
+    },
+});
+
+module.exports = Engine;

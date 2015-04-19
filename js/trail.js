@@ -7,9 +7,9 @@ var Trail = Class.extend({
 		this.positions = [];
 	},
 	render: function(ctx, screen) {
-		ctx.strokeStyle = "#333333";
+		ctx.strokeStyle = "#CCCCCC";
 		ctx.lineCap = "round";
-		ctx.lineWidth = 5;
+		ctx.lineWidth = 2;
 		for (var i = 0; i < this.positions.length; i++) {
 			ctx.beginPath();
 			ctx.moveTo(this.x - screen.xOffset, this.y - screen.yOffset);
@@ -20,8 +20,8 @@ var Trail = Class.extend({
 		}
 
 		//Update positions 
-		this.x = this.parent.pos.x + ((Math.cos(degToRad(this.parent.rotation - 90)) * -4) + this.centerOffset);
-		this.y = this.parent.pos.y + ((Math.sin(degToRad(this.parent.rotation - 90)) * -4) + this.centerOffset);
+		this.x = this.parent.pos.x + ((Math.cos(degToRad(this.parent.rotation - 270)) * 12) + this.centerOffset);
+		this.y = this.parent.pos.y + ((Math.sin(degToRad(this.parent.rotation - 270)) * 12) + this.centerOffset);
 
 		this.positions.push({
 			x: this.x,

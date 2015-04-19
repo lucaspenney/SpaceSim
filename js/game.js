@@ -10,9 +10,9 @@ var Game = Class.extend({
     this.debugMode = false;
     this.stars = new Stars();
   },
-  update: function() {
+  update: function(input) {
     for (var i = 0; i < this.entities.length; i++) {
-      this.entities[i].update();
+      this.entities[i].update(input);
     }
   },
   render: function(ctx, screen) {

@@ -1,54 +1,75 @@
-ParticleSystem.extend(Entity);
+var Class = require('./class');
+var Vector = require('./vector');
+var Particle = require('./particle');
 
-function ParticleSystem(game, x, y, amount, func) {
-	Entity.apply(this, arguments);
-	this.particles = [];
-	this.width = 1;
-	this.height = 1;
-	this.active = true;
-	this.amount = amount;
-	this.physics = new Physics(this.game, this);
-	this.stepFunc = func || function(p) {
-		p.xv *= 0.8;
-		p.yv *= 0.8;
-		p.a *= 0.8;
-	};
-}
+var ParticleSystem = Class.extend({
+	init: function(game, x, y, r, type) {
+		this.game = game;
+		this.pos = new Vector(x, y);
+		this.rotation = r;
+		this.particles = [];
+		this.type = type;
+		this.active = true;
+		this.amount = 40;
+		this.refreshAmount = 4;
+	},
+	update: function() {
+		if (!this.active) return;
 
-ParticleSystem.prototype.render = function() {
-	for (var i = 0; i < this.particles.length; i++) {
-		this.stepFunc(this.particles[i]);
-	}
-	if (this.particles.length > this.amout) {
-		this.particles.shift();
-		this.particles.push(new Particle());
-	} else {
-		this.particles.push(new Particle());
-	}
-};
+		if (this.particles.length === 0) {
+			for (var i = 0; i < this.amount; i++) {
+				this.createParticle();
+			}
+		}
+		if (this.parent) {
+			this.pos = this.parent.pos.clone();
+			var x = this.xOffset + Math.cos(degToRad(this.parent.rotation + 90)) * 13;
+			var y = this.yOffset + Math.sin(degToRad(this.parent.rotation + 90)) * 13;
+			this.pos.x += x;
+			this.pos.y += y;
+		}
+		if (this.particles.length >= this.amount) {
+			for (var i = 0; i < this.refreshAmount; i++) {
+				this.particles.shift();
+				this.createParticle();
+			}
+		} else {
+			this.createParticle();
+		}
+	},
+	setParent: function(entity, xOffset, yOffset) {
+		this.parent = entity;
+		this.xOffset = xOffset;
+		this.yOffset = yOffset;
+	},
+	createParticle: function() {
+		if (this.parent) {
+			var vel = this.parent.physics.vel.clone();
+			var pos = this.pos.clone();
+			var direction = Math.random() * 360;
+			this.particles.push(new Particle(this.game, this.pos.x, this.pos.y, 1, vel.x, vel.y, 0.88, direction));
+		}
+	},
+	render: function(ctx, screen) {
+		this.update();
+		ctx.fillStyle = '#FFF';
+		//ctx.fillRect(this.pos.x - screen.xOffset, this.pos.y - screen.yOffset, 4, 4);
+		for (var i = 0; i < this.particles.length; i++) {
+			this.particles[i].render(ctx, screen);
+			this.particles[i].update();
+		}
 
-ParticleSystem.prototype.toggle = function() {
-	if (this.active) this.turnOn();
-	else this.turnOff();
-}
+	},
+	toggle: function() {
+		if (this.active) this.turnOn();
+		else this.turnOff();
+	},
+	turnOn: function() {
+		this.active = true;
+	},
+	turnOff: function() {
+		this.active = false;
+	},
+});
 
-ParticleSystem.prototype.turnOn = function() {
-	this.active = true;
-}
-
-ParticleSystem.prototype.turnOff = function() {
-	this.active = false;
-}
-
-ParticleSystem.prototype.createParticle = function() {
-	var xv = Math.random() - 0.5;
-	var yv = Math.random() - 0.5;
-	var direction = Math.random() * 360;
-	this.particles.push(new Particle(this.game, this.x, this.y, 1, xv, yv, 0.8, direction));
-};
-
-ParticleSystem.prototype.update = function() {
-	for (var i = 0; i < this.particles.length; i++) {
-		this.particles[i].update();
-	}
-};
+module.exports = ParticleSystem;
