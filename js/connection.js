@@ -54,7 +54,7 @@ var Connection = Class.extend({
                     var updateEntProperties = function(obj, entObj) {
                         _.forOwn(obj, function(value, prop) {
                             if (typeof value === 'object') {
-                                updateEntProperties(value, entObjd[prop])
+                                updateEntProperties(value, entObj[prop])
                             } else if (prop !== undefined) {
                                 entObj[prop] = value;
                             }
