@@ -130,5 +130,11 @@ var Physics = Class.extend({
     //Calculate the distance between the center of this physics object and the center of another
     //Get the center coordinate of this physics obj
   },
+  toJSON: function() {
+    return {
+      vel: this.vel,
+      rv: this.rv,
+    };
+  },
 });
 module.exports = Physics;

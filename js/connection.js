@@ -44,21 +44,23 @@ var Connection = Class.extend({
             }
         });
         //Update existing entities
-        _.forEach(data.entities, function(entity) {
-            _.forEach(entities, function(ent) {
-                if (ent.id === data.focus.id) {
-                    _this.client.screen.focusedEntity = ent;
+        _.forEach(data.entities, function(sEnt) {
+            _.forEach(entities, function(cEnt) {
+                if (cEnt.id === data.focus.id) {
+                    _this.client.screen.focusedEntity = cEnt;
+                    console.log(cEnt.pos);
                 }
-                //First, delete any removed entities
-                if (ent.id === entity.id) {
-                    _.forOwn(entity, function(value, prop) {
-                        if (prop === "pos") {
-                            ent[prop].x = value.x;
-                            ent[prop].y = value.y;
-                        } else {
-                            ent[prop] = value;
-                        }
-                    });
+                if (cEnt.id === sEnt.id) {
+                    var updateEntProperties = function(obj, entObj) {
+                        _.forOwn(obj, function(value, prop) {
+                            if (typeof value === 'object') {
+                                updateEntProperties(value, entObjd[prop])
+                            } else if (prop !== undefined) {
+                                entObj[prop] = value;
+                            }
+                        });
+                    };
+                    updateEntProperties(sEnt, cEnt);
                 }
             })
         });

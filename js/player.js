@@ -69,10 +69,8 @@ var Player = Entity.extend({
 		return {
 			classname: "Player",
 			id: this.id,
-			pos: {
-				x: this.pos.x,
-				y: this.pos.y,
-			},
+			pos: this.pos,
+			physics: this.physics,
 			rotation: this.rotation,
 		};
 	}
