@@ -48,7 +48,6 @@ var Connection = Class.extend({
             _.forEach(entities, function(cEnt) {
                 if (cEnt.id === data.focus.id) {
                     _this.client.screen.focusedEntity = cEnt;
-                    console.log(cEnt.pos);
                 }
                 if (cEnt.id === sEnt.id) {
                     var updateEntProperties = function(obj, entObj) {

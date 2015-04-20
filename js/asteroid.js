@@ -1,6 +1,7 @@
 var Entity = require('./entity');
 var Physics = require('./physics');
 var Sprite = require('./sprite');
+var BoundingCircle = require('./boundingcircle');
 
 var Asteroid = Entity.extend({
     init: function(game, x, y) {
@@ -9,7 +10,8 @@ var Asteroid = Entity.extend({
         this.height = 30;
         this.sprite = new Sprite(this, "img/asteroid.png");
         this.physics = new Physics(game, this);
-        this.physics.setVelocity(Math.random(), Math.random(), (Math.random() - 0.5) * 5);
+        this.physics.bounds = new BoundingCircle(this.game, this, 32);
+        this.physics.setVelocity(Math.random(), (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10);
         this.physics.collidesWith = ['Asteroid', 'Player'];
         this.physics.mass = 100;
     },

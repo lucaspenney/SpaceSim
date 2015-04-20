@@ -30,7 +30,27 @@ var BoundingCircle = Class.extend({
 		return wouldCollide;
 	},
 	isColliding: function(e) {
-
+		if (e.type === 'box') {
+			//If colliding with a bounding box
+			if (this.pos.x + this.width > e.pos.x && this.pos.x < e.pos.x + e.width) {
+				if (this.pos.y + this.height > e.pos.y && this.pos.y < e.pos.y + e.height) {
+					var x, y;
+					if (this.pos.x + this.width > e.pos.x) x = (this.pos.x + this.width) - e.pos.x;
+					else if (this.pos.x < e.pos.x + e.width) x = this.pos.x - (e.pos.x + e.width);
+					if (this.pos.y + this.height > e.pos.y) y = (this.pos.y + this.height) - e.pos.y;
+					else if (this.pos.y < e.pos.y + e.height) y = this.pos.y - (e.pos.y + e.height);
+					return {
+						x: x,
+						y: y,
+					};
+				}
+			}
+		} else if (e.type === 'circle') {
+			var dist = this.pos.distance(e.pos);
+			if (dist < this.radius + e.radius) {
+				return true;
+			}
+		}
 		return false;
 	},
 	getDistBetween: function() {

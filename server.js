@@ -31,8 +31,9 @@ var Server = Class.extend({
 			_this.disconnectClient(ws);
 		});
 
-		for (var i = 0; i < 10; i++) {
-			var a = new Asteroid(this.game, 300 + Math.random() * 300, 300);
+		for (var i = 0; i < 50; i++) {
+			var a = new Asteroid(this.game, (Math.random() - 0.5) * 2000, (Math.random() - 0.5) * 2000);
+			this.game.entities.push(a);
 		}
 		this.game.entities.push(new Planet(this.game, 300, 300));
 		this.tick();
@@ -81,12 +82,15 @@ var Server = Class.extend({
 	},
 	tick: function() {
 		var _this = this;
-		for (var i = 0; i < this.game.entities.length; i++) {
-			//this.game.entities[i].pos.y += 4;
-		}
 		for (var i = 0; i < this.clients.length; i++) {
+			var entities = [];
+			_.forEach(this.game.entities, function(ent) {
+				if (_this.clients[i].entity.pos.distance(ent.pos) < 5 a00) {
+					entities.push(ent);
+				}
+			});
 			var update = {
-				entities: this.game.entities,
+				entities: entities,
 				timestamp: new Date(),
 				packet: Crypto.randomBytes(16).toString('hex'),
 				focus: this.clients[i].entity,
