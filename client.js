@@ -28,9 +28,13 @@ var Client = Class.extend({
   },
   tick: function() {
     var _this = this;
-    requestAnimationFrame(function() {
+    /*requestAnimationFrame(function() {
       _this.tick();
-    });
+    });*/
+    setTimeout(function() {
+      _this.tick();
+    }, 32)
+
     _this.fpsManager.now = Date.now();
     _this.fpsManager.delta = this.fpsManager.now - this.fpsManager.then;
     if (this.fpsManager.delta > this.fpsManager.interval) {
@@ -44,6 +48,7 @@ var Client = Class.extend({
     if (this.debug) {
       this.ctx.fillStyle = "#FFF";
       this.ctx.fillText("Message Size: " + this.connection.lastPacketLength, 10, 10);
+      this.ctx.fillText("Latency: " + this.connection.latency + "ms", 10, 20);
     }
   },
 });

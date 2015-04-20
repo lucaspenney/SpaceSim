@@ -14,6 +14,7 @@ var Connection = Class.extend({
         this.token = null;
         this.lastPacketLength = 0;
         this.lastPacket = null;
+        this.latency = -1;
         var _this = this;
         this.server.onmessage = function(message) {
             _this.lastPacketLength = message.data.length;
@@ -31,6 +32,7 @@ var Connection = Class.extend({
     },
     receive: function(data) {
         var _this = this;
+        this.latency = data.latency;
         var entities = this.game.entities;
         //First, delete any removed entities
         _.forEach(entities, function(entity, index) {
@@ -55,7 +57,13 @@ var Connection = Class.extend({
                             if (typeof value === 'object') {
                                 updateEntProperties(value, entObj[prop])
                             } else if (prop !== undefined) {
-                                entObj[prop] = value;
+                                if (entObj[prop] !== value && !isNaN(value) && !isNaN(entObj[prop])) {
+                                    //If numerical values are not thhe same do some very basic interpolation
+                                    //console.log(entObj[prop] + " + " + value);
+                                    entObj[prop] = (entObj[prop] + value) / 2;
+                                } else {
+                                    entObj[prop] = value;
+                                }
                             }
                         });
                     };
@@ -73,12 +81,12 @@ var Connection = Class.extend({
             if (!exists) _this.createEntityFromJSON(entity);
         });
         this.lastUpdate = Date.now();
-        this.latency = this.lastUpdate - data.timestamp;
-        this.send();
+        this.send(data.packetId);
     },
-    send: function() {
+    send: function(packetId) {
         var data = {
             token: this.token,
+            packetId: packetId,
             input: this.client.input.getInputState(),
         };
         this.server.send(JSON.stringify(data));

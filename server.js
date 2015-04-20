@@ -20,6 +20,7 @@ var Server = Class.extend({
 		});
 		this.game = new Game();
 		this.clients = [];
+		this.packetTimes = {};
 		this.websocket.on('connection', function(ws) {
 			console.log("Client connected");
 			_this.onConnect(ws);
@@ -39,12 +40,14 @@ var Server = Class.extend({
 		this.tick();
 	},
 	onConnect: function(ws) {
+		var _this = this;
 		var client = {
 			id: _.uniqueId(),
 			socket: ws,
 			name: "Player " + this.clients.length,
 			token: require('crypto').randomBytes(32).toString('hex'),
 			entity: null,
+			latency: -1,
 		}
 		this.clients.push(client);
 		var cplayer = new Player(this.game, 50, 50)
@@ -53,6 +56,8 @@ var Server = Class.extend({
 		this.handshake(client);
 		ws.on('message', function(message) {
 			var data = JSON.parse(message);
+			var packetTime = _this.packetTimes[data.packetId];
+			client.latency = Date.now() - packetTime;
 			if (data.token === client.token) {
 				client.entity.setInput(data.input);
 			}
@@ -89,11 +94,14 @@ var Server = Class.extend({
 					entities.push(ent);
 				}
 			});
+			var packetId = Crypto.randomBytes(16).toString('hex');
+			this.packetTimes[packetId] = Date.now();
 			var update = {
 				entities: entities,
 				timestamp: new Date(),
-				packet: Crypto.randomBytes(16).toString('hex'),
+				packetId: packetId,
 				focus: this.clients[i].entity,
+				latency: this.clients[i].latency,
 			};
 			try {
 				this.clients[i].socket.send(this.packageData(update));
@@ -110,7 +118,7 @@ var Server = Class.extend({
 		var _this = this;
 		setTimeout(function() {
 			_this.tick();
-		}, 32);
+		}, 33);
 	},
 });
 
