@@ -10,7 +10,7 @@ var Connection = Class.extend({
     init: function(client, game) {
         this.client = client;
         this.game = game;
-        this.server = new WebSocket("ws://" + (window.location.hostname || '127.0.0.1') + ":8080");
+        this.server = new WebSocket("ws://" + ((window.location.hostname) ? window.location.hostname : '127.0.0.1') + ":8080");
         this.token = null;
         this.lastPacketLength = 0;
         this.lastPacket = null;
