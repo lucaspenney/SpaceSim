@@ -29,25 +29,20 @@ var Player = Entity.extend({
 		this.mainThrust = 0.5;
 		this.engine = new Engine(this);
 	},
-	update: function(input) {
-		if (input) this.input = input;
+	update: function() {
 		this._super();
 		if (this.input.up) {
 			this.engine.mainOn = true;
 			var x = Math.cos(degToRad(this.rotation - 90)) * this.mainThrust;
 			var y = Math.sin(degToRad(this.rotation - 90)) * this.mainThrust;
 			this.physics.addAcceleration(x, y, 0);
-			this.engineParticles.turnOn();
 		} else {
 			this.engine.mainOn = false;
-			this.engineParticles.turnOff();
 		}
 		if (this.input.left) { //Left Arrow
-			this.enginesOn = true;
 			this.physics.addAcceleration(0, 0, this.turnThrust * -1);
 		}
 		if (this.input.right) { //Right Arrow
-			this.enginesOn = true;
 			this.physics.addAcceleration(0, 0, this.turnThrust);
 		}
 		this.physics.update();
@@ -58,6 +53,10 @@ var Player = Entity.extend({
 			screen.setXOffset(this.pos.x - 350);
 			screen.setYOffset(this.pos.y - 350);
 		}
+		if (this.engine.mainOn) {
+			this.engineParticles.turnOn()
+		} else this.engineParticles.turnOff();
+
 		this.engineParticles.render(ctx, screen);
 		this._super(ctx, screen);
 		//this.physics.bounds.render(ctx, screen);

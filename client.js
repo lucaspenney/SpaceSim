@@ -39,8 +39,11 @@ var Client = Class.extend({
     _this.fpsManager.delta = this.fpsManager.now - this.fpsManager.then;
     if (this.fpsManager.delta > this.fpsManager.interval) {
       _this.fpsManager.then = this.fpsManager.now - (this.fpsManager.delta % this.fpsManager.interval);
-      _this.game.update(this.input.getInputState());
-      _this.game.render(this.ctx, this.screen);
+      if (_this.screen.focusedEntity) {
+        _this.screen.focusedEntity.setInput(_this.input.getInputState());
+      }
+      _this.game.update();
+      _this.game.render(_this.ctx, _this.screen);
       _this.debugOutput();
     }
   },

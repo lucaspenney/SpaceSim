@@ -49,6 +49,7 @@ var Connection = Class.extend({
         _.forEach(data.entities, function(sEnt) {
             _.forEach(entities, function(cEnt) {
                 if (cEnt.id === data.focus.id) {
+                    //Player's entity
                     _this.client.screen.focusedEntity = cEnt;
                 }
                 if (cEnt.id === sEnt.id) {
