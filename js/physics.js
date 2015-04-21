@@ -15,9 +15,15 @@ var Physics = Class.extend({
     this.bounds = new BoundingBox(game, entity);
     this.collidesWith = [];
     this.static = false;
+    this.timeScale = 1;
   },
   update: function(entities) {
     //Add gravity to acceleration
+
+    var time = this.game.tick - this.game.lastTick;
+    //console.log(time);
+    var percentOff = (time - 33) / 33;
+    this.timeScale = percentOff + 1 + this.game.lagCompensation; //Multiply calculations by 1 + % off -- working currently
     var nearbys = [];
     for (var i = 0; i < this.game.entities.length; i++) {
       if (this.game.entities[i].pos.distance(this.entity.pos) < 3000 && this.game.entities[i].physics !== undefined && this.game.entities[i] !== this.entity) {
@@ -28,8 +34,6 @@ var Physics = Class.extend({
         var diffY = entity.pos.y - this.entity.pos.y;
         var distSquare = diffX * diffX + diffY * diffY
         var dist = Math.sqrt(distSquare);
-        //If you add mass to the objects change to entity.mass
-        //instead of 50
         var totalForce = entity.physics.mass / distSquare;
         var xa = totalForce * diffX / dist;
         var ya = totalForce * diffY / dist;
@@ -106,9 +110,9 @@ var Physics = Class.extend({
     if (this.rv > this.maxVelocity) this.rv = this.maxVelocity;
     else if (this.rv < this.maxVelocity * -1) this.rv = this.maxVelocity * -1;
 
-    this.vel.x += x;
-    this.vel.y += y;
-    this.rv += r;
+    this.vel.x += x * this.timeScale;
+    this.vel.y += y * this.timeScale;
+    this.rv += r * this.timeScale;
 
     if (Math.random() > 0.5) {
       //this.vel.x = this.vel.x * 0.99;
@@ -122,9 +126,10 @@ var Physics = Class.extend({
     this.rv = r;
   },
   addAcceleration: function(x, y, r) {
-    this.accel.x += x;
-    this.accel.y += y;
-    this.ra += r || 0;
+    if (!r) r = 0;
+    this.accel.x += x * this.timeScale;
+    this.accel.y += y * this.timeScale;
+    this.ra += r * this.timeScale;
   },
   getDistTo: function(physics) {
     //Calculate the distance between the center of this physics object and the center of another

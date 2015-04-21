@@ -9,11 +9,16 @@ var Game = Class.extend({
     this.deletedEntities = [];
     this.debugMode = false;
     this.stars = new Stars();
+    this.lastTick = Date.now();
+    this.tick = Date.now();
+    this.lagCompensation = 0;
   },
-  update: function(input) {
+  update: function() {
+    this.tick = Date.now();
     for (var i = 0; i < this.entities.length; i++) {
-      this.entities[i].update(input);
+      this.entities[i].update();
     }
+    this.lastTick = this.tick;
   },
   render: function(ctx, screen) {
     if (!ctx || !screen) return;

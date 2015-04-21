@@ -32,7 +32,8 @@ var Connection = Class.extend({
     },
     receive: function(data) {
         var _this = this;
-        this.latency = data.latency;
+        this.latency = data.latency / 2;
+        this.game.lagCompensation = (this.latency / 33) / 100;
         var entities = this.game.entities;
         //First, delete any removed entities
         _.forEach(entities, function(entity, index) {
@@ -62,9 +63,10 @@ var Connection = Class.extend({
                                     //If numerical values are not thhe same do some very basic interpolation
                                     //console.log(entObj[prop] + " + " + value);
                                     entObj[prop] = (entObj[prop] + value) / 2;
+                                    //entObj[prop] = value;
                                     setTimeout(function() {
                                         entObj[prop] = value;
-                                    }, _this.latency / 2)
+                                    }, 1)
                                 } else {
                                     entObj[prop] = value;
                                 }

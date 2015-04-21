@@ -32,11 +32,13 @@ var Server = Class.extend({
 			_this.disconnectClient(ws);
 		});
 
-		for (var i = 0; i < 50; i++) {
-			var a = new Asteroid(this.game, (Math.random() - 0.5) * 2000, (Math.random() - 0.5) * 2000);
-			this.game.entities.push(a);
-		}
+
 		this.game.entities.push(new Planet(this.game, 300, 300));
+		for (var i = 0; i < 3; i++) {
+			var a = new Asteroid(this.game, 500 - (i * 30), 300);
+			this.game.entities.push(a);
+			a.physics.addVelocity(2, -9);
+		}
 		this.tick();
 	},
 	onConnect: function(ws) {
@@ -50,7 +52,7 @@ var Server = Class.extend({
 			latency: -1,
 		}
 		this.clients.push(client);
-		var cplayer = new Player(this.game, 50, 50)
+		var cplayer = new Player(this.game, 100, 100)
 		this.game.entities.push(cplayer);
 		client.entity = cplayer;
 		this.handshake(client);
@@ -107,7 +109,8 @@ var Server = Class.extend({
 				this.clients[i].socket.send(this.packageData(update));
 			} catch (e) {
 				//Was unable to send client update, disconnect them
-				this.disconnectClient(this.clients[i].socket);
+				if (this.clients[i])
+					this.disconnectClient(this.clients[i].socket);
 			}
 		}
 		_.forEach(this.newEntities, function(entity) {
