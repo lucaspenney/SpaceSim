@@ -1,6 +1,7 @@
 var Class = require('./class');
 var BoundingBox = require('./boundingbox');
 var Vector = require('./vector');
+var EventManager = require('./eventmanager');
 
 var Physics = Class.extend({
   init: function(game, entity) {
@@ -16,6 +17,7 @@ var Physics = Class.extend({
     this.collidesWith = [];
     this.static = false;
     this.timeScale = 1;
+    this.eventManager = new EventManager();
   },
   update: function(entities) {
     //Add gravity to acceleration
@@ -26,7 +28,7 @@ var Physics = Class.extend({
     this.timeScale = percentOff + 1 + this.game.lagCompensation; //Multiply calculations by 1 + % off -- working currently
     var nearbys = [];
     for (var i = 0; i < this.game.entities.length; i++) {
-      if (this.game.entities[i].pos.distance(this.entity.pos) < 3000 && this.game.entities[i].physics !== undefined && this.game.entities[i] !== this.entity) {
+      if (this.game.entities[i].pos.distance(this.entity.pos) < 2000 && this.game.entities[i].physics !== undefined && this.game.entities[i] !== this.entity) {
         nearbys.push(this.game.entities[i]);
         var entity = this.game.entities[i];
         //Add gravity to this entity
@@ -95,6 +97,8 @@ var Physics = Class.extend({
       //this.vel.x *= -0.5;
       //this.vel.y *= -0.5;
     }
+    this.eventManager.dispatch('collision', this, entity);
+    entity.physics.eventManager.dispatch('collision', entity.physics, this.entity);
   },
   addVelocity: function(x, y, r) {
     x = x || 0;
@@ -131,9 +135,9 @@ var Physics = Class.extend({
     this.accel.y += y * this.timeScale;
     this.ra += r * this.timeScale;
   },
-  getDistTo: function(physics) {
-    //Calculate the distance between the center of this physics object and the center of another
-    //Get the center coordinate of this physics obj
+  onCollision: function(func) {
+    //Add event listener for collision
+    this.eventManager.addEventListener('collision', func);
   },
   toJSON: function() {
     return {
