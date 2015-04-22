@@ -9,6 +9,7 @@ var Entity = require('./js/entity');
 var Player = require('./js/player');
 var Asteroid = require('./js/asteroid');
 var Planet = require('./js/planet');
+var BlackHole = require('./js/blackhole');
 var Game = require('./js/game');
 
 var Server = Class.extend({
@@ -33,7 +34,7 @@ var Server = Class.extend({
 		});
 
 
-		this.game.entities.push(new Planet(this.game, 300, 300));
+		this.game.entities.push(new BlackHole(this.game, 300, 300));
 		for (var i = 0; i < 3; i++) {
 			var a = new Asteroid(this.game, 500 - (i * 30), 300);
 			this.game.entities.push(a);
