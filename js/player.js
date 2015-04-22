@@ -4,6 +4,7 @@ var Physics = require('./physics');
 var Trail = require('./trail');
 var ParticleSystem = require('./particlesystem');
 var Engine = require('./engine');
+var Explosion = require('./explosion');
 
 var Player = Entity.extend({
 	init: function(game, x, y) {
@@ -28,6 +29,11 @@ var Player = Entity.extend({
 		this.turnThrust = 0.4;
 		this.mainThrust = 0.5;
 		this.engine = new Engine(this);
+		var _this = this;
+		this.physics.onCollision(function(entity) {
+			_this.game.entityFactory.create('Explosion', _this.game, _this.pos.x, _this.pos.y);
+			_this.destroy();
+		});
 	},
 	update: function() {
 		this._super();

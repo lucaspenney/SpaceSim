@@ -10,14 +10,23 @@ var ParticleSystem = Class.extend({
 		this.particles = [];
 		this.type = type;
 		this.active = true;
-		this.amount = 40;
-		this.refreshAmount = 4;
+		this.particleTypes = {
+			'engine': {
+				refreshAmount: 4,
+				amount: 40,
+			},
+			'explosion': {
+				refreshAmount: 1,
+				amount: 150,
+			}
+		};
+		this.opts = this.particleTypes[type];
 	},
 	update: function() {
 		if (!this.active) return;
 
 		if (this.particles.length === 0) {
-			for (var i = 0; i < this.amount; i++) {
+			for (var i = 0; i < this.opts.amount; i++) {
 				this.createParticle();
 			}
 		}
@@ -28,8 +37,8 @@ var ParticleSystem = Class.extend({
 			this.pos.x += x;
 			this.pos.y += y;
 		}
-		if (this.particles.length >= this.amount) {
-			for (var i = 0; i < this.refreshAmount; i++) {
+		if (this.particles.length >= this.opts.amount) {
+			for (var i = 0; i < this.opts.refreshAmount; i++) {
 				this.particles.shift();
 				this.createParticle();
 			}
@@ -48,17 +57,19 @@ var ParticleSystem = Class.extend({
 			var pos = this.pos.clone();
 			var direction = Math.random() * 360;
 			this.particles.push(new Particle(this.game, this.pos.x, this.pos.y, 1, vel.x, vel.y, 0.88, direction));
+		} else {
+			var vel = new Vector((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 5);
+			var pos = this.pos.clone();
+			var direction = Math.random() * 360;
+			this.particles.push(new Particle(this.game, this.pos.x, this.pos.y, 1, vel.x, vel.y, 0.88, direction));
 		}
 	},
 	render: function(ctx, screen) {
 		this.update();
-		ctx.fillStyle = '#FFF';
-		//ctx.fillRect(this.pos.x - screen.xOffset, this.pos.y - screen.yOffset, 4, 4);
 		for (var i = 0; i < this.particles.length; i++) {
 			this.particles[i].render(ctx, screen);
 			this.particles[i].update();
 		}
-
 	},
 	toggle: function() {
 		if (this.active) this.turnOn();

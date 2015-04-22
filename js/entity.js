@@ -22,7 +22,7 @@ var Entity = Class.extend({
 
   },
   destroy: function() {
-    for (var i = 0; i < this.game.entities.length; i++) {
+    for (var i = this.game.entities.length - 1; i >= 0; i--) {
       if (this.game.entities[i].id === this.id) this.game.entities.splice(i, 1);
     }
   },

@@ -9,8 +9,8 @@ function Stars(screen) {
 Stars.prototype.render = function(ctx, screen) {
     if (this.stars.length == 0) {
         for (var i = 0; i < this.numStars; i++) {
-            var x = -1000 + (Math.random() * 3000);
-            var y = -1000 + (Math.random() * 3000);
+            var x = -3000 + (Math.random() * 6000);
+            var y = -3000 + (Math.random() * 6000);
             this.stars.push({
                 x: x,
                 y: y,

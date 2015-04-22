@@ -3,6 +3,8 @@ var Player = require('./player');
 var Asteroid = require('./asteroid');
 var Planet = require('./planet');
 var BlackHole = require('./blackhole');
+var Explosion = require('./explosion');
+var EntityFactory = require('./entityfactory');
 var LZString = require('./lz-string');
 
 var Connection = Class.extend({
@@ -40,6 +42,7 @@ var Connection = Class.extend({
         _.forEach(entities, function(entity, index) {
             var removed = true;
             _.forEach(data.entities, function(sEnt) {
+                if (!entity) return;
                 if (sEnt.id === entity.id) removed = false;
             });
             if (removed) {
@@ -57,9 +60,9 @@ var Connection = Class.extend({
                 if (cEnt.id === sEnt.id) {
                     var updateEntProperties = function(obj, entObj) {
                         _.forOwn(obj, function(value, prop) {
-                            if (typeof value === 'object') {
+                            if (typeof value === 'object' && entObj) {
                                 updateEntProperties(value, entObj[prop])
-                            } else if (prop !== undefined) {
+                            } else if (prop !== undefined && entObj) {
                                 if (entObj[prop] !== value && !isNaN(value) && !isNaN(entObj[prop])) {
                                     //If numerical values are not thhe same do some very basic interpolation
                                     //console.log(entObj[prop] + " + " + value);
@@ -106,23 +109,8 @@ var Connection = Class.extend({
         });
     },
     createEntityFromJSON: function(entity) {
-        if (entity.classname === "Player") {
-            var nent = new Player(this.game, entity.x, entity.y);
-            nent.id = entity.id;
-            this.game.entities.push(nent);
-        } else if (entity.classname === "Asteroid") {
-            var nent = new Asteroid(this.game, entity.x, entity.y);
-            nent.id = entity.id;
-            this.game.entities.push(nent);
-        } else if (entity.classname === "Planet") {
-            var nent = new Planet(this.game, entity.x, entity.y);
-            nent.id = entity.id;
-            this.game.entities.push(nent);
-        } else if (entity.classname === "Black Hole") {
-            var nent = new BlackHole(this.game, entity.x, entity.y);
-            nent.id = entity.id;
-            this.game.entities.push(nent);
-        }
+        var ent = this.game.entityFactory.create(entity.classname, this.game, entity.pos.x, entity.pos.y, true);
+        ent.id = entity.id;
     },
 });
 

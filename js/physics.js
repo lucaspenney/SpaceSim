@@ -21,7 +21,6 @@ var Physics = Class.extend({
   },
   update: function(entities) {
     //Add gravity to acceleration
-
     var time = this.game.tick - this.game.lastTick;
     //console.log(time);
     var percentOff = (time - 33) / 33;

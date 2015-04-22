@@ -1,6 +1,7 @@
 var Class = require('./class');
 var Player = require('./player');
 var Stars = require('./stars');
+var EntityFactory = require('./entityfactory');
 
 var Game = Class.extend({
   entityId: 0,
@@ -12,10 +13,11 @@ var Game = Class.extend({
     this.lastTick = Date.now();
     this.tick = Date.now();
     this.lagCompensation = 0;
+    this.entityFactory = new EntityFactory();
   },
   update: function() {
     this.tick = Date.now();
-    for (var i = 0; i < this.entities.length; i++) {
+    for (var i = this.entities.length - 1; i >= 0; i--) {
       this.entities[i].update();
     }
     this.lastTick = this.tick;

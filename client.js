@@ -25,6 +25,7 @@ var Client = Class.extend({
     this.connection = new Connection(this, this.game);
     this.tick();
     this.debug = true;
+    this.frameTime = 0;
   },
   tick: function() {
     var _this = this;
@@ -35,6 +36,7 @@ var Client = Class.extend({
       _this.tick();
     }, 32)
 
+    var curTime = Date.now();
     _this.fpsManager.now = Date.now();
     _this.fpsManager.delta = this.fpsManager.now - this.fpsManager.then;
     if (this.fpsManager.delta > this.fpsManager.interval) {
@@ -46,12 +48,14 @@ var Client = Class.extend({
       _this.game.render(_this.ctx, _this.screen);
       _this.debugOutput();
     }
+    this.frameTime = curTime - Date.now() + 1;
   },
   debugOutput: function() {
     if (this.debug) {
       this.ctx.fillStyle = "#FFF";
       this.ctx.fillText("Message Size: " + this.connection.lastPacketLength, 10, 10);
       this.ctx.fillText("Latency: " + this.connection.latency + "ms", 10, 20);
+      this.ctx.fillText("Frame Time: " + this.frameTime, 10, 30);
     }
   },
 });

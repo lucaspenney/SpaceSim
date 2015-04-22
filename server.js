@@ -34,12 +34,9 @@ var Server = Class.extend({
 		});
 
 
-		this.game.entities.push(new BlackHole(this.game, 300, 300));
-		for (var i = 0; i < 3; i++) {
-			var a = new Asteroid(this.game, 500 - (i * 30), 300);
-			this.game.entities.push(a);
-			a.physics.addVelocity(2, -9);
-		}
+		this.game.entities.push(new BlackHole(this.game, 800, 300));
+		this.game.entities.push(new Planet(this.game, 200, 600));
+
 		this.tick();
 	},
 	onConnect: function(ws) {
@@ -51,6 +48,11 @@ var Server = Class.extend({
 			token: require('crypto').randomBytes(32).toString('hex'),
 			entity: null,
 			latency: -1,
+		}
+		for (var i = 0; i < 1; i++) {
+			var a = new Asteroid(this.game, 400, 400);
+			this.game.entities.push(a);
+			a.physics.addVelocity(2, -2);
 		}
 		this.clients.push(client);
 		var cplayer = new Player(this.game, 100, 100)
