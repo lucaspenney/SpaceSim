@@ -26,6 +26,7 @@ var Client = Class.extend({
     this.tick();
     this.debug = true;
     this.frameTime = 0;
+    this.tickRate = 30;
   },
   tick: function() {
     var _this = this;
@@ -34,14 +35,14 @@ var Client = Class.extend({
     });*/
     setTimeout(function() {
       _this.tick();
-    }, 32)
+    }, this.tickRate)
 
     var curTime = Date.now();
 
     if (_this.screen.focusedEntity) {
       _this.screen.focusedEntity.setInput(_this.input.getInputState());
     }
-    if (Date.now() - _this.connection.lastUpdate > 32) {
+    if (Date.now() - _this.connection.lastUpdate > this.tickRate) {
       _this.game.update();
     }
     _this.game.render(_this.ctx, _this.screen);

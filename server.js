@@ -32,8 +32,8 @@ var Server = Class.extend({
 		this.websocket.on('error', function(ws) {
 			_this.disconnectClient(ws);
 		});
-
-
+		this.tickRate = 30;
+		this.frameTime = 0;
 		//this.game.entities.push(new BlackHole(this.game, 800, 300));
 		this.game.entities.push(new Planet(this.game, 200, 600));
 
@@ -91,6 +91,7 @@ var Server = Class.extend({
 	},
 	tick: function() {
 		var _this = this;
+		var start = Date.now();
 		for (var i = 0; i < this.clients.length; i++) {
 			var entities = [];
 			_.forEach(this.game.entities, function(ent) {
@@ -123,7 +124,8 @@ var Server = Class.extend({
 		var _this = this;
 		setTimeout(function() {
 			_this.tick();
-		}, 33);
+		}, this.tickRate);
+		this.frameTime = Date.now() - start;
 	},
 });
 
