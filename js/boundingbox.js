@@ -13,8 +13,8 @@ var BoundingBox = Class.extend({
 		this.height = entity.height || entity.sprite.height;
 	},
 	update: function() {
-		this.xOffset = (this.entity.sprite.width / 2) * -1;
-		this.yOffset = (this.entity.sprite.height / 2) * -1;
+		this.xOffset = (this.width / 2) * -1;
+		this.yOffset = (this.height / 2) * -1;
 		this.pos.x = this.entity.pos.x + this.xOffset;
 		this.pos.y = this.entity.pos.y + this.yOffset;
 	},
@@ -80,6 +80,13 @@ var BoundingBox = Class.extend({
 		//Debugging purposes
 		ctx.strokeStyle = "#0F0";
 		ctx.strokeRect(this.pos.x - screen.xOffset, this.pos.y - screen.yOffset, this.width, this.height);
+	},
+	toJSON: function() {
+		return {
+			pos: this.pos,
+			xOffset: this.xOffset,
+			yOffset: this.yOffset,
+		}
 	}
 });
 module.exports = BoundingBox;

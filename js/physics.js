@@ -4,7 +4,7 @@ var Vector = require('./vector');
 var EventManager = require('./eventmanager');
 
 var Physics = Class.extend({
-  init: function(game, entity) {
+  init: function(game, entity, bounds) {
     this.game = game;
     this.entity = entity;
     this.vel = new Vector(0, 0);
@@ -13,7 +13,7 @@ var Physics = Class.extend({
     this.ra = 0;
     this.maxVelocity = 15;
     this.mass = 100;
-    this.bounds = new BoundingBox(game, entity);
+    this.bounds = bounds;
     this.collidesWith = [];
     this.static = false;
     this.timeScale = 1;
@@ -47,27 +47,42 @@ var Physics = Class.extend({
     this.addVelocity(this.accel.x, this.accel.y, this.ra);
 
 
-    for (var i = 0; i < nearbys.length; i++) {
-      //Check for collisions
-      var collision = this.bounds.wouldCollide(this.vel, nearbys[i]);
-      if (collision) {
-        this.collide(nearbys[i], collision);
-      }
-    }
 
     if (!this.static) {
+      //Do collision and movement
+      var vel = this.vel.clone();
+      for (var k = 1; k <= 3; k++) {
+        var collision = false;
+        var colliding = null;
+        var v = vel.clone()
+        v.scale(k / 3);
+        for (var i = 0; i < nearbys.length; i++) {
+          colliding = nearbys[i];
+          collision = this.bounds.wouldCollide(v, nearbys[i]);
+          if (collision) break;
+        }
+        if (collision) {
+          this.collide(colliding, collision);
+          break;
+        } else {
+          this.entity.pos.add(v);
+          this.bounds.update();
+        }
+      }
       //Move entity based on velocity
-      this.entity.pos.add(this.vel);
+
       this.entity.rotation += this.rv;
+    } else {
+      this.bounds.update();
     }
 
     //Reset acceleration as it's now been applied to the current velocity
     this.accel = new Vector(0, 0);
     this.ra = 0;
-    this.bounds.update();
   },
   collide: function(entity, collision) {
     //if (this.collidesWith.indexOf(entity.toJSON().classname) === -1) return;
+    if (!entity) return;
     var e = entity.physics;
 
     e.vel.x += this.vel.x / 2;
@@ -91,11 +106,7 @@ var Physics = Class.extend({
       this.addVelocity(entity.physics.vel.x * -1, entity.physics.vel.y * -1);
     }
     */
-    //Check to ensure we don't have collision issue still
-    if (this.bounds.wouldCollide(this.vel.x, this.vel.y, entity)) {
-      //this.vel.x *= -0.5;
-      //this.vel.y *= -0.5;
-    }
+
     this.eventManager.dispatch('collision', this, entity);
     entity.physics.eventManager.dispatch('collision', entity.physics, this.entity);
   },
@@ -142,6 +153,7 @@ var Physics = Class.extend({
     return {
       vel: this.vel,
       rv: this.rv,
+      bounds: this.bounds,
     };
   },
 });

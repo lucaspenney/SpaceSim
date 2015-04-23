@@ -72,6 +72,12 @@ var BoundingCircle = Class.extend({
 		ctx.lineWidth = 5;
 		ctx.stroke();
 
+	},
+	toJSON: function() {
+		return {
+			pos: this.pos,
+			radius: this.radius,
+		};
 	}
 });
 module.exports = BoundingCircle;

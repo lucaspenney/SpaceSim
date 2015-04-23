@@ -34,7 +34,7 @@ var Server = Class.extend({
 		});
 
 
-		this.game.entities.push(new BlackHole(this.game, 800, 300));
+		//this.game.entities.push(new BlackHole(this.game, 800, 300));
 		this.game.entities.push(new Planet(this.game, 200, 600));
 
 		this.tick();
@@ -50,12 +50,11 @@ var Server = Class.extend({
 			latency: -1,
 		}
 		for (var i = 0; i < 1; i++) {
-			var a = new Asteroid(this.game, 400, 400);
+			var a = new Asteroid(this.game, 5, 5);
 			this.game.entities.push(a);
-			a.physics.addVelocity(2, -2);
 		}
 		this.clients.push(client);
-		var cplayer = new Player(this.game, 100, 100)
+		var cplayer = new Player(this.game, 100, 200)
 		this.game.entities.push(cplayer);
 		client.entity = cplayer;
 		this.handshake(client);
@@ -95,7 +94,7 @@ var Server = Class.extend({
 		for (var i = 0; i < this.clients.length; i++) {
 			var entities = [];
 			_.forEach(this.game.entities, function(ent) {
-				if (_this.clients[i].entity.pos.distance(ent.pos) < 500) {
+				if (_this.clients[i].entity.pos.distance(ent.pos) < 600) {
 					entities.push(ent);
 				}
 			});

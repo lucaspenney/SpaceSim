@@ -8,8 +8,7 @@ var BlackHole = Entity.extend({
     init: function(game, x, y) {
         this._super(game, x, y);
         this.sprite = new Sprite(this, "img/black_hole.png");
-        this.physics = new Physics(game, this);
-        this.physics.bounds = new BoundingBox(this.game, this, 32);
+        this.physics = new Physics(game, this, new BoundingCircle(this.game, this, 32));
         this.physics.setVelocity(Math.random(), Math.random(), (Math.random() - 0.5) * 5);
         this.physics.collidesWith = ['Player', 'Asteroid'];
         this.physics.mass = 20000;

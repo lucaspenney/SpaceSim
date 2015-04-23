@@ -17,6 +17,7 @@ var Connection = Class.extend({
         this.token = null;
         this.lastPacketLength = 0;
         this.lastPacket = null;
+        this.lastUpdate = 0;
         this.latency = -1;
         var _this = this;
         this.server.onmessage = function(message) {
@@ -26,7 +27,7 @@ var Connection = Class.extend({
                 _this.handshake(data.handshake);
             } else {
                 if (this.lastPacket === null) {
-                    this.lastPacked = data;
+                    this.lastPacket = data;
                 } else {
                     _this.receive(data);
                 }

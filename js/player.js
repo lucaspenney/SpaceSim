@@ -5,6 +5,7 @@ var Trail = require('./trail');
 var ParticleSystem = require('./particlesystem');
 var Engine = require('./engine');
 var Explosion = require('./explosion');
+var BoundingBox = require('./boundingbox');
 
 var Player = Entity.extend({
 	init: function(game, x, y) {
@@ -15,7 +16,7 @@ var Player = Entity.extend({
 		this.rotation = 0;
 		this.input = {};
 		this.sprite = new Sprite(this, "img/ship.png");
-		this.physics = new Physics(this.game, this);
+		this.physics = new Physics(this.game, this, new BoundingBox(this.game, this));
 		this.physics.collidesWith = ['Asteroid', 'Player'];
 		this.physics.mass = 10;
 		this.layer = 100;
@@ -65,7 +66,7 @@ var Player = Entity.extend({
 
 		this.engineParticles.render(ctx, screen);
 		this._super(ctx, screen);
-		//this.physics.bounds.render(ctx, screen);
+		//athis.physics.bounds.render(ctx, screen);
 	},
 	setInput: function(input) {
 		this.input = input;
@@ -77,6 +78,7 @@ var Player = Entity.extend({
 			pos: this.pos,
 			physics: this.physics,
 			rotation: this.rotation,
+			engine: this.engine,
 		};
 	}
 });

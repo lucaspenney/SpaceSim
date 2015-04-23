@@ -37,17 +37,15 @@ var Client = Class.extend({
     }, 32)
 
     var curTime = Date.now();
-    _this.fpsManager.now = Date.now();
-    _this.fpsManager.delta = this.fpsManager.now - this.fpsManager.then;
-    if (this.fpsManager.delta > this.fpsManager.interval) {
-      _this.fpsManager.then = this.fpsManager.now - (this.fpsManager.delta % this.fpsManager.interval);
-      if (_this.screen.focusedEntity) {
-        _this.screen.focusedEntity.setInput(_this.input.getInputState());
-      }
-      _this.game.update();
-      _this.game.render(_this.ctx, _this.screen);
-      _this.debugOutput();
+
+    if (_this.screen.focusedEntity) {
+      _this.screen.focusedEntity.setInput(_this.input.getInputState());
     }
+    if (Date.now() - _this.connection.lastUpdate > 32) {
+      _this.game.update();
+    }
+    _this.game.render(_this.ctx, _this.screen);
+    _this.debugOutput();
     this.frameTime = curTime - Date.now() + 1;
   },
   debugOutput: function() {
