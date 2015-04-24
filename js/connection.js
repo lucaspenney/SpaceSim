@@ -110,8 +110,7 @@ var Connection = Class.extend({
         });
     },
     createEntityFromJSON: function(entity) {
-        var ent = this.game.entityFactory.create(entity.classname, this.game, entity.pos.x, entity.pos.y, true);
-        ent.id = entity.id;
+        var ent = this.game.entityFactory.create(entity.classname, this.game, entity.pos.x, entity.pos.y, true, entity.id);
     },
 });
 

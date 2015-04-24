@@ -10,6 +10,7 @@ var BoundingCircle = Class.extend({
 		this.radius = radius;
 		this.xOffset = 0;
 		this.yOffset = 0;
+		this.update();
 	},
 	update: function() {
 		this.pos.x = this.entity.pos.x + this.xOffset;
@@ -30,17 +31,21 @@ var BoundingCircle = Class.extend({
 		return wouldCollide;
 	},
 	isColliding: function(e) {
+		if (!e.physics) return false;
+		if (this.entity === e) return false;
+		e = e.physics.bounds;
+
 		if (e.type === 'box') {
 			//If colliding with a bounding box
-			if (this.isPointIn(this.pos.x, this.pos.y) || this.isPointIn(this.pos.x + this.width, this.pos.y) || this.isPointIn(this.pos.x, this.pos.y + this.height) || this.isPointIn(this.pos.x + this.width, this.pos.y + this.height)) {
+			if (this.isPointIn(e.pos.x, e.pos.y) || this.isPointIn(e.pos.x + this.width, e.pos.y) || this.isPointIn(e.pos.x, e.pos.y + this.height) || this.isPointIn(e.pos.x + this.width, e.pos.y + this.height)) {
 				return true;
 			}
-			if (this.isPointIn(this.pos.x + (this.width / 2), this.pos.y) || this.isPointIn(this.pos.x, this.pos.y + (this.height / 2)) || this.isPointIn(this.pos.x + (this.width / 2), this.pos.y + (this.height / 2)) || this.isPointIn(this.pos.x + this.width, this.pos.y + (this.height / 2))) {
+			if (this.isPointIn(e.pos.x + (this.width / 2), e.pos.y) || this.isPointIn(e.pos.x, e.pos.y + (this.height / 2)) || this.isPointIn(e.pos.x + (this.width / 2), e.pos.y + (this.height / 2)) || this.isPointIn(e.pos.x + this.width, e.pos.y + (this.height / 2))) {
 				return true;
 			}
-
 		} else if (e.type === 'circle') {
 			var dist = this.pos.distance(e.pos);
+			//console.log(dist);
 			if (dist < this.radius + e.radius) {
 				return true;
 			}

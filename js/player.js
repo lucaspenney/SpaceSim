@@ -6,6 +6,7 @@ var ParticleSystem = require('./particlesystem');
 var Engine = require('./engine');
 var Explosion = require('./explosion');
 var BoundingBox = require('./boundingbox');
+var BoundingCircle = require('./boundingcircle');
 
 var Player = Entity.extend({
 	init: function(game, x, y) {
@@ -16,7 +17,8 @@ var Player = Entity.extend({
 		this.rotation = 0;
 		this.input = {};
 		this.sprite = new Sprite(this, "img/ship.png");
-		this.physics = new Physics(this.game, this, new BoundingBox(this.game, this));
+		//this.physics = new Physics(this.game, this, new BoundingBox(this.game, this));
+		this.physics = new Physics(this.game, this, new BoundingCircle(this.game, this, 20));
 		this.physics.collidesWith = ['Asteroid', 'Player'];
 		this.physics.mass = 10;
 		this.layer = 100;
@@ -57,8 +59,8 @@ var Player = Entity.extend({
 	render: function(ctx, screen) {
 		//this.trail.render(ctx, screen);
 		if (screen.focusedEntity && screen.focusedEntity.id === this.id) {
-			screen.setXOffset(this.pos.x - 350);
-			screen.setYOffset(this.pos.y - 350);
+			screen.setXOffset(this.pos.x - (screen.width / 2));
+			screen.setYOffset(this.pos.y - (screen.height / 2));
 		}
 		if (this.engine.mainOn) {
 			this.engineParticles.turnOn()
@@ -66,7 +68,7 @@ var Player = Entity.extend({
 
 		this.engineParticles.render(ctx, screen);
 		this._super(ctx, screen);
-		//athis.physics.bounds.render(ctx, screen);
+		//this.physics.bounds.render(ctx, screen);
 	},
 	setInput: function(input) {
 		this.input = input;

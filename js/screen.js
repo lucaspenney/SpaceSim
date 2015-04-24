@@ -1,8 +1,8 @@
 function Screen(game) {
     this.xOffset = 0;
     this.yOffset = 0;
-    this.width = 800;
-    this.height = 600;
+    this.width = 1000;
+    this.height = 750;
     this.focusedEntity = null;
 }
 

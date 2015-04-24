@@ -3,7 +3,7 @@ function Stars(screen) {
     this.xOffset = 0;
     this.yOffset = 0;
     this.stars = [];
-    this.numStars = 200;
+    this.numStars = 900;
 }
 
 Stars.prototype.render = function(ctx, screen) {

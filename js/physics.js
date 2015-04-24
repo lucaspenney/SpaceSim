@@ -27,8 +27,10 @@ var Physics = Class.extend({
     this.timeScale = percentOff + 1 + this.game.lagCompensation; //Multiply calculations by 1 + % off -- working currently
     var nearbys = [];
     for (var i = 0; i < this.game.entities.length; i++) {
-      if (this.game.entities[i].pos.distance(this.entity.pos) < 2000 && this.game.entities[i].physics !== undefined && this.game.entities[i] !== this.entity) {
-        nearbys.push(this.game.entities[i]);
+      var dist = this.game.entities[i].pos.distance(this.entity.pos);
+      if (dist < 1600 && this.game.entities[i].physics !== undefined && this.game.entities[i] !== this.entity) {
+        if (dist < 400)
+          nearbys.push(this.game.entities[i]); //Range for collisions is 400, gravity is 1600
         var entity = this.game.entities[i];
         //Add gravity to this entity
         var diffX = entity.pos.x - this.entity.pos.x;
@@ -40,8 +42,6 @@ var Physics = Class.extend({
         var ya = totalForce * diffY / dist;
         this.addAcceleration(xa, ya, 0);
       }
-      var dist = this.entity.pos.distance(this.game.entities[i].pos);
-
     }
     //Increase velocity by current acceleration
     this.addVelocity(this.accel.x, this.accel.y, this.ra);

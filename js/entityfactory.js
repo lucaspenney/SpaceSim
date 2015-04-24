@@ -6,9 +6,10 @@ var Explosion = require('./explosion');
 
 var EntityFactory = function() {
     return {
-        create: function(classname, game, x, y, isServer) {
+        create: function(classname, game, x, y, isServer, id) {
             var entity = this.createEntity(classname, game, x, y, isServer);
             if (entity) {
+                if (id) entity.id = id;
                 game.entities.push(entity);
                 return entity;
             }
