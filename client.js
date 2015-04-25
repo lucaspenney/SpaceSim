@@ -59,9 +59,9 @@ var Client = Class.extend({
       this.ctx.fillStyle = "#FFF";
       this.ctx.fillText("Message Size (b): " + this.connection.lastPacketLength, 10, 10);
       this.ctx.fillText("Latency (ms): " + this.connection.latency + "ms", 10, 20);
-      this.ctx.fillText("Frame Time (ms): " + this.frameTime, 10, 30);
+      this.ctx.fillText("Client Frame Time (ms): " + this.frameTime, 10, 30);
       this.ctx.fillText("Server Frame Time (ms): " + this.connection.serverFrameTime, 10, 40);
-      this.ctx.fillText("Update Rate (ms): " + this.connection.updateRate, 10, 60);
+      this.ctx.fillText("Update Rate (ms): " + this.connection.updateRate, 10, 50);
     }
   },
 });

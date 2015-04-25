@@ -31,7 +31,7 @@ var Player = Entity.extend({
 		this.engineParticles = new ParticleSystem(this.game, this.pos.x, this.pos.y, this.rotation, 'engine')
 		this.engineParticles.setParent(this, 0, 0);
 		this.turnThrust = 0.4;
-		this.mainThrust = 0.2;
+		this.mainThrust = 0.25;
 		this.engine = new Engine(this);
 		var _this = this;
 		this.physics.onCollision(function(entity) {
@@ -72,10 +72,6 @@ var Player = Entity.extend({
 	},
 	render: function(ctx, screen) {
 		//this.trail.render(ctx, screen);
-		if (screen.focusedEntity && screen.focusedEntity.id === this.id) {
-			screen.setXOffset(this.pos.x - (screen.width / 2));
-			screen.setYOffset(this.pos.y - (screen.height / 2));
-		}
 		if (this.engine.mainOn) {
 			this.engineParticles.turnOn()
 		} else this.engineParticles.turnOff();

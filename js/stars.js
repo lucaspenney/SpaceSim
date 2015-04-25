@@ -1,31 +1,73 @@
+var Sprite = require('./sprite');
+
 function Stars(screen) {
-    screen = screen;
+    this.screen = screen;
     this.xOffset = 0;
     this.yOffset = 0;
     this.stars = [];
-    this.numStars = 900;
+    this.numStars = 400;
+    this.stars = [];
+    this.layers = [];
+    var _this = this;
+    this.screen.eventManager.addEventListener('focus', function() {
+        _this.init(screen);
+        console.log('focus');
+    });
 }
 
-Stars.prototype.render = function(ctx, screen) {
-    if (this.stars.length == 0) {
-        for (var i = 0; i < this.numStars; i++) {
-            var x = -3000 + (Math.random() * 6000);
-            var y = -3000 + (Math.random() * 6000);
-            this.stars.push({
+Stars.prototype.init = function(screen) {
+    this.layers = [{
+        stars: [],
+        amount: 200,
+        scale: 0.2,
+        size: 0.2,
+    }, {
+        stars: [],
+        amount: 100,
+        scale: 0.5,
+        size: 0.5,
+    }, {
+        stars: [],
+        amount: 25,
+        scale: 0.8,
+        size: 2,
+    }, ];
+    for (var l = 0; l < this.layers.length; l++) {
+        var layer = this.layers[l];
+        for (var i = 0; i < layer.amount; i++) {
+            var x = (Math.random() * screen.width) + (screen.xOffset * layer.scale);
+            var y = (Math.random() * screen.height) + (screen.yOffset * layer.scale);
+            layer.stars.push({
                 x: x,
                 y: y,
+                size: Math.floor(Math.random() * 2) + layer.size
             });
         }
     }
+}
 
-    for (var i = 0; i < this.stars.length; i++) {
-        var x = this.stars[i].x - screen.xOffset;
-        var y = this.stars[i].y - screen.yOffset;
-        if (x > 0 && x < screen.width) {
-            if (y > 0 && y < screen.height) {
-                ctx.fillStyle = "#FFF";
-                ctx.fillRect(x, y, 2, 2);
+Stars.prototype.render = function(ctx, screen) {
+    if (this.layers.length == 0) {
+        this.init(screen);
+    }
+    for (var l = 0; l < this.layers.length; l++) {
+        var layer = this.layers[l];
+        for (var i = 0; i < layer.stars.length; i++) {
+            var xOffset = screen.xOffset * layer.scale;
+            var yOffset = screen.yOffset * layer.scale;
+            if (layer.stars[i].x - xOffset < 0) {
+                layer.stars[i].x = screen.width + xOffset + (Math.random() * 25);
+            } else if (layer.stars[i].x - xOffset > screen.width) {
+                layer.stars[i].x = xOffset - (Math.random() * 25);
             }
+
+            if (layer.stars[i].y - yOffset < 0) {
+                layer.stars[i].y = screen.height + yOffset + (Math.random() * 25);
+            } else if (layer.stars[i].y - yOffset > screen.height) {
+                layer.stars[i].y = yOffset - (Math.random() * 25);
+            }
+            ctx.fillStyle = "#FFF";
+            ctx.fillRect(layer.stars[i].x - xOffset, layer.stars[i].y - yOffset, layer.stars[i].size, layer.stars[i].size);
         }
     }
 }

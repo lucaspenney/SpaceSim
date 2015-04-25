@@ -62,9 +62,8 @@ var Connection = Class.extend({
         //Update existing entities
         _.forEach(data.entities, function(sEnt) {
             _.forEach(entities, function(cEnt) {
-                if (cEnt.id === data.focus.id) {
-                    //Player's entity
-                    _this.client.screen.focusedEntity = cEnt;
+                if (!_this.client.screen.focusedEntity && cEnt.id === data.focus.id) {
+                    _this.client.screen.setFocusedEntity(cEnt);
                 }
                 if (cEnt.id === sEnt.id) {
                     var updateEntProperties = function(obj, entObj) {

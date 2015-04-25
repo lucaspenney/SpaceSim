@@ -9,7 +9,6 @@ var Game = Class.extend({
     this.entities = [];
     this.deletedEntities = [];
     this.debugMode = false;
-    this.stars = new Stars();
     this.lastTick = Date.now();
     this.tick = Date.now();
     this.lagCompensation = 0;
@@ -27,7 +26,7 @@ var Game = Class.extend({
     if (!ctx || !screen) return;
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, screen.width, screen.height);
-    this.stars.render(ctx, screen);
+    screen.render(ctx, screen);
     this.entities.sort(function(a, b) {
       if (a === null) return 1;
       if (b === null) return -1;
