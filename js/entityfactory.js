@@ -3,6 +3,7 @@ var Asteroid = require('./asteroid');
 var Planet = require('./planet');
 var BlackHole = require('./blackhole');
 var Explosion = require('./explosion');
+var Bullet = require('./bullet');
 
 var EntityFactory = function() {
     return {
@@ -31,8 +32,10 @@ var EntityFactory = function() {
                 return new BlackHole(game, x, y);
             } else if (classname === "Explosion") {
                 return new Explosion(game, x, y);
+            } else if (classname === "Bullet") {
+                return new Bullet(game, x, y);
             }
-        }
+        },
     };
 };
 

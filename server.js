@@ -10,6 +10,7 @@ var Player = require('./js/player');
 var Asteroid = require('./js/asteroid');
 var Planet = require('./js/planet');
 var BlackHole = require('./js/blackhole');
+var WorldManager = require('./js/worldmanager');
 var Game = require('./js/game');
 
 var Server = Class.extend({
@@ -20,6 +21,7 @@ var Server = Class.extend({
 			port: port
 		});
 		this.game = new Game();
+		this.worldManager = new WorldManager(this.game);
 		this.clients = [];
 		this.packetTimes = {};
 		this.websocket.on('connection', function(ws) {
@@ -108,6 +110,7 @@ var Server = Class.extend({
 				packetId: packetId,
 				focus: this.clients[i].entity,
 				latency: this.clients[i].latency,
+				frameTime: this.frameTime,
 			};
 			try {
 				this.clients[i].socket.send(this.packageData(update));
@@ -117,17 +120,14 @@ var Server = Class.extend({
 					this.disconnectClient(this.clients[i].socket);
 			}
 		}
-		_.forEach(this.newEntities, function(entity) {
-			_this.game.entities.push(entity);
-		});
 
+		this.worldManager.update(this.clients, this.game.entities);
 		this.game.update();
 		var _this = this;
 		setTimeout(function() {
 			_this.tick();
 		}, this.tickRate);
 		this.frameTime = Date.now() - start;
-		//console.log(this.frameTime);
 	},
 });
 

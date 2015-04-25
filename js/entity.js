@@ -10,6 +10,7 @@ var Entity = Class.extend({
     this.rotation = 0;
     this.sprite = null;
     this.layer = 0;
+    this.active = true;
   },
   render: function(ctx, screen) {
     if (this.sprite !== undefined) {

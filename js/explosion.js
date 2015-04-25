@@ -5,6 +5,7 @@ var Explosion = Entity.extend({
     init: function(game, x, y) {
         this._super(game, x, y);
         this.particles = new ParticleSystem(this.game, this.pos.x, this.pos.y, 0, 'explosion')
+        this.particles.turnOn();
         this.time = 1000;
         this.lifeTime = Date.now() + this.time;
         this.shouldSpawn = true;

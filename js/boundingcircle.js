@@ -45,7 +45,6 @@ var BoundingCircle = Class.extend({
 			}
 		} else if (e.type === 'circle') {
 			var dist = this.pos.distance(e.pos);
-			//console.log(dist);
 			if (dist < this.radius + e.radius) {
 				return true;
 			}

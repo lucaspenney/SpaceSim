@@ -18,7 +18,8 @@ var Game = Class.extend({
   update: function() {
     this.tick = Date.now();
     for (var i = this.entities.length - 1; i >= 0; i--) {
-      this.entities[i].update();
+      if (this.entities[i].active)
+        this.entities[i].update();
     }
     this.lastTick = this.tick;
   },

@@ -19,6 +19,9 @@ var Connection = Class.extend({
         this.lastPacket = null;
         this.lastUpdate = 0;
         this.latency = -1;
+        this.lastReceive = 0;
+        this.updateRate = 0;
+        this.serverFrameTime = 0;
         var _this = this;
         this.server.onmessage = function(message) {
             _this.lastPacketLength = message.data.length;
@@ -35,9 +38,14 @@ var Connection = Class.extend({
         }
     },
     receive: function(data) {
+        this.updateRate = (Date.now() - this.lastReceive);
+        this.lastReceive = Date.now();
         var _this = this;
         this.latency = data.latency / 2;
-        this.game.lagCompensation = (this.latency / 33) / 100;
+        this.game.lagCompensation = (this.latency / 33) / 10;
+        this.game.lagCompensation = -0.7;
+        this.game.lagCompensation = (data.frameTime / 33) * -1;;
+        this.serverFrameTime = data.frameTime;
         var entities = this.game.entities;
         //First, delete any removed entities
         _.forEach(entities, function(entity, index) {
@@ -64,17 +72,9 @@ var Connection = Class.extend({
                             if (typeof value === 'object' && entObj) {
                                 updateEntProperties(value, entObj[prop])
                             } else if (prop !== undefined && entObj) {
-                                if (entObj[prop] !== value && !isNaN(value) && !isNaN(entObj[prop])) {
-                                    //If numerical values are not thhe same do some very basic interpolation
-                                    //console.log(entObj[prop] + " + " + value);
-                                    entObj[prop] = (entObj[prop] + value) / 2;
-                                    //entObj[prop] = value;
-                                    setTimeout(function() {
-                                        entObj[prop] = value;
-                                    }, 1)
-                                } else {
-                                    entObj[prop] = value;
-                                }
+                                entObj[prop] = value;
+                                //if (entObj[prop] !== value && !isNaN(value) && !isNaN(entObj[prop])) {
+                                //console.log(value);
                             }
                         });
                     };
@@ -93,6 +93,8 @@ var Connection = Class.extend({
         });
         this.lastUpdate = Date.now();
         this.send(data.packetId);
+        this.client.game.render(this.client.ctx, this.client.screen);
+        this.client.tick();
     },
     send: function(packetId) {
         var data = {

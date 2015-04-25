@@ -32,15 +32,17 @@ var Physics = Class.extend({
         if (dist < 400)
           nearbys.push(this.game.entities[i]); //Range for collisions is 400, gravity is 1600
         var entity = this.game.entities[i];
-        //Add gravity to this entity
-        var diffX = entity.pos.x - this.entity.pos.x;
-        var diffY = entity.pos.y - this.entity.pos.y;
-        var distSquare = diffX * diffX + diffY * diffY
-        var dist = Math.sqrt(distSquare);
-        var totalForce = entity.physics.mass / distSquare;
-        var xa = totalForce * diffX / dist;
-        var ya = totalForce * diffY / dist;
-        this.addAcceleration(xa, ya, 0);
+        //Add gravity to this from the entity in loop
+        if (entity.physics.mass > 0) {
+          var diffX = entity.pos.x - this.entity.pos.x;
+          var diffY = entity.pos.y - this.entity.pos.y;
+          var distSquare = diffX * diffX + diffY * diffY
+          var dist = Math.sqrt(distSquare);
+          var totalForce = entity.physics.mass / distSquare;
+          var xa = totalForce * diffX / dist;
+          var ya = totalForce * diffY / dist;
+          this.addAcceleration(xa, ya, 0);
+        }
       }
     }
     //Increase velocity by current acceleration
@@ -57,6 +59,7 @@ var Physics = Class.extend({
         var v = vel.clone()
         v.scale(k / 3);
         for (var i = 0; i < nearbys.length; i++) {
+          if (this.collidesWith.indexOf(nearbys[i].toJSON().classname) === -1) continue;
           colliding = nearbys[i];
           collision = this.bounds.wouldCollide(v, nearbys[i]);
           if (collision) break;
@@ -81,7 +84,9 @@ var Physics = Class.extend({
     this.ra = 0;
   },
   collide: function(entity, collision) {
-    //if (this.collidesWith.indexOf(entity.toJSON().classname) === -1) return;
+    if (this.collidesWith.indexOf(entity.toJSON().classname) === -1) {
+      return;
+    }
     if (!entity) return;
     var e = entity.physics;
 

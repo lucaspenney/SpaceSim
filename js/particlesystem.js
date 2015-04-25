@@ -9,18 +9,22 @@ var ParticleSystem = Class.extend({
 		this.rotation = r;
 		this.particles = [];
 		this.type = type;
-		this.active = true;
+		this.active = false;
 		this.particleTypes = {
 			'engine': {
-				refreshAmount: 4,
-				amount: 40,
+				refreshAmount: 20,
+				amount: 300,
+				decay: 0.88,
 			},
 			'explosion': {
-				refreshAmount: 1,
+				refreshAmount: 10,
 				amount: 150,
+				decay: 0.85,
 			}
 		};
 		this.opts = this.particleTypes[type];
+		this.update();
+		this.update();
 	},
 	update: function() {
 		if (!this.active) return;
@@ -32,6 +36,7 @@ var ParticleSystem = Class.extend({
 		}
 		if (this.parent) {
 			this.pos = this.parent.pos.clone();
+			this.pos.add(this.parent.physics.vel.clone().scale(0.5));
 			var x = this.xOffset + Math.cos(degToRad(this.parent.rotation + 90)) * 13;
 			var y = this.yOffset + Math.sin(degToRad(this.parent.rotation + 90)) * 13;
 			this.pos.x += x;
@@ -55,13 +60,16 @@ var ParticleSystem = Class.extend({
 		if (this.parent) {
 			var vel = this.parent.physics.vel.clone();
 			var pos = this.pos.clone();
+			var v = new Vector((Math.random() - 0.5), Math.random() - 0.5);
+			v.scale(5);
+			vel.add(v);
 			var direction = Math.random() * 360;
-			this.particles.push(new Particle(this.game, this.pos.x, this.pos.y, 1, vel.x, vel.y, 0.88, direction));
+			this.particles.push(new Particle(this.game, this.pos.x, this.pos.y, 1, vel.x, vel.y, this.opts.decay, direction));
 		} else {
 			var vel = new Vector((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 5);
 			var pos = this.pos.clone();
 			var direction = Math.random() * 360;
-			this.particles.push(new Particle(this.game, this.pos.x, this.pos.y, 1, vel.x, vel.y, 0.88, direction));
+			this.particles.push(new Particle(this.game, this.pos.x, this.pos.y, 1, vel.x, vel.y, this.opts.decay, direction));
 		}
 	},
 	render: function(ctx, screen) {
