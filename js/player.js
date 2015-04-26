@@ -22,6 +22,7 @@ var Player = Entity.extend({
 		this.physics = new Physics(this.game, this, new BoundingCircle(this.game, this, 20));
 		this.physics.collidesWith = ['Asteroid', 'Planet', 'Player'];
 		this.physics.mass = 10;
+		this.physics.maxVelocity = 8;
 		this.layer = 100;
 		this.trail = new Trail(this.game, this);
 		this.enginesOn = false;
@@ -60,10 +61,11 @@ var Player = Entity.extend({
 			if (Date.now() - this.lastFireTime > 100) {
 				var bullet = this.game.entityFactory.create('Bullet', this.game, this.pos.x, this.pos.y);
 				if (bullet) {
+					var x = Math.cos(degToRad(this.rotation - 90));
+					var y = Math.sin(degToRad(this.rotation - 90));
+					var v = new Vector(x, y).scale(8).add(this.physics.vel.clone());
+					bullet.physics.vel = v;
 					bullet.rotation = this.rotation;
-					var x = Math.cos(degToRad(this.rotation - 90)) * 5;
-					var y = Math.sin(degToRad(this.rotation - 90)) * 5;
-					bullet.physics.vel = this.physics.vel.clone().add((new Vector(x, y)).scale(3));
 					this.lastFireTime = Date.now();
 				}
 			}

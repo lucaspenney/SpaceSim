@@ -1,15 +1,24 @@
 var Class = require('./class');
 
 var Trail = Class.extend({
-	init: function(game, parent, centerOffset) {
+	init: function(game, parent, maxLength, centerOffset) {
 		this.parent = parent;
 		this.centerOffset = centerOffset;
 		this.positions = [];
+		this.maxLength = maxLength || 5;
 	},
 	render: function(ctx, screen) {
-		ctx.strokeStyle = "#CCCCCC";
+		ctx.strokeStyle = "#666";
 		ctx.lineCap = "round";
-		ctx.lineWidth = 2;
+		ctx.lineWidth = 1;
+		//Update positions 
+		this.x = this.parent.pos.x;
+		this.y = this.parent.pos.y;
+
+		this.positions.push({
+			x: this.x,
+			y: this.y,
+		});
 		for (var i = 0; i < this.positions.length; i++) {
 			ctx.beginPath();
 			ctx.moveTo(this.x - screen.xOffset, this.y - screen.yOffset);
@@ -19,15 +28,8 @@ var Trail = Class.extend({
 			ctx.stroke();
 		}
 
-		//Update positions 
-		this.x = this.parent.pos.x + ((Math.cos(degToRad(this.parent.rotation - 270)) * 12) + this.centerOffset);
-		this.y = this.parent.pos.y + ((Math.sin(degToRad(this.parent.rotation - 270)) * 12) + this.centerOffset);
 
-		this.positions.push({
-			x: this.x,
-			y: this.y,
-		});
-		if (this.positions.length > 10) {
+		if (this.positions.length > this.maxLength) {
 			this.positions.shift();
 		}
 	},
