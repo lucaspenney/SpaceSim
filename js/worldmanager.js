@@ -22,13 +22,14 @@ var WorldManager = Class.extend({
                 var distance = entity.pos.distance(client.entity.pos);
                 if (distance < 5500) {
                     nearClients++;
-                } else if (distance > 60000) {
+                } else if (distance > 8000) {
                     farClients++;
                 }
             });
             if (nearClients === 0) {
-                if (farClients !== 0) entity.destroy();
-                else entity.active = false;
+                if (farClients !== 0) {
+                    entity.destroy();
+                } else entity.active = false;
             } else
                 entity.active = true;
         });
