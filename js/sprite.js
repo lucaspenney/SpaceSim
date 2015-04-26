@@ -21,8 +21,8 @@ var Sprite = Class.extend({
 			_this.loaded = true;
 			_this.xOffset = 0;
 			_this.yOffset = 0;
-			_this.width = _this.img.width;
-			_this.height = _this.img.height;
+			_this.width = _this.entity.width;
+			_this.height = _this.entity.height;
 			_this.frameWidth = _this.img.width;
 			_this.frameHeight = _this.img.height;
 			_this.rotationXOffset = 0;
@@ -39,9 +39,16 @@ var Sprite = Class.extend({
 			ctx.translate(x + this.rotationXOffset, y + this.rotationYOffset);
 			ctx.rotate(degToRad(this.entity.rotation));
 			ctx.globalAlpha = this.alpha;
-			ctx.drawImage(this.img, this.xOffset, this.yOffset, this.frameWidth, this.frameHeight, -this.frameWidth / 2, -this.frameHeight / 2, this.frameWidth * this.scale, this.frameHeight * this.scale);
+			ctx.drawImage(this.img, this.xOffset, this.yOffset, this.frameWidth, this.frameHeight, -this.width / 2, -this.height / 2, this.width, this.height);
 			ctx.restore();
 		}
 	},
+	toJSON: function(ctx, screen, x, y) {
+		return {
+			img: {
+				src: this.img.src,
+			}
+		};
+	}
 });
 module.exports = Sprite;
