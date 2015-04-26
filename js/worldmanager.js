@@ -34,7 +34,7 @@ var WorldManager = Class.extend({
         });
 
         //Now add new entities
-        for (var i = 0; i < 5; i++) { //Max number of entities to spawn (not guaranteed, but limited)
+        for (var i = 0; i < 25; i++) { //Max number of entities to spawn (not guaranteed, but limited)
             var _this = this;
             var randClientEntity = clients[clients.length - (Math.floor(Math.random() * clients.length) + 1)].entity;
             var nearPos = randClientEntity.pos.clone();
@@ -64,7 +64,6 @@ var WorldManager = Class.extend({
     createRandomEntity: function(x, y) {
         var classnames = ["Planet"];
         var choice = classnames[Math.floor(Math.random() * classnames.length)];
-        console.log(choice);
         this.game.entityFactory.create(choice, this.game, x, y);
     }
 });
