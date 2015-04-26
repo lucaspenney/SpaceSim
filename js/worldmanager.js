@@ -9,7 +9,7 @@ var WorldManager = Class.extend({
         this.lastUpdate = 0;
     },
     update: function(clients, entities) {
-        if (Date.now() - this.lastUpdate < 20) return;
+        if (Date.now() - this.lastUpdate < 300) return;
         this.lastUpdate = Date.now();
 
         //Remove far entities
@@ -20,9 +20,9 @@ var WorldManager = Class.extend({
             var farClients = 0;
             _.forEach(clients, function(client) {
                 var distance = entity.pos.distance(client.entity.pos);
-                if (distance < 2600) {
+                if (distance < 5500) {
                     nearClients++;
-                } else if (distance > 4600) {
+                } else if (distance > 60000) {
                     farClients++;
                 }
             });
@@ -34,31 +34,37 @@ var WorldManager = Class.extend({
         });
 
         //Now add new entities
-        var _this = this;
-        var randClientEntity = clients[clients.length - (Math.floor(Math.random() * clients.length) + 1)].entity;
-        var nearPos = randClientEntity.pos.clone();
-        nearPos.add(randClientEntity.physics.vel.clone().scale(10));
-        var x = (randClientEntity.pos.x - 3000) + (Math.random() * 6000);
-        var y = (randClientEntity.pos.y - 3000) + (Math.random() * 6000);
-        var p = new Vector(x, y);
-        var farFromPlayers = true;
-        _.forEach(clients, function(client) {
-            if (p.distance(client.entity.pos) < 1800) farFromPlayers = false;
-        });
-        if (farFromPlayers) {
+        for (var i = 0; i < 5; i++) { //Max number of entities to spawn (not guaranteed, but limited)
+            var _this = this;
+            var randClientEntity = clients[clients.length - (Math.floor(Math.random() * clients.length) + 1)].entity;
+            var nearPos = randClientEntity.pos.clone();
+            nearPos.add(randClientEntity.physics.vel.clone().scale(5));
+            var hasPosition = false;
+            while (!hasPosition) {
+                var x = (nearPos.x - 1200) + (Math.random() * 1200);
+                var y = (nearPos.y - 1200) + (Math.random() * 1200);
+                var p = new Vector(x, y);
+                hasPosition = true;
+                _.forEach(clients, function(client) {
+                    if (p.distance(client.entity.pos) < 1400) hasPosition = false;
+                });
+            }
             var farFromEnts = true;
             _.forEach(_this.game.entities, function(ent) {
-                if (ent.pos.distance(p) < 3000) farFromEnts = false;
+                if (ent.toJSON().classname === "Planet") {
+                    if (ent.pos.distance(p) < 2200) farFromEnts = false;
+                }
+
             });
             if (farFromEnts) {
-                console.log(p);
                 _this.createRandomEntity(p.x, p.y);
             }
         }
     },
     createRandomEntity: function(x, y) {
-        var classnames = ["Asteroid", "Planet", "Black Hole"];
-        var choice = classnames[Math.floor(Math.random() * classnames.length) + 1];
+        var classnames = ["Planet"];
+        var choice = classnames[Math.floor(Math.random() * classnames.length)];
+        console.log(choice);
         this.game.entityFactory.create(choice, this.game, x, y);
     }
 });

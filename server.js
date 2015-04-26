@@ -36,14 +36,6 @@ var Server = Class.extend({
 		});
 		this.tickRate = 30;
 		this.frameTime = 0;
-		//this.game.entities.push(new BlackHole(this.game, 800, 300));
-		this.game.entities.push(new Planet(this.game, 200, 600));
-		for (var i = 0; i < 10; i++) {
-			//var a = new Asteroid(this.game, Math.random() * 6000, Math.random() * 6000);
-			this.game.entities.push(new Planet(this.game, Math.random() * 6000, Math.random() * 6000));
-			//this.game.entities.push(a);
-		}
-
 		this.tick();
 	},
 	onConnect: function(ws) {
@@ -57,7 +49,7 @@ var Server = Class.extend({
 			latency: -1,
 		}
 		this.clients.push(client);
-		var cplayer = new Player(this.game, 15, 15)
+		var cplayer = new Player(this.game, 0, 0)
 		this.game.entities.push(cplayer);
 		client.entity = cplayer;
 		this.handshake(client);
