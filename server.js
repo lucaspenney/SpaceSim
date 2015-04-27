@@ -40,10 +40,25 @@ var Server = Class.extend({
 	},
 	onConnect: function(ws) {
 		var _this = this;
+		//Find a client id
+		var id = -1;
+		for (var i = 0; i < 64; i++) {
+			var canUse = true;
+			_.forEach(this.clients, function(client) {
+				if (i === client.id) {
+					canUse = false;
+					return false;
+				}
+			});
+			if (canUse) {
+				id = i;
+				break;
+			}
+		}
 		var client = {
-			id: _.uniqueId(),
+			id: id,
 			socket: ws,
-			name: "Player " + this.clients.length,
+			name: "Player " + id,
 			token: require('crypto').randomBytes(32).toString('hex'),
 			entity: null,
 			latency: -1,
@@ -63,7 +78,11 @@ var Server = Class.extend({
 				//Send this message to all other clients
 				_.forEach(_this.clients, function(c) {
 					if (data.message && data.message.length > 0)
-						c.messages.push(data.message);
+						c.messages.push({
+							sender: client.id,
+							name: client.name,
+							message: data.message
+						});
 				});
 			}
 		});

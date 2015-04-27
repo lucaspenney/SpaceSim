@@ -50,11 +50,15 @@ var Client = Class.extend({
     }
     if (Date.now() - _this.connection.lastUpdate > this.tickRate) {
       _this.game.update();
-      _this.game.render(this.ctx, this.screen);
+      _this.render();
       console.log('self update');
     }
-    _this.debugOutput();
-    this.frameTime = curTime - Date.now() + 1;
+    _this.frameTime = curTime - Date.now() + 1;
+  },
+  render: function() {
+    this.game.render(this.ctx, this.screen);
+    this.chat.render(this.ctx, this.screen);
+    this.debugOutput();
   },
   debugOutput: function() {
     if (this.debug) {

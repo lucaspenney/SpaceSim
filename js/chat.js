@@ -10,13 +10,48 @@ var Connection = require('./connection');
 var Game = require('./game');
 
 var Chat = Class.extend({
-    init: function() {
-        this.pendingSendMessage = "test";
+    init: function(client) {
+        this.client = client;
+        this.pendingSendMessage = null;
         this.messages = [];
+        this.textarea = $('<input type="text" maxlength="60">');
+        $('#game').append(this.textarea);
+        var _this = this;
+        this.client.input.on('esc', function() {
+            _this.hide();
+        });
+        this.client.input.on('y', function() {
+            _this.show();
+        });
+        this.textarea.keyup(function(evt) {
+
+            //Detect enter keypress and clear+send on it 
+            if (evt.keyCode === 13) {
+                _this.pendingSendMessage = _this.textarea.val();
+                _this.textarea.val('');
+                _this.hide();
+            } else if (evt.keyCode === 27) {
+                _this.hide();
+            }
+        });
     },
-    receiveMessage: function(message) {
-        if (message && message.length > 0)
-            this.messages.push(message);
+    show: function() {
+        this.textarea.show();
+        this.textarea.focus();
+    },
+    hide: function() {
+        this.client.stage.focus();
+        this.textarea.blur();
+    },
+    setPendingMessage: function(message) {
+        this.pendingSendMessage = message
+    },
+    receiveMessages: function(messages) {
+        if (messages && messages.length > 0) {
+            for (var i = 0; i < messages.length; i++) {
+                this.messages.push(messages[i])
+            }
+        }
     },
     sendMessage: function(message) {
         this.pendingSendMessage = message;
@@ -27,7 +62,14 @@ var Chat = Class.extend({
         return message;
     },
     render: function(ctx, screen) {
-
+        var numMessages = (this.messages.length > 5) ? 5 : this.messages.length;
+        for (var i = 0; i < numMessages; i++) {
+            var message = this.messages[(this.messages.length - numMessages) + i];
+            ctx.fillStyle = "#CCF";
+            ctx.font = 'normal 10pt Monospace';
+            ctx.fillText(message.name + ":", 20, 600 + (i * 20));
+            ctx.fillText(message.message, message.name.length * 12, 600 + (i * 20));
+        }
     },
 });
 

@@ -46,7 +46,7 @@ var Connection = Class.extend({
         this.game.lagCompensation = (data.frameTime / 33) * 1;
         this.game.lagCompensation = 0;
         this.serverFrameTime = data.frameTime;
-        this.client.chat.receiveMessage(data.messages.toString());
+        this.client.chat.receiveMessages(data.messages);
         var entities = this.game.entities;
         //First, delete any removed entities
         _.forEach(entities, function(entity, index) {
@@ -94,8 +94,7 @@ var Connection = Class.extend({
         this.lastUpdate = Date.now();
         this.client.game.lastTick = Date.now();
         this.send(data.packetId);
-        this.client.game.render(this.client.ctx, this.client.screen);
-        this.client.tick();
+        this.client.render();
     },
     send: function(packetId) {
         var data = {
