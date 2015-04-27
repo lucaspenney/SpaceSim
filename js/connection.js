@@ -43,9 +43,10 @@ var Connection = Class.extend({
         var _this = this;
         this.latency = data.latency / 2;
         this.game.lagCompensation = (this.latency / 33) / 10;
-        this.game.lagCompensation = -0.7;
-        this.game.lagCompensation = (data.frameTime / 33) * -1;;
+        this.game.lagCompensation = (data.frameTime / 33) * 1;
+        this.game.lagCompensation = 0;
         this.serverFrameTime = data.frameTime;
+        this.client.chat.receiveMessage(data.messages.toString());
         var entities = this.game.entities;
         //First, delete any removed entities
         _.forEach(entities, function(entity, index) {
@@ -91,6 +92,7 @@ var Connection = Class.extend({
             if (!exists) _this.createEntityFromJSON(entity);
         });
         this.lastUpdate = Date.now();
+        this.client.game.lastTick = Date.now();
         this.send(data.packetId);
         this.client.game.render(this.client.ctx, this.client.screen);
         this.client.tick();
@@ -100,6 +102,7 @@ var Connection = Class.extend({
             token: this.token,
             packetId: packetId,
             input: this.client.input.getInputState(),
+            message: this.client.chat.getAndResetMessage(),
         };
         this.server.send(JSON.stringify(data));
     },

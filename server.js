@@ -47,6 +47,7 @@ var Server = Class.extend({
 			token: require('crypto').randomBytes(32).toString('hex'),
 			entity: null,
 			latency: -1,
+			messages: [],
 		}
 		this.clients.push(client);
 		var cplayer = new Player(this.game, 0, 0)
@@ -59,6 +60,11 @@ var Server = Class.extend({
 			client.latency = Date.now() - packetTime;
 			if (data.token === client.token) {
 				client.entity.setInput(data.input);
+				//Send this message to all other clients
+				_.forEach(_this.clients, function(c) {
+					if (data.message && data.message.length > 0)
+						c.messages.push(data.message);
+				});
 			}
 		});
 	},
@@ -103,9 +109,11 @@ var Server = Class.extend({
 				focus: this.clients[i].entity,
 				latency: this.clients[i].latency,
 				frameTime: this.frameTime,
+				messages: this.clients[i].messages,
 			};
 			try {
 				this.clients[i].socket.send(this.packageData(update));
+				this.clients[i].messages = [];
 			} catch (e) {
 				//Was unable to send client update, disconnect them
 				if (this.clients[i])

@@ -7,6 +7,7 @@ var InputManager = require('./js/input');
 var Player = require('./js/player');
 var Entity = require('./js/entity');
 var Connection = require('./js/connection');
+var Chat = require('./js/chat');
 var Game = require('./js/game');
 
 var Client = Class.extend({
@@ -22,6 +23,7 @@ var Client = Class.extend({
     this.fpsManager = new FPSManager(this);
     this.input = new InputManager(this);
     this.screen = new Screen(this);
+    this.chat = new Chat(this);
     this.connection = new Connection(this, this.game);
     this.loop();
     this.debug = true;

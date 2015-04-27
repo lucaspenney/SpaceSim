@@ -35,15 +35,15 @@ var WorldManager = Class.extend({
         });
 
         //Now add new entities
-        for (var i = 0; i < 25; i++) { //Max number of entities to spawn (not guaranteed, but limited)
+        for (var i = 0; i < 15; i++) { //Max number of entities to spawn (not guaranteed, but limited)
             var _this = this;
             var randClientEntity = clients[clients.length - (Math.floor(Math.random() * clients.length) + 1)].entity;
             var nearPos = randClientEntity.pos.clone();
             nearPos.add(randClientEntity.physics.vel.clone().scale(5));
             var hasPosition = false;
             while (!hasPosition) {
-                var x = (nearPos.x - 1200) + (Math.random() * 1200);
-                var y = (nearPos.y - 1200) + (Math.random() * 1200);
+                var x = (nearPos.x - 1200) + (Math.random() * 2400);
+                var y = (nearPos.y - 1200) + (Math.random() * 2400);
                 var p = new Vector(x, y);
                 hasPosition = true;
                 _.forEach(clients, function(client) {
