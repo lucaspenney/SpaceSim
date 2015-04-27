@@ -9,6 +9,8 @@ var PlanetTypes = [{
     img: "planet2.png",
 }, {
     img: "planet3.png",
+}, {
+    img: "planet4.png",
 }, ];
 
 var Planet = Entity.extend({
@@ -17,7 +19,7 @@ var Planet = Entity.extend({
         this._super(game, x, y);
         this.width = Math.floor(Math.random() * 400) + 300;;
         this.height = this.width;
-        this.radius = (this.width / 2) * 0.75;
+        this.radius = (this.width / 2) * 0.9;
         this.sprite = new Sprite(this, "img/" + planet.img);
         this.physics = new Physics(game, this, new BoundingCircle(this.game, this, this.radius));
         this.physics.setVelocity(Math.random(), Math.random(), (Math.random() - 0.5) * 5);

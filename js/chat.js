@@ -68,6 +68,7 @@ var Chat = Class.extend({
             ctx.fillStyle = "#CCF";
             ctx.font = 'normal 10pt Monospace';
             ctx.fillText(message.name + ":", 20, 600 + (i * 20));
+            ctx.fillStyle = "#FFF";
             ctx.fillText(message.message, message.name.length * 12, 600 + (i * 20));
         }
     },
