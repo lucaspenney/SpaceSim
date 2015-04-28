@@ -11,10 +11,10 @@ var Vector = require('./vector');
 
 var Player = Entity.extend({
 	init: function(game, x, y) {
-		this._super(game, x, y);
-		this.game = game;
 		this.width = 32;
 		this.height = 32;
+		this._super(game, x, y);
+		this.game = game;
 		this.rotation = 0;
 		this.input = {};
 		this.sprite = new Sprite(this, "img/ship.png");
