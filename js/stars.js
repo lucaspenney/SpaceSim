@@ -56,15 +56,19 @@ Stars.prototype.render = function(ctx, screen) {
             var xOffset = screen.xOffset * layer.scale;
             var yOffset = screen.yOffset * layer.scale;
             if (layer.stars[i].x - xOffset < 0) {
-                layer.stars[i].x = screen.width + xOffset + (Math.random() * 100);
+                //layer.stars[i].x = screen.width + xOffset + (Math.random() * 100);
+                layer.stars[i].x += screen.width;
             } else if (layer.stars[i].x - xOffset > screen.width) {
-                layer.stars[i].x = xOffset - (Math.random() * 100);
+                //layer.stars[i].x = xOffset - (Math.random() * 100);
+                layer.stars[i].x -= screen.width;
             }
 
             if (layer.stars[i].y - yOffset < 0) {
-                layer.stars[i].y = screen.height + yOffset + (Math.random() * 100);
+                //layer.stars[i].y = screen.height + yOffset + (Math.random() * 100);
+                layer.stars[i].y += screen.height;
             } else if (layer.stars[i].y - yOffset > screen.height) {
-                layer.stars[i].y = yOffset - (Math.random() * 100);
+                //layer.stars[i].y = yOffset - (Math.random() * 100);
+                layer.stars[i].y -= screen.height;
             }
             ctx.fillStyle = "#FFF";
             ctx.fillRect(layer.stars[i].x - xOffset, layer.stars[i].y - yOffset, layer.stars[i].size, layer.stars[i].size);

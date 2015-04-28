@@ -32,14 +32,9 @@ var Client = Class.extend({
   },
   loop: function() {
     var _this = this;
-    /*requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
       _this.tick();
-    });*/
-    this.tick();
-    setTimeout(function() {
-      _this.tick();
-      _this.loop();
-    }, this.tickRate);
+    });
   },
   tick: function() {
     var _this = this;
@@ -48,12 +43,15 @@ var Client = Class.extend({
     if (_this.screen.focusedEntity) {
       _this.screen.focusedEntity.setInput(_this.input.getInputState());
     }
-    if (Date.now() - _this.connection.lastUpdate > this.tickRate) {
+    if (Date.now() - _this.connection.lastUpdate > _this.tickRate) {
       _this.game.update();
       _this.render();
       console.log('self update');
     }
     _this.frameTime = curTime - Date.now() + 1;
+    requestAnimationFrame(function() {
+      _this.tick();
+    });
   },
   render: function() {
     this.game.render(this.ctx, this.screen);
