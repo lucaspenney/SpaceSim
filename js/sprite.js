@@ -42,7 +42,8 @@ var Sprite = Class.extend({
 			ctx.rotate(degToRad(this.entity.rotation));
 			ctx.globalAlpha = this.alpha;
 			if (this.frameWidth < 1 || this.frameHeight < 1 || this.frameWidth > this.imgWidth || this.frameHeight > this.imgHeight) console.log(this);
-			ctx.drawImage(this.img, this.xOffset, this.yOffset, this.frameWidth, this.frameHeight, -this.width / 2, -this.height / 2, this.imgWidth, this.imgHeight);
+			console.log(this.frameWidth + " " + this.frameHeight);
+			ctx.drawImage(this.img, this.xOffset, this.yOffset, this.frameWidth - 1, this.frameHeight - 1, (0 - this.width) / 2, (0 - this.height) / 2, this.imgWidth, this.imgHeight);
 			ctx.restore();
 		}
 	},
