@@ -40,9 +40,13 @@ var Sprite = Class.extend({
 			ctx.save();
 			ctx.translate(x + this.rotationXOffset, y + this.rotationYOffset);
 			ctx.rotate(degToRad(this.entity.rotation));
-			ctx.translate(-(this.width / 2), -(this.height / 2));
+			ctx.translate(-(this.width / 2), -(this.height / 2)); //Rotational axis on center of sprite
 			ctx.globalAlpha = this.alpha;
-			ctx.drawImage(this.img, this.xOffset, this.yOffset, this.frameWidth, this.frameHeight, 0, 0, this.width, this.height);
+			try {
+				ctx.drawImage(this.img, this.xOffset, this.yOffset, Math.floor(this.frameWidth), Math.floor(this.frameHeight), 0, 0, this.width, this.height);
+			} catch (e) {
+				console.log("Firefox sucks");
+			}
 			ctx.restore();
 		}
 	},
