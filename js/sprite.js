@@ -40,9 +40,9 @@ var Sprite = Class.extend({
 			ctx.save();
 			ctx.translate(x + this.rotationXOffset, y + this.rotationYOffset);
 			ctx.rotate(degToRad(this.entity.rotation));
+			ctx.translate(-(this.width / 2), -(this.height / 2));
 			ctx.globalAlpha = this.alpha;
-			//ctx.drawImage(this.img, this.xOffset, this.yOffset, this.frameWidth, this.frameHeight, -this.width / 2, -this.height / 2, this.width, this.height);
-			ctx.drawImage(this.img, 0, 0, this.img.width, this.img.height, 0, 0, this.width, this.height);
+			ctx.drawImage(this.img, this.xOffset, this.yOffset, this.frameWidth, this.frameHeight, 0, 0, this.width, this.height);
 			ctx.restore();
 		}
 	},
