@@ -23,7 +23,7 @@ var Planet = Entity.extend({
         this.sprite = new Sprite(this, "img/" + planet.img);
         this.physics = new Physics(game, this, new BoundingCircle(this.game, this, this.radius));
         this.physics.setVelocity(Math.random(), Math.random(), (Math.random() - 0.5) * 5);
-        this.physics.collidesWith = ['Asteroid', 'Player'];
+        this.physics.collidesWith = [];
         this.physics.mass = 10000;
         this.physics.static = true;
     },

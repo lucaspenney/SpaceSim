@@ -73,6 +73,14 @@ var Connection = Class.extend({
                                 updateEntProperties(value, entObj[prop])
                             } else if (prop !== undefined && entObj) {
                                 entObj[prop] = value;
+                                if (prop.indexOf("_") === 0) {
+                                    _.forEach(entities, function(gEnt) {
+                                        if (gEnt.id === value.id) {
+                                            entObj[prop] = gEnt;
+                                            return false;
+                                        }
+                                    });
+                                }
                                 //if (entObj[prop] !== value && !isNaN(value) && !isNaN(entObj[prop])) {
                                 //console.log(value);
                             }

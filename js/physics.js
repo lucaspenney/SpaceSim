@@ -65,8 +65,11 @@ var Physics = Class.extend({
           if (collision) break;
         }
         if (collision) {
-          this.collide(colliding, collision);
-          break;
+          var collide = this.collide(colliding, collision);
+          if (collide === false) {
+            this.entity.pos.add(v);
+            this.bounds.update();
+          } else break;
         } else {
           this.entity.pos.add(v);
           this.bounds.update();
@@ -85,10 +88,11 @@ var Physics = Class.extend({
   },
   collide: function(entity, collision) {
     if (this.collidesWith.indexOf(entity.toJSON().classname) === -1) {
-      return;
+      return false;
     }
     if (!entity) return;
     var e = entity.physics;
+    if (this.eventManager.dispatch('pre-collide', this.entity, entity).indexOf(false) !== -1) return false;
 
     e.vel.x += this.vel.x / 2;
     e.vel.y += this.vel.y / 2;
@@ -112,7 +116,7 @@ var Physics = Class.extend({
     }
     */
 
-    this.eventManager.dispatch('collision', this, entity);
+    this.eventManager.dispatch('post-collide', this.entity, entity);
     entity.physics.eventManager.dispatch('collision', entity.physics, this.entity);
   },
   addVelocity: function(x, y, r) {
@@ -150,9 +154,9 @@ var Physics = Class.extend({
     this.accel.y += y * this.timeScale;
     this.ra += r * this.timeScale;
   },
-  onCollision: function(func) {
+  on: function(event, func) {
     //Add event listener for collision
-    this.eventManager.addEventListener('collision', func);
+    this.eventManager.addEventListener(event, func);
   },
   toJSON: function() {
     return {

@@ -8,11 +8,13 @@ var Explosion = require('./explosion');
 var BoundingBox = require('./boundingbox');
 var BoundingCircle = require('./boundingcircle');
 var Vector = require('./vector');
+var Planet = require('./planet');
 
 var Player = Entity.extend({
 	init: function(game, x, y) {
 		this.width = 32;
 		this.height = 32;
+		this.classname = "Player";
 		this._super(game, x, y);
 		this.game = game;
 		this.rotation = 0;
@@ -35,9 +37,11 @@ var Player = Entity.extend({
 		this.mainThrust = 0.25;
 		this.engine = new Engine(this);
 		var _this = this;
-		this.physics.onCollision(function(entity) {
-			_this.game.entityFactory.create('Explosion', _this.game, _this.pos.x, _this.pos.y);
-			_this.destroy();
+		this.physics.on('post-collide', function(entity) {
+			if (entity instanceof Planet) {
+				this.destroy();
+				this.game.entityFactory.create('Explosion', this.game, this.pos.x, this.pos.y);
+			}
 		});
 		this.lastFireTime = 0;
 	},
@@ -63,9 +67,11 @@ var Player = Entity.extend({
 				if (bullet) {
 					var x = Math.cos(degToRad(this.rotation - 90));
 					var y = Math.sin(degToRad(this.rotation - 90));
-					var v = new Vector(x, y).scale(8).add(this.physics.vel.clone());
+					var v = new Vector(x, y).scale(8);
+					if (this.physics.vel.x + this.physics.vel.y > 2) v.add(this.physics.vel.clone());
 					bullet.physics.vel = v;
 					bullet.rotation = this.rotation;
+					bullet.setOwner(this);
 					this.lastFireTime = Date.now();
 				}
 			}
