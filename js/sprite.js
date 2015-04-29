@@ -23,7 +23,7 @@ var Sprite = Class.extend({
 			_this.yOffset = 0;
 			_this.width = _this.entity.width || _this.img.width;
 			_this.height = _this.entity.height || _this.img.height;
-			_this.imgWidth = _this.img.Width;
+			_this.imgWidth = _this.img.width;
 			_this.imgHeight = _this.img.height;
 			_this.frameWidth = _this.img.width;
 			_this.frameHeight = _this.img.height;
@@ -33,6 +33,11 @@ var Sprite = Class.extend({
 	},
 	draw: function(ctx, screen, x, y) {
 		if (this.loaded) {
+			if (this.entity.width && this.entity.height) {
+				this.width = this.entity.width;
+				this.height = this.entity.height;
+			}
+
 			//Draw relative to screen
 			x -= screen.xOffset;
 			y -= screen.yOffset;
