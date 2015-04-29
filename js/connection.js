@@ -69,18 +69,18 @@ var Connection = Class.extend({
                 if (cEnt.id === sEnt.id) {
                     var updateEntProperties = function(obj, entObj) {
                         _.forOwn(obj, function(value, prop) {
-                            if (typeof value === 'object' && entObj) {
+                            //First, underscore prefixed properties are entity references, reference them
+                            if (prop.indexOf("_") !== -1) {
+                                _.forEach(entities, function(gEnt) {
+                                    if (gEnt.id === value.id) {
+                                        entObj[prop.replace("_", "")] = gEnt;
+                                        return false;
+                                    }
+                                });
+                            } else if (typeof value === 'object' && entObj) {
                                 updateEntProperties(value, entObj[prop])
                             } else if (prop !== undefined && entObj) {
                                 entObj[prop] = value;
-                                if (prop.indexOf("_") === 0) {
-                                    _.forEach(entities, function(gEnt) {
-                                        if (gEnt.id === value.id) {
-                                            entObj[prop] = gEnt;
-                                            return false;
-                                        }
-                                    });
-                                }
                                 //if (entObj[prop] !== value && !isNaN(value) && !isNaN(entObj[prop])) {
                                 //console.log(value);
                             }

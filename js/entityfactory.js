@@ -1,4 +1,5 @@
 var Player = require('./player');
+var Ship = require('./ship');
 var Asteroid = require('./asteroid');
 var Planet = require('./planet');
 var BlackHole = require('./blackhole');
@@ -24,6 +25,8 @@ var EntityFactory = function() {
             }
             if (classname === "Player") {
                 return new Player(game, x, y);
+            } else if (classname === "Ship") {
+                return new Ship(game, x, y);
             } else if (classname === "Asteroid") {
                 return new Asteroid(game, x, y);
             } else if (classname === "Planet") {

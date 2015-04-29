@@ -11,7 +11,7 @@ var WorldManager = Class.extend({
     update: function(clients, entities) {
         if (Date.now() - this.lastUpdate < 300) return;
         this.lastUpdate = Date.now();
-
+        var _this = this;
         //Remove far entities
         if (clients.length === 0) return;
         _.forEach(entities, function(entity) {
@@ -36,10 +36,9 @@ var WorldManager = Class.extend({
 
         //Now add new entities
         for (var i = 0; i < 15; i++) { //Max number of entities to spawn (not guaranteed, but limited)
-            var _this = this;
             var randClientEntity = clients[clients.length - (Math.floor(Math.random() * clients.length) + 1)].entity;
             var nearPos = randClientEntity.pos.clone();
-            nearPos.add(randClientEntity.physics.vel.clone().scale(5));
+            //nearPos.add(randClientEntity.physics.vel.clone().scale(5));
             var hasPosition = false;
             while (!hasPosition) {
                 var x = (nearPos.x - 1200) + (Math.random() * 2400);
@@ -61,11 +60,42 @@ var WorldManager = Class.extend({
                 _this.createRandomEntity(p.x, p.y);
             }
         }
+
+        //Spawn players that need spawning
+        _.forEach(clients, function(client) {
+            var entity = client.entity;
+            if (entity.needSpawn) {
+                var hasPosition = false;
+                var p = null;
+                var range = 3000;
+                while (!hasPosition) {
+                    var nearPos = _this.getRandomClient(clients).entity.pos.clone(0);
+                    var x = (nearPos.x - range) + (Math.random() * range);
+                    var y = (nearPos.y - range) + (Math.random() * range);
+                    p = new Vector(x, y);
+                    hasPosition = true;
+                    _.forEach(clients, function(c) {
+                        if (p.distance(c.entity.pos) < 2500) hasPosition = false;
+                    });
+                    _.forEach(entities, function(e) {
+                        if (p.distance(e.pos) < 900) hasPosition = false;
+                    })
+                    range += 500;
+                }
+
+                entity.ship = _this.game.entityFactory.create('Ship', _this.game, p.x, p.y);
+                entity.ship.player = entity;
+                entity.needSpawn = false;
+            }
+        });
     },
     createRandomEntity: function(x, y) {
         var classnames = ["Planet"];
         var choice = classnames[Math.floor(Math.random() * classnames.length)];
         this.game.entityFactory.create(choice, this.game, x, y);
+    },
+    getRandomClient: function(clients) {
+        return clients[clients.length - (Math.floor(Math.random() * clients.length) + 1)];
     }
 });
 
