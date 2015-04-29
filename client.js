@@ -32,9 +32,7 @@ var Client = Class.extend({
   },
   loop: function() {
     var _this = this;
-    requestAnimationFrame(function() {
-      _this.tick();
-    });
+    _this.tick();
   },
   tick: function() {
     var _this = this;
@@ -48,10 +46,10 @@ var Client = Class.extend({
       _this.render();
       console.log('self update');
     }
-    _this.frameTime = curTime - Date.now() + 1;
-    requestAnimationFrame(function() {
+    _this.frameTime = curTime - Date.now();
+    setTimeout(function() {
       _this.tick();
-    });
+    }, _this.tickRate);
   },
   render: function() {
     this.game.render(this.ctx, this.screen);
