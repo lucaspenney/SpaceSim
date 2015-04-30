@@ -28,12 +28,6 @@ var ParticleSystem = Class.extend({
 	},
 	update: function() {
 		if (!this.active) return;
-
-		if (this.particles.length === 0) {
-			for (var i = 0; i < this.opts.amount; i++) {
-				this.createParticle();
-			}
-		}
 		if (this.parent) {
 			this.pos = this.parent.pos.clone();
 			this.pos.add(this.parent.physics.vel.clone().scale(0.5));
@@ -41,6 +35,11 @@ var ParticleSystem = Class.extend({
 			var y = this.yOffset + Math.sin(degToRad(this.parent.rotation + 90)) * 13;
 			this.pos.x += x;
 			this.pos.y += y;
+		}
+		if (this.particles.length === 0) {
+			for (var i = 0; i < this.opts.amount; i++) {
+				this.createParticle();
+			}
 		}
 		if (this.particles.length >= this.opts.amount) {
 			for (var i = 0; i < this.opts.refreshAmount; i++) {
