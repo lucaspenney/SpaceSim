@@ -65,8 +65,7 @@ var Server = Class.extend({
 			messages: [],
 		}
 		this.clients.push(client);
-		var cplayer = new Player(this.game, 0, 0)
-		this.game.entities.push(cplayer);
+		var cplayer = this.game.entityFactory.create("Player", this.game, 0, 0);
 		client.entity = cplayer;
 		this.handshake(client);
 		ws.on('message', function(message) {
@@ -119,12 +118,16 @@ var Server = Class.extend({
 					entities.push(ent);
 				}
 			});
-			var clients = [];
+			var radar = [];
 			_.forEach(this.clients, function(client) {
 				if (_this.clients[i] !== client) {
-					clients.push(client.entity.pos);
+					radar.push({
+						name: client.name,
+						pos: client.entity.pos
+					});
 				}
-			})
+			});
+			this.clients[i].entity.radar = radar;
 			var packetId = Crypto.randomBytes(16).toString('hex');
 			this.packetTimes[packetId] = Date.now();
 			var update = {
@@ -135,7 +138,6 @@ var Server = Class.extend({
 				latency: this.clients[i].latency,
 				frameTime: this.frameTime,
 				messages: this.clients[i].messages,
-				clients: clients,
 			};
 			try {
 				this.clients[i].socket.send(this.packageData(update));

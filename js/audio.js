@@ -11,7 +11,7 @@ var Audio = Class.extend({
         this.sounds = {};
         this.sounds["background"] = new Howl({
             urls: ['sound/background2.ogg'],
-            volume: 0.6,
+            volume: 0.4,
             autoplay: true,
             loop: true,
             buffer: true,
@@ -23,8 +23,8 @@ var Audio = Class.extend({
         this.sounds["engine"] = new Howl({
             urls: ['sound/engine.wav'],
             loop: true,
-            volume: 0.5,
-            autoplay: true,
+            volume: 0.4,
+            buffer: true,
         });
 
         this.game.on('entity.created', function(entity) {
@@ -56,7 +56,7 @@ var Audio = Class.extend({
                     if (entity.engine.mainOn) {
                         if (this.entitySounds[entity.id].sounds.engine.pos() === 0) {
                             this.entitySounds[entity.id].sounds.engine.play();
-                            engineSound.pos(1)
+                            engineSound.pos(1);
                         }
                     } else {
                         this.entitySounds[entity.id].sounds.engine.stop();
