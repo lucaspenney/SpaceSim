@@ -119,6 +119,12 @@ var Server = Class.extend({
 					entities.push(ent);
 				}
 			});
+			var clients = [];
+			_.forEach(this.clients, function(client) {
+				if (_this.clients[i] !== client) {
+					clients.push(client.entity.pos);
+				}
+			})
 			var packetId = Crypto.randomBytes(16).toString('hex');
 			this.packetTimes[packetId] = Date.now();
 			var update = {
@@ -129,6 +135,7 @@ var Server = Class.extend({
 				latency: this.clients[i].latency,
 				frameTime: this.frameTime,
 				messages: this.clients[i].messages,
+				clients: clients,
 			};
 			try {
 				this.clients[i].socket.send(this.packageData(update));
