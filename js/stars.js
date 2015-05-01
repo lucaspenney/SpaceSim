@@ -24,12 +24,12 @@ Stars.prototype.init = function(screen) {
     }, {
         stars: [],
         amount: 100,
-        scale: 0.5,
+        scale: 0.8,
         size: 0.5,
     }, {
         stars: [],
         amount: 100,
-        scale: 0.8,
+        scale: 1,
         size: 2,
     }, ];
     for (var l = 0; l < this.layers.length; l++) {

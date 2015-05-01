@@ -6,8 +6,8 @@ var Trail = require('./trail');
 var Ship = require('./ship');
 
 var Bullet = Entity.extend({
-    init: function(game, x, y) {
-        this._super(game, x, y);
+    init: function(game, id, x, y) {
+        this._super(game, id, x, y);
         this.sprite = new Sprite(this, "img/bullet.png");
         this.physics = new Physics(this.game, this, new BoundingBox(this.game, this));
         //this.physics.setVelocity(Math.random(), (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10);

@@ -8,6 +8,7 @@ var Player = require('./js/player');
 var Entity = require('./js/entity');
 var Connection = require('./js/connection');
 var Chat = require('./js/chat');
+var AudioManager = require('./js/audio');
 var Game = require('./js/game');
 
 var Client = Class.extend({
@@ -22,6 +23,7 @@ var Client = Class.extend({
     this.ctx = this.canvasElement.getContext('2d');
     this.fpsManager = new FPSManager(this);
     this.input = new InputManager(this);
+    this.audio = new AudioManager(this);
     this.screen = new Screen(this);
     this.chat = new Chat(this);
     this.connection = new Connection(this, this.game);
@@ -47,9 +49,10 @@ var Client = Class.extend({
       console.log('self update');
     }
     _this.frameTime = curTime - Date.now();
-    setTimeout(function() {
+    requestAnimationFrame(function() {
       _this.tick();
-    }, _this.tickRate);
+    });
+    this.audio.update();
   },
   render: function() {
     this.game.render(this.ctx, this.screen);

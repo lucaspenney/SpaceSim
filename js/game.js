@@ -2,6 +2,7 @@ var Class = require('./class');
 var Player = require('./player');
 var Stars = require('./stars');
 var EntityFactory = require('./entityfactory');
+var EventManager = require('./eventmanager');
 
 var Game = Class.extend({
   entityId: 0,
@@ -13,6 +14,7 @@ var Game = Class.extend({
     this.tick = Date.now();
     this.lagCompensation = 0;
     this.entityFactory = new EntityFactory();
+    this.eventManager = new EventManager();
   },
   update: function() {
     this.tick = Date.now();
@@ -41,6 +43,9 @@ var Game = Class.extend({
     for (var i = 0; i < this.entities.length; i++) {
       this.entities[i].render(ctx, screen);
     }
+  },
+  on: function(event, func) {
+    this.eventManager.addEventListener(event, func);
   },
   newEntityId: function() {
     this.entityId++;

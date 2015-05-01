@@ -9,34 +9,34 @@ var Bullet = require('./bullet');
 var EntityFactory = function() {
     return {
         create: function(classname, game, x, y, isServer, id) {
-            var entity = this.createEntity(classname, game, x, y, isServer);
+            var entity = this.createEntity(classname, game, x, y, isServer, id);
             if (entity) {
-                if (id) entity.id = id;
                 game.entities.push(entity);
                 return entity;
             }
             return false;
         },
-        createEntity: function(classname, game, x, y, isServer) {
+        createEntity: function(classname, game, x, y, isServer, id) {
             if (!isServer) {
                 if (typeof window !== 'undefined') {
                     return false; //Only create new entities if it's the server or the client's connection (which uses isServer)
                 }
             }
+            if (id === undefined) id = game.newEntityId();
             if (classname === "Player") {
-                return new Player(game, x, y);
+                return new Player(game, id, x, y);
             } else if (classname === "Ship") {
-                return new Ship(game, x, y);
+                return new Ship(game, id, x, y);
             } else if (classname === "Asteroid") {
-                return new Asteroid(game, x, y);
+                return new Asteroid(game, id, x, y);
             } else if (classname === "Planet") {
-                return new Planet(game, x, y);
+                return new Planet(game, id, x, y);
             } else if (classname === "Black Hole") {
-                return new BlackHole(game, x, y);
+                return new BlackHole(game, id, x, y);
             } else if (classname === "Explosion") {
-                return new Explosion(game, x, y);
+                return new Explosion(game, id, x, y);
             } else if (classname === "Bullet") {
-                return new Bullet(game, x, y);
+                return new Bullet(game, id, x, y);
             }
         },
     };

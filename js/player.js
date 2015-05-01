@@ -11,9 +11,9 @@ var Vector = require('./vector');
 var Planet = require('./planet');
 
 var Player = Entity.extend({
-	init: function(game, x, y) {
+	init: function(game, id, x, y) {
 		this.classname = "Player";
-		this._super(game, x, y);
+		this._super(game, id, x, y);
 		this.game = game;
 		this.input = {};
 		this.client = false;

@@ -14,11 +14,11 @@ var PlanetTypes = [{
 }, ];
 
 var Planet = Entity.extend({
-    init: function(game, x, y) {
+    init: function(game, id, x, y) {
         var planet = PlanetTypes[Math.floor(Math.random() * PlanetTypes.length)];
         this.width = Math.floor(Math.random() * 450) + 325;
         this.height = this.width;
-        this._super(game, x, y);
+        this._super(game, id, x, y);
         this.radius = (this.width / 2) * 0.9;
         this.sprite = new Sprite(this, "img/" + planet.img);
         this.physics = new Physics(game, this, new BoundingCircle(this.game, this, this.radius));
