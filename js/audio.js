@@ -23,7 +23,7 @@ var Audio = Class.extend({
         this.sounds["engine"] = new Howl({
             urls: ['sound/engine.wav'],
             loop: true,
-            volume: 0.4,
+            volume: 0.5,
             buffer: true,
         });
 
@@ -34,7 +34,10 @@ var Audio = Class.extend({
             if (entity instanceof Ship) {
                 _this.entitySounds[entity.id] = {
                     sounds: {
-                        engine: _this.sounds["engine"]
+                        engine: {
+                            sound: _this.sounds["engine"],
+                            id: null,
+                        }
                     },
                     entity: entity
                 };
@@ -42,7 +45,7 @@ var Audio = Class.extend({
         });
         this.game.on('entity.destroyed', function(entity) {
             if (this.entitySounds[entity.id]) {
-                this.entitySounds[entity.id].sounds.engine.stop();
+                this.entitySounds[entity.id].sounds.engine.sound.stop();
                 this.entitySounds[entity.id] = null;
             }
         });
@@ -54,12 +57,16 @@ var Audio = Class.extend({
                 if (this.entitySounds[entity.id]) {
                     var engineSound = this.entitySounds[entity.id].sounds.engine;
                     if (entity.engine.mainOn) {
-                        if (this.entitySounds[entity.id].sounds.engine.pos() === 0) {
-                            this.entitySounds[entity.id].sounds.engine.play();
-                            engineSound.pos(1);
+                        if (engineSound.id === null) {
+                            engineSound.sound.play(function(id) {
+                                engineSound.id = id;
+                            });
                         }
                     } else {
-                        this.entitySounds[entity.id].sounds.engine.stop();
+                        if (engineSound.id !== null) {
+                            engineSound.sound.stop(engineSound.id);
+                            engineSound.id = null;
+                        }
                     }
                 }
             }
