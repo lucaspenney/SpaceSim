@@ -51,7 +51,7 @@ var WorldManager = Class.extend({
             }
             var farFromEnts = true;
             _.forEach(_this.game.entities, function(ent) {
-                if (ent.toJSON().classname === "Planet") {
+                if (ent.toJSON().classname !== "Ship" && ent.toJSON().classname !== "Player") {
                     if (ent.pos.distance(p) < 2200) farFromEnts = false;
                 }
 
@@ -82,7 +82,6 @@ var WorldManager = Class.extend({
                     })
                     range += 500;
                 }
-
                 entity.ship = _this.game.entityFactory.create('Ship', _this.game, p.x, p.y);
                 entity.ship.player = entity;
                 entity.needSpawn = false;
@@ -90,7 +89,7 @@ var WorldManager = Class.extend({
         });
     },
     createRandomEntity: function(x, y) {
-        var classnames = ["Planet"];
+        var classnames = ["Planet", "Black Hole"];
         var choice = classnames[Math.floor(Math.random() * classnames.length)];
         this.game.entityFactory.create(choice, this.game, x, y);
     },

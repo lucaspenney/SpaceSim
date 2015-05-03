@@ -5,17 +5,16 @@ var BoundingCircle = require('./boundingcircle');
 var BoundingBox = require('./boundingbox');
 
 var BlackHole = Entity.extend({
-    init: function(game, x, y) {
-        this._super(game, x, y);
+    init: function(game, id, x, y) {
+        this._super(game, id, x, y);
+        this.width = Math.floor(Math.random() * 100) + 100;
+        this.height = this.width;
         this.sprite = new Sprite(this, "img/black_hole.png");
-        this.physics = new Physics(game, this, new BoundingCircle(this.game, this, 32));
+        this.physics = new Physics(game, this, new BoundingCircle(this.game, this, this.width / 4));
         this.physics.setVelocity(Math.random(), Math.random(), (Math.random() - 0.5) * 5);
-        this.physics.collidesWith = ['Player', 'Asteroid'];
+        this.physics.collidesWith = ['Ship'];
         this.physics.mass = 20000;
         this.physics.static = true;
-        this.physics.onCollision(function(entity) {
-            entity.destroy();
-        });
     },
     update: function() {
         this.physics.update();
