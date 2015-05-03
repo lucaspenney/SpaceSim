@@ -40,7 +40,7 @@ var Player = Entity.extend({
 		if (screen.focusedEntity === this) {
 			for (var i = 0; i < this.radar.length; i++) {
 				var distance = this.pos.distance(new Vector(this.radar[i].pos.x, this.radar[i].pos.y));
-				if (distance < 750) continue;
+				if (distance < 650) continue;
 				var x = this.pos.x - this.radar[i].pos.x;
 				var y = this.pos.y - this.radar[i].pos.y;
 

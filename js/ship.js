@@ -4,11 +4,13 @@ var Physics = require('./physics');
 var Trail = require('./trail');
 var ParticleSystem = require('./particlesystem');
 var Engine = require('./engine');
+var Weapon = require('./weapon');
 var Explosion = require('./explosion');
 var BoundingBox = require('./boundingbox');
 var BoundingCircle = require('./boundingcircle');
 var Vector = require('./vector');
 var Planet = require('./planet');
+var BlackHole = require('./blackhole');
 
 var Ship = Entity.extend({
 	init: function(game, id, x, y) {
@@ -18,10 +20,10 @@ var Ship = Entity.extend({
 		this.game = game;
 		this.rotation = 0;
 		this.input = {};
-		this.sprite = new Sprite(this, "img/ship.png");
+		this.sprite = new Sprite(this, "img/ship1.png");
 		//this.physics = new Physics(this.game, this, new BoundingBox(this.game, this));
 		this.physics = new Physics(this.game, this, new BoundingCircle(this.game, this, 20));
-		this.physics.collidesWith = ['Asteroid', 'Planet', 'Ship'];
+		this.physics.collidesWith = ['Asteroid', 'Planet', 'Ship', 'Black Hole'];
 		this.physics.mass = 10;
 		this.physics.maxVelocity = 8;
 		this.layer = 100;
@@ -34,12 +36,16 @@ var Ship = Entity.extend({
 		this.turnThrust = 0.4;
 		this.mainThrust = 0.25;
 		this.engine = new Engine(this);
+		this.weapon = new Weapon(this);
 		var _this = this;
 		this.physics.on('post-collide', function(entity) {
 			if (entity instanceof Planet) {
 				this.destroy();
 				this.player.requestRespawn();
 				this.game.entityFactory.create('Explosion', this.game, this.pos.x, this.pos.y);
+			} else if (entity instanceof BlackHole) {
+				this.destroy();
+				this.player.requestRespawn();
 			}
 		});
 		this.lastFireTime = 0;
@@ -61,6 +67,8 @@ var Ship = Entity.extend({
 			this.physics.addAcceleration(0, 0, this.turnThrust);
 		}
 		if (this.input.fire) {
+			this.weapon.fire();
+			/*
 			if (Date.now() - this.lastFireTime > 100) {
 				var bullet = this.game.entityFactory.create('Bullet', this.game, this.pos.x, this.pos.y);
 				if (bullet) {
@@ -74,6 +82,7 @@ var Ship = Entity.extend({
 					this.lastFireTime = Date.now();
 				}
 			}
+			*/
 		}
 		this.physics.update();
 	},

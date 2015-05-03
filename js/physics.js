@@ -33,7 +33,7 @@ var Physics = Class.extend({
           nearbys.push(this.game.entities[i]); //Range for collisions is 400, gravity is 1600
         var entity = this.game.entities[i];
         //Add gravity to this from the entity in loop
-        if (entity.physics.mass > 0) {
+        if (entity.physics.mass > 0 && this.mass > 0 && this.entity.pos.distance(entity.pos) > 10) {
           var diffX = entity.pos.x - this.entity.pos.x;
           var diffY = entity.pos.y - this.entity.pos.y;
           var distSquare = diffX * diffX + diffY * diffY

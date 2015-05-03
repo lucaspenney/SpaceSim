@@ -45,7 +45,7 @@ var Audio = Class.extend({
         });
         this.game.on('entity.destroyed', function(entity) {
             if (this.entitySounds[entity.id]) {
-                this.entitySounds[entity.id].sounds.engine.sound.stop();
+                this.entitySounds[entity.id].sounds.engine.sound.stop(this.entitySounds[entity.id].sounds.engine.id);
                 this.entitySounds[entity.id] = null;
             }
         });

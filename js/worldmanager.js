@@ -52,7 +52,7 @@ var WorldManager = Class.extend({
             var farFromEnts = true;
             _.forEach(_this.game.entities, function(ent) {
                 if (ent.toJSON().classname !== "Ship" && ent.toJSON().classname !== "Player") {
-                    if (ent.pos.distance(p) < 2200) farFromEnts = false;
+                    if (ent.pos.distance(p) < 1800) farFromEnts = false;
                 }
 
             });

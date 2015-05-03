@@ -1,15 +1,33 @@
-function Weapon(game, owner) {
-	this.game = game;
-	this.kickback = 0.2;
-	this.owner = owner;
-	this.fireInterval = new Interval(0.1);
-	this.power = 12;
+var Class = require('./class');
+var Vector = require('./vector');
+
+var Weapon = Class.extend({
+	init: function(parent) {
+		this.parent = parent;
+		this.lastFireTime = Date.now();
+		this.fireRate = 1000;
+	},
+	fire: function() {
+		if (Date.now() - this.lastFireTime > this.fireRate) {
+			var missile = this.parent.game.entityFactory.create('Missile', this.parent.game, this.parent.pos.x, this.parent.pos.y);
+			if (missile) {
+				missile.setOwner(this.parent);
+				missile.physics.vel = this.parent.physics.vel.clone();
+				var x = Math.cos(degToRad(this.parent.rotation - 270)) * 2;
+				var y = Math.sin(degToRad(this.parent.rotation - 270)) * 2;
+				missile.physics.vel.add(new Vector(x, y));
+			}
+			this.lastFireTime = Date.now();
+		}
+	},
+});
+
+function degToRad(angle) {
+	return ((angle * Math.PI) / 180);
 }
 
-Weapon.prototype.fire = function() {
-	if (this.fireInterval.hasElapsed()) {
-		new Bullet(this.game, this.owner.x, this.owner.y, this.owner, this.owner.rotation, this.power);
-		this.owner.physics.addVelocity(Math.cos(degToRad(this.owner.rotation - 90)) * this.kickback * -1, Math.sin(degToRad(this.owner.rotation - 90)) * this.kickback * -1);
-		this.fireInterval.reset();
-	}
+function radToDeg(angle) {
+	return ((angle * 180) / Math.PI);
 }
+
+module.exports = Weapon;

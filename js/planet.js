@@ -24,7 +24,7 @@ var Planet = Entity.extend({
         this.physics = new Physics(game, this, new BoundingCircle(this.game, this, this.radius));
         this.physics.setVelocity(Math.random(), Math.random(), (Math.random() - 0.5) * 5);
         this.physics.collidesWith = [];
-        this.physics.mass = 10000;
+        this.physics.mass = this.width * 18;
         this.physics.static = true;
     },
     update: function() {

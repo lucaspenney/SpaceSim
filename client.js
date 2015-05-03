@@ -30,7 +30,7 @@ var Client = Class.extend({
     this.loop();
     this.debug = true;
     this.frameTime = 0;
-    this.tickRate = 31;
+    this.tickRate = 30;
   },
   loop: function() {
     var _this = this;

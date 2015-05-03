@@ -1,5 +1,12 @@
 var SERVER = true;
 
+function degToRad(angle) {
+	return ((angle * Math.PI) / 180);
+}
+
+function radToDeg(angle) {
+	return ((angle * 180) / Math.PI);
+}
 var _ = require('lodash-node');
 var LZString = require('lz-string');
 var Crypto = require('crypto');
