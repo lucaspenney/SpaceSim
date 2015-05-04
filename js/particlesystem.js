@@ -3,10 +3,9 @@ var Vector = require('./vector');
 var Particle = require('./particle');
 
 var ParticleSystem = Class.extend({
-	init: function(game, x, y, r, type) {
+	init: function(game, x, y, type) {
 		this.game = game;
 		this.pos = new Vector(x, y);
-		this.rotation = r;
 		this.particles = [];
 		this.type = type;
 		this.active = false;
@@ -29,10 +28,11 @@ var ParticleSystem = Class.extend({
 	update: function() {
 		if (!this.active) return;
 		if (this.parent) {
+			console.log(3);
 			this.pos = this.parent.pos.clone();
 			this.pos.add(this.parent.physics.vel.clone().scale(0.5));
-			var x = this.xOffset + Math.cos(degToRad(this.parent.rotation + 90)) * 13;
-			var y = this.yOffset + Math.sin(degToRad(this.parent.rotation + 90)) * 13;
+			var x = this.xOffset + Math.cos(this.parent.rotation.clone().add(90).toRadians()) * 13;
+			var y = this.yOffset + Math.sin(this.parent.rotation.clone().add(90).toRadians()) * 13;
 			this.pos.x += x;
 			this.pos.y += y;
 		}

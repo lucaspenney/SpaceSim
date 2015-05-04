@@ -35,8 +35,8 @@ Stars.prototype.init = function(screen) {
     for (var l = 0; l < this.layers.length; l++) {
         var layer = this.layers[l];
         for (var i = 0; i < layer.amount; i++) {
-            var x = (Math.random() * screen.width) + (screen.xOffset * layer.scale);
-            var y = (Math.random() * screen.height) + (screen.yOffset * layer.scale);
+            var x = Math.floor((Math.random() * screen.width) + (screen.xOffset * layer.scale));
+            var y = Math.floor((Math.random() * screen.height) + (screen.yOffset * layer.scale));
             layer.stars.push({
                 x: x,
                 y: y,

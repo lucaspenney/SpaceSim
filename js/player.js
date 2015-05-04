@@ -8,6 +8,7 @@ var Explosion = require('./explosion');
 var BoundingBox = require('./boundingbox');
 var BoundingCircle = require('./boundingcircle');
 var Vector = require('./vector');
+var Angle = require('./angle');
 var Planet = require('./planet');
 
 var Player = Entity.extend({
@@ -18,7 +19,7 @@ var Player = Entity.extend({
 		this.input = {};
 		this.client = false;
 		this.needSpawn = true;
-		this.radar = [{
+		this.radar = [{ //TODO: Fix this needing to be declared for syncing an array
 			name: '',
 			pos: {}
 		}];
@@ -39,21 +40,22 @@ var Player = Entity.extend({
 		}
 		if (screen.focusedEntity === this) {
 			for (var i = 0; i < this.radar.length; i++) {
+				if (this.radar[i].name === '') continue;
 				var distance = this.pos.distance(new Vector(this.radar[i].pos.x, this.radar[i].pos.y));
 				if (distance < 650) continue;
 				var x = this.pos.x - this.radar[i].pos.x;
 				var y = this.pos.y - this.radar[i].pos.y;
+				var angle = new Angle().fromRadians(Math.atan2(y, x));
+				angle.subtract(180);
 
-				var angle = radToDeg(Math.atan2(y, x));
-
-				var x = Math.cos(degToRad(angle - 180)) * 100;
-				var y = Math.sin(degToRad(angle - 180)) * 100;
+				var x = Math.cos(angle.toRadians()) * 300;
+				var y = Math.sin(angle.toRadians()) * 300;
 
 				var p = new Vector(this.pos.x + x, this.pos.y + y);
 				var p2 = new Vector(this.pos.x + (x * 2), this.pos.y + (y * 2));
 
 				ctx.strokeStyle = "#FFF";
-				ctx.fillText(this.radar[i].name, p.x - screen.xOffset, p.y - screen.yOffset);
+				ctx.fillText(this.radar[i].name, p.x - screen.xOffset - (this.radar[i].name.length * 2), p.y - screen.yOffset);
 				ctx.beginPath();
 				ctx.moveTo(p.x - screen.xOffset, p.y - screen.yOffset);
 				ctx.lineTo(p2.x - screen.xOffset, p2.y - screen.yOffset);

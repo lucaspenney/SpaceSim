@@ -77,7 +77,7 @@ var Physics = Class.extend({
       }
       //Move entity based on velocity
 
-      this.entity.rotation += this.rv;
+      this.entity.rotation.add(this.rv);
     } else {
       this.bounds.update();
     }

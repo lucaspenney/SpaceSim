@@ -142,6 +142,12 @@ Vector.prototype = {
   distance: function(v) {
     return Math.sqrt(Math.pow((v.x - this.x), 2) + Math.pow((v.y - this.y), 2));
   },
+  absoluteGreaterThan: function(n) {
+    return Math.abs(this.x) + Math.abs(this.y) > n;
+  },
+  absoluteLessThan: function(n) {
+    return Math.abs(this.x) + Math.abs(this.y) < n;
+  },
   toJSON: function() {
     return {
       x: this.x,

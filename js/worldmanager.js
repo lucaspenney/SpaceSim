@@ -91,6 +91,10 @@ var WorldManager = Class.extend({
     createRandomEntity: function(x, y) {
         var classnames = ["Planet", "Black Hole"];
         var choice = classnames[Math.floor(Math.random() * classnames.length)];
+        //Override for now
+        if (Math.random() > 0.8) {
+            choice = "Black Hole";
+        } else choice = "Planet";
         this.game.entityFactory.create(choice, this.game, x, y);
     },
     getRandomClient: function(clients) {

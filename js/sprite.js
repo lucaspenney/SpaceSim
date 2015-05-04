@@ -44,7 +44,7 @@ var Sprite = Class.extend({
 			//Perform the draw
 			ctx.save();
 			ctx.translate(x + this.rotationXOffset, y + this.rotationYOffset);
-			ctx.rotate(degToRad(this.entity.rotation));
+			ctx.rotate(this.entity.rotation.toRadians());
 			ctx.translate(-(this.width / 2), -(this.height / 2)); //Rotational axis on center of sprite
 			ctx.globalAlpha = this.alpha;
 			try {

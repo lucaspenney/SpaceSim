@@ -19,7 +19,7 @@ var Planet = Entity.extend({
         this.width = Math.floor(Math.random() * 450) + 325;
         this.height = this.width;
         this._super(game, id, x, y);
-        this.radius = (this.width / 2) * 0.9;
+        this.radius = (this.width / 2) * 0.86;
         this.sprite = new Sprite(this, "img/" + planet.img);
         this.physics = new Physics(game, this, new BoundingCircle(this.game, this, this.radius));
         this.physics.setVelocity(Math.random(), Math.random(), (Math.random() - 0.5) * 5);

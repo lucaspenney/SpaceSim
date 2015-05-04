@@ -13,8 +13,8 @@ var Weapon = Class.extend({
 			if (missile) {
 				missile.setOwner(this.parent);
 				missile.physics.vel = this.parent.physics.vel.clone();
-				var x = Math.cos(degToRad(this.parent.rotation - 270)) * 2;
-				var y = Math.sin(degToRad(this.parent.rotation - 270)) * 2;
+				var x = Math.cos(this.parent.rotation.clone().subtract(270).toRadians()) * 2;
+				var y = Math.sin(this.parent.rotation.clone().subtract(270).toRadians()) * 2;
 				missile.physics.vel.add(new Vector(x, y));
 			}
 			this.lastFireTime = Date.now();

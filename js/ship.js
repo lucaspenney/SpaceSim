@@ -9,6 +9,7 @@ var Explosion = require('./explosion');
 var BoundingBox = require('./boundingbox');
 var BoundingCircle = require('./boundingcircle');
 var Vector = require('./vector');
+var Angle = require('./angle');
 var Planet = require('./planet');
 var BlackHole = require('./blackhole');
 
@@ -18,10 +19,9 @@ var Ship = Entity.extend({
 		this.height = 32;
 		this._super(game, id, x, y);
 		this.game = game;
-		this.rotation = 0;
+		this.rotation = new Angle();
 		this.input = {};
 		this.sprite = new Sprite(this, "img/ship1.png");
-		//this.physics = new Physics(this.game, this, new BoundingBox(this.game, this));
 		this.physics = new Physics(this.game, this, new BoundingCircle(this.game, this, 20));
 		this.physics.collidesWith = ['Asteroid', 'Planet', 'Ship', 'Black Hole'];
 		this.physics.mass = 10;
@@ -29,20 +29,29 @@ var Ship = Entity.extend({
 		this.layer = 100;
 		this.trail = new Trail(this.game, this);
 		this.enginesOn = false;
-		//this.weapon = new Weapon(this.game, this);
-		//this.engine = new Engine(this.game, this);ww
-		this.engineParticles = new ParticleSystem(this.game, this.pos.x, this.pos.y, this.rotation, 'engine')
+		this.engineParticles = new ParticleSystem(this.game, this.pos.x, this.pos.y, 'engine')
 		this.engineParticles.setParent(this, 0, 0);
 		this.turnThrust = 0.4;
 		this.mainThrust = 0.25;
 		this.engine = new Engine(this);
 		this.weapon = new Weapon(this);
+		this.landed = false;
 		var _this = this;
 		this.physics.on('post-collide', function(entity) {
 			if (entity instanceof Planet) {
-				this.destroy();
-				this.player.requestRespawn();
-				this.game.entityFactory.create('Explosion', this.game, this.pos.x, this.pos.y);
+				var x = this.pos.x - entity.pos.x;
+				var y = this.pos.y - entity.pos.y;
+				var angle = new Angle().fromRadians(Math.atan2(y, x));
+				var difference = this.rotation.clone().subtractAngle(angle);
+				if (this.physics.vel.absoluteGreaterThan(2) || (difference.degrees < 55 || difference.degrees > 125)) {
+					this.destroy();
+					this.player.requestRespawn();
+					this.game.entityFactory.create('Explosion', this.game, this.pos.x, this.pos.y);
+				} else {
+					this.rotation.set(angle.degrees + 90);
+					this.physics.rv = 0;
+					this.landed = true;
+				}
 			} else if (entity instanceof BlackHole) {
 				this.destroy();
 				this.player.requestRespawn();
@@ -54,8 +63,8 @@ var Ship = Entity.extend({
 		this._super();
 		if (this.input.up) {
 			this.engine.mainOn = true;
-			var x = Math.cos(degToRad(this.rotation - 90)) * this.mainThrust;
-			var y = Math.sin(degToRad(this.rotation - 90)) * this.mainThrust;
+			var x = Math.cos(this.rotation.clone().subtract(90).toRadians()) * this.mainThrust;
+			var y = Math.sin(this.rotation.clone().subtract(90).toRadians()) * this.mainThrust;
 			this.physics.addAcceleration(x, y, 0);
 		} else {
 			this.engine.mainOn = false;
@@ -110,13 +119,5 @@ var Ship = Entity.extend({
 		};
 	}
 });
-
-function degToRad(angle) {
-	return ((angle * Math.PI) / 180);
-}
-
-function radToDeg(angle) {
-	return ((angle * 180) / Math.PI);
-}
 
 module.exports = Ship;
