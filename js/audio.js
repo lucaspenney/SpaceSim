@@ -44,9 +44,9 @@ var Audio = Class.extend({
             }
         });
         this.game.on('entity.destroyed', function(entity) {
-            if (this.entitySounds[entity.id]) {
-                this.entitySounds[entity.id].sounds.engine.sound.stop(this.entitySounds[entity.id].sounds.engine.id);
-                this.entitySounds[entity.id] = null;
+            if (_this.entitySounds[entity.id]) {
+                _this.entitySounds[entity.id].sounds.engine.sound.stop(_this.entitySounds[entity.id].sounds.engine.id);
+                _this.entitySounds[entity.id] = null;
             }
         });
     },
@@ -60,7 +60,7 @@ var Audio = Class.extend({
                         if (engineSound.id === null) {
                             engineSound.sound.play(function(id) {
                                 engineSound.id = id;
-                            });
+                            }).loop();
                         }
                     } else {
                         if (engineSound.id !== null) {

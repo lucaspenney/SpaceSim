@@ -50,6 +50,7 @@ var Connection = Class.extend({
         var entities = this.game.entities;
         //First, delete any removed entities
         _.forEach(entities, function(entity, index) {
+            if (entity === undefined) return true;
             var removed = true;
             _.forEach(data.entities, function(sEnt) {
                 if (!entity) return;
@@ -57,7 +58,7 @@ var Connection = Class.extend({
             });
             if (removed) {
                 //This entity was not in the server's update - remove it
-                _this.game.entities.splice(index, 1);
+                entity.destroy();
             }
         });
         //Update existing entities

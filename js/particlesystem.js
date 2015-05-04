@@ -28,7 +28,6 @@ var ParticleSystem = Class.extend({
 	update: function() {
 		if (!this.active) return;
 		if (this.parent) {
-			console.log(3);
 			this.pos = this.parent.pos.clone();
 			this.pos.add(this.parent.physics.vel.clone().scale(0.5));
 			var x = this.xOffset + Math.cos(this.parent.rotation.clone().add(90).toRadians()) * 13;
