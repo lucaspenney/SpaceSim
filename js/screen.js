@@ -5,6 +5,8 @@ function Screen(client) {
     this.client = client;
     this.xOffset = 0;
     this.yOffset = 0;
+    this.targetXOffset = 0;
+    this.targetYOffset = 0;
     this.width = Math.min($(window).width(), 1280);
     this.height = Math.min($(window).height(), 960);;
     this.focusedEntity = null;
@@ -54,10 +56,13 @@ Screen.prototype.setFocusedEntity = function(ent) {
 }
 
 Screen.prototype.render = function(ctx, screen) {
+    var lookAheadFactor = 12;
     if (this.focusedEntity) {
-        this.xOffset = this.focusedEntity.pos.x - (this.width / 2);
-        this.yOffset = this.focusedEntity.pos.y - (this.height / 2);
+        this.targetXOffset = this.focusedEntity.pos.x + this.focusedEntity.ship.physics.vel.clone().scale(lookAheadFactor).x - (this.width / 2);
+        this.targetYOffset = this.focusedEntity.pos.y + this.focusedEntity.ship.physics.vel.clone().scale(lookAheadFactor).y - (this.height / 2);
     }
+    this.xOffset += (this.targetXOffset - this.xOffset) * 0.25;
+    this.yOffset += (this.targetYOffset - this.yOffset) * 0.25;
     this.stars.render(ctx, screen);
 }
 
