@@ -27,7 +27,7 @@ var Game = Class.extend({
   render: function(ctx, screen) {
     if (!ctx || !screen) return;
     ctx.fillStyle = "#000000";
-    ctx.fillRect(0, 0, screen.width, screen.height);
+    ctx.clearRect(0, 0, screen.width, screen.height);
     screen.render(ctx, screen);
     this.entities.sort(function(a, b) {
       if (a === null) return 1;

@@ -18,19 +18,19 @@ function Stars(screen) {
 Stars.prototype.init = function(screen) {
     this.layers = [{
         stars: [],
-        amount: 400,
+        amount: 500,
         scale: 0.2,
         size: 0.1,
     }, {
         stars: [],
-        amount: 100,
-        scale: 0.8,
-        size: 0.5,
+        amount: 200,
+        scale: 0.6,
+        size: 1,
     }, {
         stars: [],
-        amount: 100,
-        scale: 1,
-        size: 2,
+        amount: 50,
+        scale: 0.8,
+        size: 2.5,
     }, ];
     for (var l = 0; l < this.layers.length; l++) {
         var layer = this.layers[l];

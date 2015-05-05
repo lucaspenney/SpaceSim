@@ -18,8 +18,6 @@ var Client = Class.extend({
     this.layers = [];
     this.stage.html('<canvas></canvas>');
     this.canvasElement = this.stage.find('canvas').get(0);
-    this.canvasElement.setAttribute('height', this.stage.height());
-    this.canvasElement.setAttribute('width', this.stage.width());
     this.ctx = this.canvasElement.getContext('2d');
     this.fpsManager = new FPSManager(this);
     this.input = new InputManager(this);
