@@ -23,7 +23,7 @@ var Physics = Class.extend({
     //Add gravity to acceleration
     var time = this.game.tick - this.game.lastTick;
     //console.log(time);
-    var percentOff = (time - 33) / 33;
+    var percentOff = (time - this.game.tickRate) / this.game.tickRate;
     this.timeScale = percentOff + 1 + this.game.lagCompensation; //Multiply calculations by 1 + % off -- working currently
     var nearbys = [];
     for (var i = 0; i < this.game.entities.length; i++) {

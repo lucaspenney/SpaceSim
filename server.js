@@ -161,7 +161,7 @@ var Server = Class.extend({
 		var _this = this;
 		setTimeout(function() {
 			_this.tick();
-		}, this.tickRate);
+		}, 1000 / this.tickRate);
 		this.frameTime = Date.now() - start;
 	},
 });

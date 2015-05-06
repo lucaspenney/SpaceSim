@@ -43,7 +43,7 @@ var Client = Class.extend({
     if (_this.screen.focusedEntity) {
       _this.screen.focusedEntity.setInput(_this.input.getInputState());
     }
-    if (Date.now() - _this.connection.lastUpdate > _this.tickRate) {
+    if (Date.now() - _this.connection.lastUpdate > 1000 / _this.tickRate) {
       _this.game.update();
       _this.render();
       console.log('self update');
@@ -67,7 +67,7 @@ var Client = Class.extend({
       this.ctx.fillText("Latency (ms): " + this.connection.latency + "ms", 10, 20);
       this.ctx.fillText("Client Frame Time (ms): " + this.frameTime, 10, 30);
       this.ctx.fillText("Server Frame Time (ms): " + this.connection.serverFrameTime, 10, 40);
-      this.ctx.fillText("Update Rate (ms): " + this.connection.updateRate, 10, 50);
+      this.ctx.fillText("Update Time (ms): " + this.connection.updateRate, 10, 50);
     }
   },
 });

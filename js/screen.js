@@ -57,7 +57,7 @@ Screen.prototype.setFocusedEntity = function(ent) {
 
 Screen.prototype.render = function(ctx, screen) {
     var lookAheadFactor = 12;
-    if (this.focusedEntity) {
+    if (this.focusedEntity && this.focusedEntity.ship) {
         this.targetXOffset = this.focusedEntity.pos.x + this.focusedEntity.ship.physics.vel.clone().scale(lookAheadFactor).x - (this.width / 2);
         this.targetYOffset = this.focusedEntity.pos.y + this.focusedEntity.ship.physics.vel.clone().scale(lookAheadFactor).y - (this.height / 2);
     }
