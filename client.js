@@ -5,6 +5,7 @@ var Stars = require('./js/stars');
 var EventManager = require('./js/eventmanager');
 var InputManager = require('./js/input');
 var Player = require('./js/player');
+var Ship = require('./js/ship');
 var Entity = require('./js/entity');
 var Connection = require('./js/connection');
 var Chat = require('./js/chat');
@@ -31,6 +32,8 @@ var Client = Class.extend({
     this.debug = true;
     this.frameTime = 0;
     this.tickRate = 60;
+    this.lastUpdate = 0;
+    this.interp = 0;
   },
   loop: function() {
     var _this = this;
@@ -38,17 +41,22 @@ var Client = Class.extend({
   },
   tick: function() {
     var _this = this;
-
     var curTime = Date.now();
     if (_this.screen.focusedEntity) {
       _this.screen.focusedEntity.setInput(_this.input.getInputState());
     }
-    if (Date.now() - _this.connection.lastUpdate > 1000 / _this.tickRate) {
-      _this.game.update();
-      _this.render();
-      console.log('self update');
+    if (Date.now() - _this.lastUpdate > 1000 / _this.tickRate) {
+      if (Date.now() - _this.connection.lastUpdate > 1000 / _this.game.tickRate && _this.interp === 0) {
+        console.log('self update');
+        //_this.game.update();
+        //_this.render();
+        _this.lastUpdate = Date.now();
+        _this.interp++;
+      }
+      console.log("start render");
+      console.log("end render");
     }
-    _this.frameTime = curTime - Date.now();
+    _this.frameTime = Date.now() - curTime;
     requestAnimationFrame(function() {
       _this.tick();
     });
@@ -67,7 +75,8 @@ var Client = Class.extend({
       this.ctx.fillText("Latency (ms): " + this.connection.latency + "ms", 10, 20);
       this.ctx.fillText("Client Frame Time (ms): " + this.frameTime, 10, 30);
       this.ctx.fillText("Server Frame Time (ms): " + this.connection.serverFrameTime, 10, 40);
-      this.ctx.fillText("Update Time (ms): " + this.connection.updateRate, 10, 50);
+      this.ctx.fillText("Server Update Rate (ms): " + this.connection.updateRate, 10, 50);
+      this.ctx.fillText("Client Update Time (ms): " + this.connection.updateTime, 10, 60);
     }
   },
 });

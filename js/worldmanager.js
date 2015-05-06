@@ -75,7 +75,7 @@ var WorldManager = Class.extend({
                     p = new Vector(x, y);
                     hasPosition = true;
                     _.forEach(clients, function(c) {
-                        if (p.distance(c.entity.pos) < 2500) hasPosition = false;
+                        if (p.distance(c.entity.pos) < 200) hasPosition = false;
                     });
                     _.forEach(entities, function(e) {
                         if (p.distance(e.pos) < 900) hasPosition = false;

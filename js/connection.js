@@ -22,6 +22,7 @@ var Connection = Class.extend({
         this.lastReceive = 0;
         this.updateRate = 0;
         this.serverFrameTime = 0;
+        this.nextData = null;
         var _this = this;
         this.server.onmessage = function(message) {
             _this.lastPacketLength = message.data.length;
@@ -29,24 +30,22 @@ var Connection = Class.extend({
             if (data.handshake !== undefined) {
                 _this.handshake(data.handshake);
             } else {
-                if (this.lastPacket === null) {
-                    this.lastPacket = data;
-                } else {
-                    _this.receive(data);
-                }
+                _this.receive(data);
             }
         }
     },
     receive: function(data) {
+        var start = Date.now();
+        var _this = this;
         this.updateRate = (Date.now() - this.lastReceive);
         this.lastReceive = Date.now();
-        var _this = this;
         this.latency = data.latency / 2;
         this.game.lagCompensation = (this.latency / 33) / 10;
         this.game.lagCompensation = (data.frameTime / 33) * 1;
         this.game.lagCompensation = 0;
         this.serverFrameTime = data.frameTime;
         this.client.chat.receiveMessages(data.messages);
+
         var entities = this.game.entities;
         //First, delete any removed entities
         _.forEach(entities, function(entity, index) {
@@ -100,10 +99,14 @@ var Connection = Class.extend({
             })
             if (!exists) _this.createEntityFromJSON(entity);
         });
-        this.lastUpdate = Date.now();
-        this.client.game.lastTick = Date.now();
+
         this.send(data.packetId);
         this.client.render();
+        this.lastUpdate = Date.now() - (this.serverFrameTime - 30);
+        this.client.game.lastTick = this.lastUpdate;
+        this.client.interp = 0;
+        this.updateTime = Date.now() - start;
+        console.log("server update")
     },
     send: function(packetId) {
         var data = {

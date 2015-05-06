@@ -43,6 +43,7 @@ var Server = Class.extend({
 		});
 		this.tickRate = 30;
 		this.frameTime = 0;
+		this.lastUpdate = 0;
 		this.tick();
 	},
 	onConnect: function(ws) {
@@ -117,6 +118,15 @@ var Server = Class.extend({
 	},
 	tick: function() {
 		var _this = this;
+
+		if (Date.now() - _this.lastUpdate < 1000 / _this.tickRate) {
+			setTimeout(function() {
+				_this.tick();
+			}, 0);
+			return;
+		}
+		this.worldManager.update(this.clients, this.game.entities);
+		this.game.update();
 		var start = Date.now();
 		for (var i = 0; i < this.clients.length; i++) {
 			var entities = [];
@@ -155,14 +165,11 @@ var Server = Class.extend({
 					this.disconnectClient(this.clients[i].socket);
 			}
 		}
-
-		this.worldManager.update(this.clients, this.game.entities);
-		this.game.update();
-		var _this = this;
+		this.frameTime = Date.now() - start;
+		this.lastUpdate = Date.now();
 		setTimeout(function() {
 			_this.tick();
-		}, 1000 / this.tickRate);
-		this.frameTime = Date.now() - start;
+		}, 0);
 	},
 });
 

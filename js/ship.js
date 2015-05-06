@@ -44,9 +44,9 @@ var Ship = Entity.extend({
 				var angle = new Angle().fromRadians(Math.atan2(y, x));
 				var difference = this.rotation.clone().subtractAngle(angle);
 				if (this.physics.vel.absoluteGreaterThan(2) || (difference.degrees < 55 || difference.degrees > 125)) {
-					this.destroy();
-					this.player.requestRespawn();
+					if (this.player) this.player.requestRespawn();
 					this.game.entityFactory.create('Explosion', this.game, this.pos.x, this.pos.y);
+					this.destroy();
 				} else {
 					this.rotation.set(angle.degrees + 90);
 					this.physics.rv = 0;

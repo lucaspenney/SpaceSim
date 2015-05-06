@@ -22,9 +22,10 @@ var Physics = Class.extend({
   update: function(entities) {
     //Add gravity to acceleration
     var time = this.game.tick - this.game.lastTick;
+
     //console.log(time);
     var percentOff = (time - this.game.tickRate) / this.game.tickRate;
-    this.timeScale = percentOff + 1 + this.game.lagCompensation; //Multiply calculations by 1 + % off -- working currently
+    this.timeScale = percentOff + 1; //Multiply calculations by 1 + % off -- working currently
     var nearbys = [];
     for (var i = 0; i < this.game.entities.length; i++) {
       var dist = this.game.entities[i].pos.distance(this.entity.pos);

@@ -17,7 +17,7 @@ var Game = Class.extend({
     this.eventManager = new EventManager();
     this.tickRate = 30;
   },
-  update: function() {
+  update: function(tickRate) {
     this.tick = Date.now();
     for (var i = this.entities.length - 1; i >= 0; i--) {
       if (this.entities[i].active)
