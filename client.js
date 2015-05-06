@@ -9,6 +9,7 @@ var Ship = require('./js/ship');
 var Entity = require('./js/entity');
 var Connection = require('./js/connection');
 var Chat = require('./js/chat');
+var UI = require('./js/ui');
 var AudioManager = require('./js/audio');
 var Game = require('./js/game');
 
@@ -27,13 +28,13 @@ var Client = Class.extend({
     this.audio = new AudioManager(this);
     this.screen = new Screen(this);
     this.chat = new Chat(this);
+    this.ui = new UI(this);
     this.connection = new Connection(this, this.game);
     this.loop();
     this.debug = true;
     this.frameTime = 0;
     this.tickRate = 30;
     this.lastUpdate = 0;
-    this.interp = 0;
   },
   loop: function() {
     var _this = this;
@@ -62,6 +63,7 @@ var Client = Class.extend({
   render: function() {
     this.game.render(this.ctx, this.screen);
     this.chat.render(this.ctx, this.screen);
+    this.ui.render(this.ctx, this.screen);
     this.debugOutput();
   },
   debugOutput: function() {

@@ -61,37 +61,27 @@ var Ship = Entity.extend({
 	},
 	update: function() {
 		this._super();
-		if (this.input.up) {
-			this.engine.mainOn = true;
-			var x = Math.cos(this.rotation.clone().subtract(90).toRadians()) * this.mainThrust;
-			var y = Math.sin(this.rotation.clone().subtract(90).toRadians()) * this.mainThrust;
-			this.physics.addAcceleration(x, y, 0);
-		} else {
-			this.engine.mainOn = false;
-		}
-		if (this.input.left) { //Left Arrow
-			this.physics.addAcceleration(0, 0, this.turnThrust * -1);
-		}
-		if (this.input.right) { //Right Arrow
-			this.physics.addAcceleration(0, 0, this.turnThrust);
+		if (this.engine.hasFuel()) {
+			if (this.input.up) {
+				this.engine.mainOn = true;
+				this.engine.useFuel(2);
+				var x = Math.cos(this.rotation.clone().subtract(90).toRadians()) * this.mainThrust;
+				var y = Math.sin(this.rotation.clone().subtract(90).toRadians()) * this.mainThrust;
+				this.physics.addAcceleration(x, y, 0);
+			} else {
+				this.engine.mainOn = false;
+			}
+			if (this.input.left) { //Left Arrow
+				this.engine.useFuel();
+				this.physics.addAcceleration(0, 0, this.turnThrust * -1);
+			}
+			if (this.input.right) { //Right Arrow
+				this.engine.useFuel();
+				this.physics.addAcceleration(0, 0, this.turnThrust);
+			}
 		}
 		if (this.input.fire) {
 			this.weapon.fire();
-			/*
-			if (Date.now() - this.lastFireTime > 100) {
-				var bullet = this.game.entityFactory.create('Bullet', this.game, this.pos.x, this.pos.y);
-				if (bullet) {
-					var x = Math.cos(degToRad(this.rotation - 90));
-					var y = Math.sin(degToRad(this.rotation - 90));
-					var v = new Vector(x, y).scale(8);
-					if (this.physics.vel.x + this.physics.vel.y > 2) v.add(this.physics.vel.clone());
-					bullet.physics.vel = v;
-					bullet.rotation = this.rotation;
-					bullet.setOwner(this);
-					this.lastFireTime = Date.now();
-				}
-			}
-			*/
 		}
 		this.physics.update();
 	},
