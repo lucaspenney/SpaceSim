@@ -104,7 +104,6 @@ var Connection = Class.extend({
         this.client.render();
         this.lastUpdate = Date.now() - (this.serverFrameTime - 30);
         this.client.game.lastTick = this.lastUpdate;
-        this.client.interp = 0;
         this.updateTime = Date.now() - start;
         console.log("server update")
     },
