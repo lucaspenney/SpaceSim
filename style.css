@@ -9,7 +9,7 @@ body, html {
 #game {
     margin:0 auto;
     /* original image source: http://www.eso.org/public/archives/images/screen/eso1228d.jpg */;
-    background-image: url('/img/background.png');
+    background-image: url('img/background.png');
     background-size: contain;
 }
 
