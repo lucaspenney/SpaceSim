@@ -131,7 +131,7 @@ var Server = Class.extend({
 		for (var i = 0; i < this.clients.length; i++) {
 			var entities = [];
 			_.forEach(this.game.entities, function(ent) {
-				if (_this.clients[i].entity.pos.distance(ent.pos) < 1000) {
+				if (_this.clients[i].entity.pos.distance(ent.pos) < 1200) {
 					entities.push(ent);
 				}
 			});
