@@ -18,7 +18,7 @@ var Audio = Class.extend({
         });
         this.sounds["explosion"] = new Howl({
             urls: ['sound/explosion.wav'],
-            volume: 0.6,
+            volume: 1,
         });
         this.sounds["engine"] = new Howl({
             urls: ['sound/engine.wav'],

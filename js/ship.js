@@ -28,9 +28,6 @@ var Ship = Entity.extend({
 		this.physics.maxVelocity = 8;
 		this.layer = 100;
 		this.trail = new Trail(this.game, this);
-		this.enginesOn = false;
-		this.engineParticles = new ParticleSystem(this.game, this.pos.x, this.pos.y, 'engine')
-		this.engineParticles.setParent(this, 0, 0);
 		this.turnThrust = 0.4;
 		this.mainThrust = 0.25;
 		this.engine = new Engine(this);
@@ -69,7 +66,7 @@ var Ship = Entity.extend({
 				var y = Math.sin(this.rotation.clone().subtract(90).toRadians()) * this.mainThrust;
 				this.physics.addAcceleration(x, y, 0);
 			} else {
-				this.engine.mainOn = false;
+				this.mainOn = false;
 			}
 			if (this.input.left) { //Left Arrow
 				this.engine.useFuel();
@@ -79,7 +76,7 @@ var Ship = Entity.extend({
 				this.engine.useFuel();
 				this.physics.addAcceleration(0, 0, this.turnThrust);
 			}
-		}
+		} else this.engine.mainOn = false;
 		if (this.input.fire) {
 			this.weapon.fire();
 		}
@@ -87,11 +84,7 @@ var Ship = Entity.extend({
 	},
 	render: function(ctx, screen) {
 		//this.trail.render(ctx, screen);
-		if (this.engine.mainOn) {
-			this.engineParticles.turnOn()
-		} else this.engineParticles.turnOff();
-
-		this.engineParticles.render(ctx, screen);
+		this.engine.render(ctx, screen);
 		this._super(ctx, screen);
 		//this.physics.bounds.render(ctx, screen);
 	},

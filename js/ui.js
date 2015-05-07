@@ -20,7 +20,8 @@ var UI = Class.extend({
         this.components = [];
         //Fuel meter
         this.components.push(new UIMeter(screen.width / 2, screen.height - 50, function() {
-            //return (_this.client.screen.focusedEntity.ship.engine.fuel / 1000);
+            if (!screen.focusedEntity || !screen.focusedEntity.ship) return 1;
+            return (screen.focusedEntity.ship.engine.fuel / 1000);
         }, 'fuel'));
     },
     render: function(ctx, screen) {
