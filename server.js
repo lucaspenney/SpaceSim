@@ -125,8 +125,7 @@ var Server = Class.extend({
 			}, 0);
 			return;
 		}
-		this.worldManager.update(this.clients, this.game.entities);
-		this.game.update();
+
 		var start = Date.now();
 		for (var i = 0; i < this.clients.length; i++) {
 			var entities = [];
@@ -155,6 +154,7 @@ var Server = Class.extend({
 				latency: this.clients[i].latency,
 				frameTime: this.frameTime,
 				messages: this.clients[i].messages,
+				time: Date.now(),
 			};
 			try {
 				this.clients[i].socket.send(this.packageData(update));
@@ -165,6 +165,8 @@ var Server = Class.extend({
 					this.disconnectClient(this.clients[i].socket);
 			}
 		}
+		this.worldManager.update(this.clients, this.game.entities);
+		this.game.update();
 		this.frameTime = Date.now() - start;
 		this.lastUpdate = Date.now();
 		setTimeout(function() {

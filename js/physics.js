@@ -24,9 +24,8 @@ var Physics = Class.extend({
     var time = this.game.tick - this.game.lastTick;
 
     //console.log(time);
-    var percentOff = (time - this.game.tickRate) / this.game.tickRate;
+    var percentOff = ((time - this.game.tickRate) / this.game.tickRate);
     this.timeScale = percentOff + 1; //Multiply calculations by 1 + % off -- working currently
-    this.timeScale = 1;
     var nearbys = [];
     for (var i = 0; i < this.game.entities.length; i++) {
       var dist = this.game.entities[i].pos.distance(this.entity.pos);
@@ -58,7 +57,7 @@ var Physics = Class.extend({
       for (var k = 1; k <= 3; k++) {
         var collision = false;
         var colliding = null;
-        var v = vel.clone()
+        var v = vel.clone().scale(this.timeScale);
         v.scale(k / 3);
         for (var i = 0; i < nearbys.length; i++) {
           if (this.collidesWith.indexOf(nearbys[i].toJSON().classname) === -1) continue;
@@ -79,7 +78,7 @@ var Physics = Class.extend({
       }
       //Move entity based on velocity
 
-      this.entity.rotation.add(this.rv);
+      this.entity.rotation.add(this.rv * this.timeScale);
     } else {
       this.bounds.update();
     }
@@ -135,9 +134,9 @@ var Physics = Class.extend({
     if (this.rv > this.maxVelocity) this.rv = this.maxVelocity;
     else if (this.rv < this.maxVelocity * -1) this.rv = this.maxVelocity * -1;
 
-    this.vel.x += x * this.timeScale;
-    this.vel.y += y * this.timeScale;
-    this.rv += r * this.timeScale;
+    this.vel.x += x;
+    this.vel.y += y;
+    this.rv += r;
 
     if (Math.random() > 0.5) {
       //this.vel.x = this.vel.x * 0.99;
@@ -152,9 +151,9 @@ var Physics = Class.extend({
   },
   addAcceleration: function(x, y, r) {
     if (!r) r = 0;
-    this.accel.x += x * this.timeScale;
-    this.accel.y += y * this.timeScale;
-    this.ra += r * this.timeScale;
+    this.accel.x += x;
+    this.accel.y += y;
+    this.ra += r;
   },
   on: function(event, func) {
     //Add event listener for collision

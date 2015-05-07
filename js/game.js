@@ -16,6 +16,7 @@ var Game = Class.extend({
     this.entityFactory = new EntityFactory();
     this.eventManager = new EventManager();
     this.tickRate = 30;
+    this.lagCompensation = 1;
   },
   update: function(tickRate) {
     this.tick = Date.now();

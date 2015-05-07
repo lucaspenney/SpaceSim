@@ -33,8 +33,10 @@ var Client = Class.extend({
     this.loop();
     this.debug = true;
     this.frameTime = 0;
-    this.tickRate = 60;
+    this.tickRate = 30;
     this.lastUpdate = 0;
+    this.fps = 0;
+    this.second = 0;
   },
   loop: function() {
     var _this = this;
@@ -47,8 +49,7 @@ var Client = Class.extend({
       _this.screen.focusedEntity.setInput(_this.input.getInputState());
     }
 
-    if (Date.now() - _this.lastUpdate > 1000 / _this.tickRate && Date.now() - _this.connection.lastUpdate > 1000 / _this.tickRate) {
-      _this.game.lastTick = Math.max(_this.lastUpdate, _this.connection.lastUpdate);
+    if (Date.now() - this.lastUpdate > 1000 / _this.tickRate) {
       _this.game.update();
       _this.render();
       _this.lastUpdate = Date.now();
@@ -58,13 +59,18 @@ var Client = Class.extend({
     requestAnimationFrame(function() {
       _this.tick();
     });
-    //this.audio.update();
+    this.audio.update();
   },
   render: function() {
+    if (Date.now() - this.second > 1000) {
+      this.second = Date.now();
+      this.fps = 0;
+    }
     this.game.render(this.ctx, this.screen);
     this.chat.render(this.ctx, this.screen);
     this.ui.render(this.ctx, this.screen);
     this.debugOutput();
+    this.fps++;
   },
   debugOutput: function() {
     if (this.debug) {
@@ -73,9 +79,10 @@ var Client = Class.extend({
       this.ctx.fillText("Message Size (b): " + this.connection.lastPacketLength, 10, 10);
       this.ctx.fillText("Latency (ms): " + this.connection.latency + "ms", 10, 20);
       this.ctx.fillText("Client Frame Time (ms): " + this.frameTime, 10, 30);
-      this.ctx.fillText("Server Frame Time (ms): " + this.connection.serverFrameTime, 10, 40);
-      this.ctx.fillText("Server Update Rate (ms): " + this.connection.updateRate, 10, 50);
-      this.ctx.fillText("Client Update Time (ms): " + this.connection.updateTime, 10, 60);
+      this.ctx.fillText("Client FPS: " + this.fps, 10, 40);
+      this.ctx.fillText("Server Frame Time (ms): " + this.connection.serverFrameTime, 10, 50);
+      this.ctx.fillText("Server Update Rate (ms): " + this.connection.updateRate, 10, 60);
+      this.ctx.fillText("Client Update Time (ms): " + this.connection.updateTime, 10, 70);
     }
   },
 });

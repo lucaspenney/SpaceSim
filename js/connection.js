@@ -24,6 +24,7 @@ var Connection = Class.extend({
         this.serverFrameTime = 0;
         this.nextData = null;
         this.serverTickRate = 30;
+        this.serverMinDelay = 10;
         var _this = this;
         this.server.onmessage = function(message) {
             _this.lastPacketLength = message.data.length;
@@ -40,12 +41,9 @@ var Connection = Class.extend({
         var _this = this;
 
         this.updateRate = (Date.now() - this.lastReceive);
-        if (Date.now() - this.lastReceive < 1000 / this.serverTickRate) return;
         this.lastReceive = Date.now();
-        this.latency = data.latency / 2;
-        this.game.lagCompensation = (this.latency / 33) / 10;
-        this.game.lagCompensation = (data.frameTime / 33) * 1;
-        this.game.lagCompensation = 0;
+        this.latency = data.latency;
+        this.game.lagCompensation = 1;
         this.serverFrameTime = data.frameTime;
         this.client.chat.receiveMessages(data.messages);
 
@@ -104,9 +102,9 @@ var Connection = Class.extend({
         this.send(data.packetId);
         this.updateTime = Date.now() - start;
         this.lastUpdate = Date.now();
+        this.client.lastUpdate = Date.now();
+        this.client.game.lastTick = Date.now();
         this.client.render();
-        this.client.game.lastTick = Date.now() + this.updateTime;
-
         console.log('server update');
     },
     send: function(packetId) {
