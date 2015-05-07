@@ -80,6 +80,11 @@ var Ship = Entity.extend({
 		if (this.input.fire) {
 			this.weapon.fire();
 		}
+
+		if (this.landed) {
+			this.engine.fuel += 2;
+			this.landed = false;
+		}
 		this.physics.update();
 	},
 	render: function(ctx, screen) {
@@ -99,6 +104,7 @@ var Ship = Entity.extend({
 			physics: this.physics,
 			rotation: this.rotation,
 			engine: this.engine,
+			landed: this.landed,
 		};
 	}
 });
