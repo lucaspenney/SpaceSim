@@ -169,7 +169,7 @@ var Server = Class.extend({
 		this.lastUpdate = Date.now();
 		setTimeout(function() {
 			_this.tick();
-		}, 0);
+		}, (1000 / _this.tickRate) / 2);
 	},
 });
 

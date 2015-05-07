@@ -23,6 +23,7 @@ var Connection = Class.extend({
         this.updateRate = 0;
         this.serverFrameTime = 0;
         this.nextData = null;
+        this.serverTickRate = 30;
         var _this = this;
         this.server.onmessage = function(message) {
             _this.lastPacketLength = message.data.length;
@@ -37,7 +38,9 @@ var Connection = Class.extend({
     receive: function(data) {
         var start = Date.now();
         var _this = this;
+
         this.updateRate = (Date.now() - this.lastReceive);
+        if (Date.now() - this.lastReceive < 1000 / this.serverTickRate) return;
         this.lastReceive = Date.now();
         this.latency = data.latency / 2;
         this.game.lagCompensation = (this.latency / 33) / 10;
@@ -61,31 +64,29 @@ var Connection = Class.extend({
             }
         });
         //Update existing entities
+        var updateEntProperties = function(obj, entObj) {
+            _.forOwn(obj, function(value, prop) {
+                //First, underscore prefixed properties are entity references, reference them
+                if (prop.indexOf("_") !== -1) {
+                    _.forEach(entities, function(gEnt) {
+                        if (gEnt.id === value.id) {
+                            entObj[prop.replace("_", "")] = gEnt;
+                            return false;
+                        }
+                    });
+                } else if (typeof value === 'object' && entObj) {
+                    updateEntProperties(value, entObj[prop])
+                } else if (prop !== undefined && entObj) {
+                    entObj[prop] = value;
+                }
+            });
+        };
         _.forEach(data.entities, function(sEnt) {
             _.forEach(entities, function(cEnt) {
                 if (!_this.client.screen.focusedEntity && cEnt.id === data.focus.id) {
                     _this.client.screen.setFocusedEntity(cEnt);
                 }
                 if (cEnt.id === sEnt.id) {
-                    var updateEntProperties = function(obj, entObj) {
-                        _.forOwn(obj, function(value, prop) {
-                            //First, underscore prefixed properties are entity references, reference them
-                            if (prop.indexOf("_") !== -1) {
-                                _.forEach(entities, function(gEnt) {
-                                    if (gEnt.id === value.id) {
-                                        entObj[prop.replace("_", "")] = gEnt;
-                                        return false;
-                                    }
-                                });
-                            } else if (typeof value === 'object' && entObj) {
-                                updateEntProperties(value, entObj[prop])
-                            } else if (prop !== undefined && entObj) {
-                                entObj[prop] = value;
-                                //if (entObj[prop] !== value && !isNaN(value) && !isNaN(entObj[prop])) {
-                                //console.log(value);
-                            }
-                        });
-                    };
                     updateEntProperties(sEnt, cEnt);
                 }
             })
@@ -101,11 +102,12 @@ var Connection = Class.extend({
         });
 
         this.send(data.packetId);
-        this.client.render();
-        this.lastUpdate = Date.now() - (this.serverFrameTime - 30);
-        this.client.game.lastTick = this.lastUpdate;
         this.updateTime = Date.now() - start;
-        console.log("server update")
+        this.lastUpdate = Date.now();
+        this.client.render();
+        this.client.game.lastTick = Date.now() + this.updateTime;
+
+        console.log('server update');
     },
     send: function(packetId) {
         var data = {

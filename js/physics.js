@@ -26,6 +26,7 @@ var Physics = Class.extend({
     //console.log(time);
     var percentOff = (time - this.game.tickRate) / this.game.tickRate;
     this.timeScale = percentOff + 1; //Multiply calculations by 1 + % off -- working currently
+    this.timeScale = 1;
     var nearbys = [];
     for (var i = 0; i < this.game.entities.length; i++) {
       var dist = this.game.entities[i].pos.distance(this.entity.pos);
@@ -162,6 +163,7 @@ var Physics = Class.extend({
   toJSON: function() {
     return {
       vel: this.vel,
+      accel: this.accel,
       rv: this.rv,
       bounds: this.bounds,
     };
