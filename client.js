@@ -49,7 +49,7 @@ var Client = Class.extend({
       _this.screen.focusedEntity.setInput(_this.input.getInputState());
     }
 
-    if (Date.now() - this.lastUpdate > 1000 / _this.tickRate) {
+    if (Date.now() - this.lastUpdate > (1000 / this.tickRate) * 2) {
       _this.game.update();
       _this.render();
       _this.lastUpdate = Date.now();
