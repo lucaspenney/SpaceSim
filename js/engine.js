@@ -24,7 +24,7 @@ var Engine = Class.extend({
     },
     useFuel: function(num) {
         num = (num) ? num : 1;
-        if (this.fuel > num) {
+        if (this.fuel >= num) {
             this.fuel -= num
             return true;
         }

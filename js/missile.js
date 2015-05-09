@@ -5,7 +5,18 @@ var Sprite = require('./sprite');
 var BoundingBox = require('./boundingbox');
 var Trail = require('./trail');
 var Ship = require('./ship');
+var Planet = require('./planet');
 var ParticleSystem = require('./particlesystem');
+var Engine = require('./engine');
+var Vector = require('./vector');
+
+Math.sign = Math.sign || function(x) {
+    x = +x; // convert to a number
+    if (x === 0 || isNaN(x)) {
+        return x;
+    }
+    return x > 0 ? 1 : -1;
+}
 
 var Missile = Entity.extend({
     init: function(game, id, x, y) {
@@ -17,7 +28,7 @@ var Missile = Entity.extend({
         //this.physics.setVelocity(Math.random(), (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10);
         this.physics.collidesWith = ['Asteroid', 'Planet', 'Ship'];
         this.physics.mass = 10;
-        this.physics.maxVelocity = 16;
+        this.physics.maxVelocity = 8;
         var _this = this;
         this.physics.on('pre-collide', function(entity) {
             if (!this.owner) return false;
@@ -27,17 +38,15 @@ var Missile = Entity.extend({
         });
         this.physics.on('post-collide', function(entity) {
             if (entity instanceof Ship) {
-                this.game.entityFactory.create('Explosion', this.game, entity.pos.x, entity.pos.y);
                 entity.destroy();
             }
+            this.game.entityFactory.create('Explosion', this.game, entity.pos.x, entity.pos.y);
             this.destroy();
         });
         this.owner = null;
-        this.speed = 0.1;
+        this.speed = 0.5;
         this.lastFireTime = 0;
-        this.fuel = 300;
-        this.particles = new ParticleSystem(this.game, this.pos.x, this.pos.y, 'engine');
-        this.particles.setParent(this, 0, 0);
+        this.engine = new Engine(this);
         this.rotation = new Angle();
     },
     setTarget: function(target) {
@@ -62,7 +71,8 @@ var Missile = Entity.extend({
                 }
             }
         }
-        if (this.owner && this.target && this.fuel > 0) {
+        this.engine.mainOn = false;
+        if (this.owner && this.target && this.engine.hasFuel()) {
             var x = this.pos.x - this.target.pos.x;
             var y = this.pos.y - this.target.pos.y;
             var angle = new Angle().fromRadians((Math.atan2(y, x)));
@@ -70,17 +80,25 @@ var Missile = Entity.extend({
 
             var x = Math.cos(this.rotation.toRadians()) * this.speed;
             var y = Math.sin(this.rotation.toRadians()) * this.speed;
-            this.physics.addAcceleration(x, y, 0);
+            var targetVel = new Vector(x, y);
             this.rotation.add(90);
-            this.fuel--;
+            if (Math.sign(targetVel.x) !== Math.sign(this.physics.vel.x) ||
+                Math.sign(targetVel.y) !== Math.sign(this.physics.vel.y)) {
+                //Correct tradjectory when off course
+                this.physics.addAcceleration(x * 2, y * 3, 0);
+                this.engine.mainOn = true;
+                this.engine.useFuel(3);
+            } else {
+                //Move towards target
+                this.physics.addAcceleration(x * 0.5, y * 0.5, 0);
+
+                this.engine.mainOn = false;
+                this.engine.useFuel(2);
+            }
         }
     },
-    render: function(ctx, screen) {
-        this.particles.turnOn();
-        if (this.fuel <= 0) {
-            this.particles.turnOff();
-        }
-        this.particles.render(ctx, screen);
+    render: function(ctx, screen, audio) {
+        this.engine.render(ctx, screen, audio);
         this._super(ctx, screen);
         //this.physics.bounds.render(ctx, screen);
     },
@@ -94,6 +112,7 @@ var Missile = Entity.extend({
             },
             rotation: this.rotation,
             physics: this.physics,
+            engine: this.engine,
             fuel: this.fuel,
             _owner: this.owner,
         };

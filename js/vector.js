@@ -142,6 +142,14 @@ Vector.prototype = {
   distance: function(v) {
     return Math.sqrt(Math.pow((v.x - this.x), 2) + Math.pow((v.y - this.y), 2));
   },
+  greaterThan: function(v) {
+    if (this.x > v.x && this.y > v.y) return true;
+    return false;
+  },
+  lessThan: function(v) {
+    if (this.x < v.x && this.y < v.y) return true;
+    return false;
+  },
   absoluteGreaterThan: function(n) {
     return Math.abs(this.x) + Math.abs(this.y) > n;
   },
