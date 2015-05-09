@@ -89,6 +89,16 @@ var Ship = Entity.extend({
 		//this.trail.render(ctx, screen);
 		this.engine.render(ctx, screen, audio);
 		this._super(ctx, screen);
+
+		if (!this.sounds.engine && this.engine.mainOn) {
+			audio.playSound("engine", this, function(id) {
+				this.sounds.engine = id;
+			})
+		}
+		if (this.sounds.engine && !this.engine.mainOn) {
+			audio.stopSound("engine", this.sounds.engine);
+			this.sounds.engine = null;
+		}
 		//this.physics.bounds.render(ctx, screen);
 	},
 	setInput: function(input) {

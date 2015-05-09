@@ -25,7 +25,18 @@ var Audio = Class.extend({
             volume: 0.5,
             buffer: true,
         });
-
+        this.game.on('entity.destroyed', function(entity) {
+            var sounds = entity.sounds;
+            if (sounds) {
+                for (var k in sounds) {
+                    if (sounds.hasOwnProperty(k)) {
+                        console.log(sounds[k]);
+                        _this.sounds[k].stop(sounds[k]);
+                        entity.sounds[k] = null;
+                    }
+                }
+            }
+        });
     },
     playSound: function(soundName, context, callback) {
         this.sounds[soundName].play(function(id) {
@@ -36,6 +47,9 @@ var Audio = Class.extend({
     stopSound: function(soundName, soundId) {
         this.sounds[soundName].stop(soundId);
     },
+    disableMusic: function() {
+        this.sounds["background"].stop();
+    }
 });
 
 module.exports = Audio;
