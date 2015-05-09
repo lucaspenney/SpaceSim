@@ -9,6 +9,7 @@ var Engine = Class.extend({
         this.leftOn = false;
         this.rightOn = false;
         this.fuel = 1000;
+        this.maxFuel = 1000;
         this.particles = new ParticleSystem(this.game, this.ship.pos.x, this.ship.pos.y, 'engine')
         this.particles.setParent(this.ship, 0, 0);
         this.sounds = {};
@@ -28,6 +29,10 @@ var Engine = Class.extend({
             return true;
         }
         return false
+    },
+    addFuel: function(amount) {
+        this.fuel += amount;
+        if (this.fuel > this.maxFuel) this.fuel = this.maxFuel;
     },
     render: function(ctx, screen, audio) {
         if (this.mainOn && this.fuel > 0) {

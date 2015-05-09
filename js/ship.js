@@ -80,7 +80,7 @@ var Ship = Entity.extend({
 		}
 
 		if (this.landed) {
-			this.engine.fuel += 2;
+			this.engine.addFuel(2);
 			this.landed = false;
 		}
 		this.physics.update();
