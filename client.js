@@ -75,6 +75,7 @@ var Client = Class.extend({
     if (this.debug) {
       this.ctx.fillStyle = "#FFF";
       this.ctx.font = 'normal 8pt Monospace';
+      this.ctx.textAlign = 'left';
       this.ctx.fillText("Message Size (b): " + this.connection.lastPacketLength, 10, 10);
       this.ctx.fillText("Latency (ms): " + this.connection.latency + "ms", 10, 20);
       this.ctx.fillText("Client Frame Time (ms): " + this.frameTime, 10, 30);

@@ -62,6 +62,7 @@ var Chat = Class.extend({
         return message;
     },
     render: function(ctx, screen) {
+        ctx.textAlign = 'center';
         var numMessages = (this.messages.length > 5) ? 5 : this.messages.length;
         for (var i = 0; i < numMessages; i++) {
             var message = this.messages[(this.messages.length - numMessages) + i];

@@ -1,5 +1,6 @@
 var EventManager = require('./eventmanager');
 var Stars = require('./stars');
+var Sprite = require('./sprite');
 
 function Screen(client) {
     this.client = client;
