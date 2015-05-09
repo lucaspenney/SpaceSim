@@ -9,6 +9,7 @@ var Explosion = Entity.extend({
         this.time = 1000;
         this.lifeTime = Date.now() + this.time;
         this.shouldSpawn = true;
+        this.sounds = {};
     },
     update: function() {
         if (this.lifeTime - (this.time / 2) < Date.now()) {
@@ -20,8 +21,13 @@ var Explosion = Entity.extend({
             this.destroy();
         }
     },
-    render: function(ctx, screen) {
+    render: function(ctx, screen, audio) {
         this.particles.render(ctx, screen);
+        if (!this.sounds.explosion) {
+            audio.playSound("explosion", this, function(id) {
+                this.sounds.explosion = id;
+            });
+        }
     },
     toJSON: function() {
         return {

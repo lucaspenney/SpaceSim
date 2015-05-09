@@ -59,14 +59,13 @@ var Client = Class.extend({
     requestAnimationFrame(function() {
       _this.tick();
     });
-    this.audio.update();
   },
   render: function() {
     if (Date.now() - this.second > 1000) {
       this.second = Date.now();
       this.fps = 0;
     }
-    this.game.render(this.ctx, this.screen);
+    this.game.render(this.ctx, this.screen, this.audio);
     this.chat.render(this.ctx, this.screen);
     this.ui.render(this.ctx, this.screen);
     this.debugOutput();

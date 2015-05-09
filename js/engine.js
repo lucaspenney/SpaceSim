@@ -11,6 +11,7 @@ var Engine = Class.extend({
         this.fuel = 1000;
         this.particles = new ParticleSystem(this.game, this.ship.pos.x, this.ship.pos.y, 'engine')
         this.particles.setParent(this.ship, 0, 0);
+        this.sounds = {};
     },
     hasFuel: function() {
         if (this.fuel <= 0) {
@@ -21,13 +22,27 @@ var Engine = Class.extend({
         return this.fuel > 0;
     },
     useFuel: function(num) {
-        this.fuel -= (num) ? num : 1;
+        num = (num) ? num : 1;
+        if (this.fuel > num) {
+            this.fuel -= num
+            return true;
+        }
+        return false
     },
-    render: function(ctx, screen) {
+    render: function(ctx, screen, audio) {
         if (this.mainOn && this.fuel > 0) {
             this.particles.turnOn();
         } else this.particles.turnOff();
         this.particles.render(ctx, screen);
+        if (!this.sounds.engine && this.mainOn) {
+            audio.playSound("engine", this, function(id) {
+                this.sounds.engine = id;
+            })
+        }
+        if (this.sounds.engine && !this.mainOn) {
+            audio.stopSound("engine", this.sounds.engine);
+            this.sounds.engine = null;
+        }
     },
     toJSON: function() {
         return {

@@ -11,6 +11,7 @@ var Entity = Class.extend({
     this.rotation = new Angle();
     this.sprite = null;
     this.layer = 0;
+    this.sounds = {};
     this.active = true;
     this.game.eventManager.dispatch('entity.created', this, this);
   },

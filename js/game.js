@@ -26,7 +26,7 @@ var Game = Class.extend({
     }
     this.lastTick = this.tick;
   },
-  render: function(ctx, screen) {
+  render: function(ctx, screen, audio) {
     if (!ctx || !screen) return;
     ctx.fillStyle = "#000000";
     ctx.clearRect(0, 0, screen.width, screen.height);
@@ -43,7 +43,7 @@ var Game = Class.extend({
       return 0;
     });
     for (var i = 0; i < this.entities.length; i++) {
-      this.entities[i].render(ctx, screen);
+      this.entities[i].render(ctx, screen, audio);
     }
   },
   on: function(event, func) {

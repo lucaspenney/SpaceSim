@@ -58,25 +58,23 @@ var Ship = Entity.extend({
 	},
 	update: function() {
 		this._super();
-		if (this.engine.hasFuel()) {
-			if (this.input.up) {
+		this.engine.mainOn = false;
+		if (this.input.up) {
+			if (this.engine.useFuel(2)) {
 				this.engine.mainOn = true;
-				this.engine.useFuel(2);
 				var x = Math.cos(this.rotation.clone().subtract(90).toRadians()) * this.mainThrust;
 				var y = Math.sin(this.rotation.clone().subtract(90).toRadians()) * this.mainThrust;
 				this.physics.addAcceleration(x, y, 0);
-			} else {
-				this.mainOn = false;
 			}
-			if (this.input.left) { //Left Arrow
-				this.engine.useFuel();
-				this.physics.addAcceleration(0, 0, this.turnThrust * -1);
-			}
-			if (this.input.right) { //Right Arrow
-				this.engine.useFuel();
-				this.physics.addAcceleration(0, 0, this.turnThrust);
-			}
-		} else this.engine.mainOn = false;
+		}
+		if (this.input.left) { //Left Arrow
+			this.engine.useFuel();
+			this.physics.addAcceleration(0, 0, this.turnThrust * -1);
+		}
+		if (this.input.right) { //Right Arrow
+			this.engine.useFuel();
+			this.physics.addAcceleration(0, 0, this.turnThrust);
+		}
 		if (this.input.fire) {
 			this.weapon.fire();
 		}
@@ -87,9 +85,9 @@ var Ship = Entity.extend({
 		}
 		this.physics.update();
 	},
-	render: function(ctx, screen) {
+	render: function(ctx, screen, audio) {
 		//this.trail.render(ctx, screen);
-		this.engine.render(ctx, screen);
+		this.engine.render(ctx, screen, audio);
 		this._super(ctx, screen);
 		//this.physics.bounds.render(ctx, screen);
 	},
