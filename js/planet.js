@@ -5,12 +5,20 @@ var BoundingCircle = require('./boundingcircle');
 
 var PlanetTypes = [{
     img: "planet1.png",
+    diameter: 650,
+    width: 750,
 }, {
     img: "planet2.png",
+    diameter: 565,
+    width: 628,
 }, {
     img: "planet3.png",
+    diameter: 650,
+    width: 710,
 }, {
     img: "planet4.png",
+    diameter: 650,
+    width: 710,
 }, ];
 
 var Planet = Entity.extend({
@@ -19,7 +27,7 @@ var Planet = Entity.extend({
         this.width = Math.floor(Math.random() * 450) + 325;
         this.height = this.width;
         this._super(game, id, x, y);
-        this.radius = (this.width / 2) * 0.86;
+        this.radius = ((this.width / planet.width) * planet.diameter) / 2;
         this.sprite = new Sprite(this, "img/" + planet.img);
         this.physics = new Physics(game, this, new BoundingCircle(this.game, this, this.radius));
         this.physics.setVelocity(Math.random(), Math.random(), (Math.random() - 0.5) * 5);
