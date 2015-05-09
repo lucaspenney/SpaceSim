@@ -5,19 +5,19 @@ var BoundingCircle = require('./boundingcircle');
 
 var PlanetTypes = [{
     img: "planet1.png",
-    diameter: 650,
+    diameter: 640,
     width: 750,
 }, {
     img: "planet2.png",
-    diameter: 565,
+    diameter: 560,
     width: 628,
 }, {
     img: "planet3.png",
-    diameter: 650,
+    diameter: 640,
     width: 710,
 }, {
     img: "planet4.png",
-    diameter: 650,
+    diameter: 640,
     width: 710,
 }, ];
 

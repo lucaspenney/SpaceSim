@@ -35,6 +35,7 @@ var Client = Class.extend({
     this.frameTime = 0;
     this.tickRate = 30;
     this.lastUpdate = 0;
+    this.lastRender = 0;
     this.fps = 0;
     this.second = 0;
   },
@@ -44,32 +45,35 @@ var Client = Class.extend({
   },
   tick: function() {
     var _this = this;
-    var curTime = Date.now();
+
     if (_this.screen.focusedEntity) {
       _this.screen.focusedEntity.setInput(_this.input.getInputState());
     }
 
-    if (Date.now() - this.lastUpdate > (1000 / this.tickRate) * 2) {
+    if (Date.now() - this.lastRender > (1000 / this.tickRate)) {
+      console.log('self update');
       _this.game.update();
       _this.render();
       _this.lastUpdate = Date.now();
-      console.log("self update");
     }
-    _this.frameTime = Date.now() - curTime;
+
     requestAnimationFrame(function() {
       _this.tick();
     });
   },
   render: function() {
+    this.lastRender = Date.now();
     if (Date.now() - this.second > 1000) {
       this.second = Date.now();
       this.fps = 0;
     }
+    var curTime = Date.now();
     this.game.render(this.ctx, this.screen, this.audio);
     this.chat.render(this.ctx, this.screen);
     this.ui.render(this.ctx, this.screen);
     this.debugOutput();
     this.fps++;
+    this.frameTime = Date.now() - curTime;
   },
   debugOutput: function() {
     if (this.debug) {

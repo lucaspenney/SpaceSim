@@ -28,7 +28,7 @@ var Player = Entity.extend({
 	update: function() {
 		this._super();
 		if (this.ship) {
-			this.pos = this.ship.pos;
+			this.pos = this.ship.pos.clone();;
 			this.ship.setInput(this.input);
 		}
 	},
@@ -72,7 +72,7 @@ var Player = Entity.extend({
 	setInput: function(input) {
 		this.input = input;
 		if (this.ship) {
-			this.ship.input = input;
+			this.ship.setInput(this.input);
 		}
 	},
 	requestRespawn: function() {

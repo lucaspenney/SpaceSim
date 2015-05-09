@@ -37,16 +37,15 @@ var Connection = Class.extend({
         }
     },
     receive: function(data) {
+        console.log('receiving');
         var start = Date.now();
         var _this = this;
-
         this.updateRate = (Date.now() - this.lastReceive);
         this.lastReceive = Date.now();
         this.latency = data.latency;
         this.game.lagCompensation = 1;
         this.serverFrameTime = data.frameTime;
         this.client.chat.receiveMessages(data.messages);
-
         var entities = this.game.entities;
         //First, delete any removed entities
         _.forEach(entities, function(entity, index) {
@@ -107,7 +106,6 @@ var Connection = Class.extend({
         this.client.lastUpdate = Date.now();
         this.client.game.lastTick = Date.now();
         this.client.render();
-        console.log('server update');
     },
     send: function(packetId) {
         var data = {

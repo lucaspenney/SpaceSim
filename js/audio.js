@@ -30,7 +30,6 @@ var Audio = Class.extend({
             if (sounds) {
                 for (var k in sounds) {
                     if (sounds.hasOwnProperty(k)) {
-                        console.log(sounds[k]);
                         _this.sounds[k].stop(sounds[k]);
                         entity.sounds[k] = null;
                     }

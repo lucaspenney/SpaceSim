@@ -91,6 +91,7 @@ var Ship = Entity.extend({
 		this._super(ctx, screen);
 
 		if (!this.sounds.engine && this.engine.mainOn) {
+			this.sounds.engine = true;
 			audio.playSound("engine", this, function(id) {
 				this.sounds.engine = id;
 			})

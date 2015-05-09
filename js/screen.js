@@ -49,21 +49,29 @@ Screen.prototype.setYOffset = function(y) {
 };
 
 Screen.prototype.setFocusedEntity = function(ent) {
-    this.focusedEntity = ent;
-    console.log(this.focusedEntity)
-    this.xOffset = ent.pos.x - (this.width / 2);
-    this.yOffset = ent.pos.y - (this.height / 2);
+    if (ent.ship) {
+        this.focusedEntity = ent;
+    } else return;
+    this.targetXOffset = ent.ship.pos.x - (this.width / 2);
+    this.targetXOffset = ent.ship.pos.y - (this.height / 2);
     this.eventManager.dispatch('focus');
+    this.xOffset = this.targetXOffset;
+    this.yOffset = this.targetYOffset;
 }
 
 Screen.prototype.render = function(ctx, screen) {
+
     var lookAheadFactor = 12;
     if (this.focusedEntity && this.focusedEntity.ship) {
-        this.targetXOffset = this.focusedEntity.pos.x + this.focusedEntity.ship.physics.vel.clone().scale(lookAheadFactor).x - (this.width / 2);
-        this.targetYOffset = this.focusedEntity.pos.y + this.focusedEntity.ship.physics.vel.clone().scale(lookAheadFactor).y - (this.height / 2);
+        this.targetXOffset = this.focusedEntity.ship.pos.x + this.focusedEntity.ship.physics.vel.clone().scale(lookAheadFactor).x - (this.width / 2);
+        this.targetYOffset = this.focusedEntity.ship.pos.y + this.focusedEntity.ship.physics.vel.clone().scale(lookAheadFactor).y - (this.height / 2);
+        this.targetXOffset = this.focusedEntity.ship.pos.x - (this.width / 2);
+        this.targetyOffset = this.focusedEntity.ship.pos.y - (this.height / 2);
+        //this.xOffset += (this.targetXOffset - this.xOffset) * 0.25;
+        //this.yOffset += (this.targetYOffset - this.yOffset) * 0.25;
     }
-    this.xOffset += (this.targetXOffset - this.xOffset) * 0.25;
-    this.yOffset += (this.targetYOffset - this.yOffset) * 0.25;
+    this.xOffset = this.targetXOffset;
+    this.yOffset = this.targetYOffset;
     this.stars.render(ctx, screen);
 }
 
