@@ -23,6 +23,7 @@ var Player = Entity.extend({
 			name: '',
 			pos: {}
 		}];
+		this.layer = 999;
 	},
 	update: function() {
 		this._super();
@@ -35,8 +36,9 @@ var Player = Entity.extend({
 		//Render player name
 		if (this.ship) {
 			ctx.fillStyle = "#CCF";
+			ctx.textAlign = 'center';
 			if (screen.focusedEntity !== this)
-				ctx.fillText("Player", this.pos.x - screen.xOffset - (this.ship.width / 2), this.pos.y - screen.yOffset - (this.ship.height));
+				ctx.fillText("Player", this.pos.x - screen.xOffset, this.pos.y - screen.yOffset - (this.ship.height));
 		}
 		if (screen.focusedEntity === this) {
 			for (var i = 0; i < this.radar.length; i++) {
@@ -52,10 +54,13 @@ var Player = Entity.extend({
 				var y = Math.sin(angle.toRadians()) * 300;
 
 				var p = new Vector(this.pos.x + x, this.pos.y + y);
-				var p2 = new Vector(this.pos.x + (x * 2), this.pos.y + (y * 2));
+				var p2 = new Vector(this.pos.x + (x * 5), this.pos.y + (y * 5));
 
 				ctx.strokeStyle = "#FFF";
-				ctx.fillText(this.radar[i].name, p.x - screen.xOffset - (this.radar[i].name.length * 2), p.y - screen.yOffset);
+				ctx.textAlign = 'center';
+				var t = p.clone().subtract(new Vector(x * 0.2, y * 0.2));
+				ctx.fillText(this.radar[i].name, t.x - screen.xOffset, t.y - screen.yOffset);
+				ctx.fillText(Math.floor(distance) + "m", t.x - screen.xOffset, t.y - screen.yOffset + 20);
 				ctx.beginPath();
 				ctx.moveTo(p.x - screen.xOffset, p.y - screen.yOffset);
 				ctx.lineTo(p2.x - screen.xOffset, p2.y - screen.yOffset);
@@ -74,7 +79,7 @@ var Player = Entity.extend({
 		var _this = this;
 		setTimeout(function() {
 			_this.needSpawn = true;
-		}, 1000)
+		}, 1000);
 	},
 	toJSON: function() {
 		return {

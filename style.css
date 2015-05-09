@@ -23,11 +23,11 @@ input {
     left: 20px;;
     z-index:99;;
     background-color:none;
-    opacity:0.5;
+    opacity:0.2;
     width: 250px;;
 }
 input:focus {
-    opacity: 0.9;
+    opacity: 0.5;
 }
 
 textarea:focus, input:focus{

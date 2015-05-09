@@ -72,6 +72,8 @@ var Connection = Class.extend({
                             return false;
                         }
                     });
+                } else if (value instanceof Array) {
+                    entObj[prop] = value;
                 } else if (typeof value === 'object' && entObj) {
                     updateEntProperties(value, entObj[prop])
                 } else if (prop !== undefined && entObj) {
