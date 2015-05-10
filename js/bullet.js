@@ -31,7 +31,7 @@ var Bullet = Entity.extend({
             }
             this.destroy();
         });
-        this.trail = new Trail(this.game, this, 6, 0);
+        //this.trail = new Trail(this.game, this, 6, 0);
         var _this = this;
     },
     setOwner: function(owner) {
@@ -41,7 +41,7 @@ var Bullet = Entity.extend({
         this.physics.update();
     },
     render: function(ctx, screen) {
-        this.trail.render(ctx, screen);
+        //this.trail.render(ctx, screen);
         this._super(ctx, screen);
         //this.physics.bounds.render(ctx, screen);
     },

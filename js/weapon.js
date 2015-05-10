@@ -40,12 +40,4 @@ var Weapon = Class.extend({
 	},
 });
 
-function degToRad(angle) {
-	return ((angle * Math.PI) / 180);
-}
-
-function radToDeg(angle) {
-	return ((angle * 180) / Math.PI);
-}
-
 module.exports = Weapon;
