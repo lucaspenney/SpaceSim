@@ -104,7 +104,7 @@ var Connection = Class.extend({
         this.updateTime = Date.now() - start;
         this.lastUpdate = Date.now();
         this.client.lastUpdate = Date.now();
-        this.client.game.lastTick = Date.now();
+        this.client.game.lastTick = Date.now() - this.updateTime;
         this.client.render();
     },
     send: function(packetId) {

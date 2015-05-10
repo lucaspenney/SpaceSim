@@ -59,7 +59,7 @@ var ParticleSystem = Class.extend({
 			var vel = this.parent.physics.vel.clone();
 			var pos = this.pos.clone();
 			var v = new Vector((Math.random() - 0.5), Math.random() - 0.5);
-			v.scale(5);
+			v.scale(2);
 			vel.add(v);
 			var direction = Math.random() * 360;
 			this.particles.push(new Particle(this.game, this.pos.x, this.pos.y, 1, vel.x, vel.y, this.opts.decay, direction));

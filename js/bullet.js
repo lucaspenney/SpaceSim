@@ -8,16 +8,19 @@ var Ship = require('./ship');
 var Bullet = Entity.extend({
     init: function(game, id, x, y) {
         this._super(game, id, x, y);
+        this.width = 6;
+        this.height = 18;
         this.sprite = new Sprite(this, "img/bullet.png");
         this.physics = new Physics(this.game, this, new BoundingBox(this.game, this));
-        //this.physics.setVelocity(Math.random(), (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10);
         this.physics.collidesWith = ['Asteroid', 'Planet', 'Ship'];
-        this.physics.mass = 0;
+        this.physics.mass = 2;
         this.physics.maxVelocity = 16;
-        var _this = this;
+        this.owner = null;
         this.physics.on('pre-collide', function(entity) {
+
             if (!this.owner) return false;
             if (entity.id === this.owner.id) {
+
                 return false;
             }
         });
@@ -28,8 +31,8 @@ var Bullet = Entity.extend({
             }
             this.destroy();
         });
-        this.trail = new Trail(this.game, this, 5, 0);
-        this.owner = null;
+        this.trail = new Trail(this.game, this, 6, 0);
+        var _this = this;
     },
     setOwner: function(owner) {
         this.owner = owner;

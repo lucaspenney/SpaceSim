@@ -25,7 +25,6 @@ var Missile = Entity.extend({
         this.height = 35;
         this.sprite = new Sprite(this, "img/missile.png");
         this.physics = new Physics(this.game, this, new BoundingBox(this.game, this));
-        //this.physics.setVelocity(Math.random(), (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10);
         this.physics.collidesWith = ['Asteroid', 'Planet', 'Ship'];
         this.physics.mass = 10;
         this.physics.maxVelocity = 8;

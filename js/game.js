@@ -36,9 +36,9 @@ var Game = Class.extend({
       if (b === null) return -1;
       if (a.layer === undefined) a.layer = 0;
       if (b.layer === undefined) b.layer = 0;
-      if (a.layer < b.layer)
-        return -1;
       if (a.layer > b.layer)
+        return -1;
+      if (a.layer < b.layer)
         return 1;
       return 0;
     });

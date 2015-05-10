@@ -5,7 +5,7 @@ var BoundingCircle = require('./boundingcircle');
 
 var PlanetTypes = [{
     img: "planet1.png",
-    diameter: 640,
+    diameter: 630,
     width: 750,
 }, {
     img: "planet2.png",
