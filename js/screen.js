@@ -8,8 +8,8 @@ function Screen(client) {
     this.yOffset = 0;
     this.targetXOffset = 0;
     this.targetYOffset = 0;
-    this.width = Math.min($(window).width(), 1280);
-    this.height = Math.min($(window).height(), 960);;
+    this.width = Math.min(window.innerWidth, 1280);
+    this.height = Math.min(window.innerHeight, 960);
     this.focusedEntity = null;
     this.eventManager = new EventManager();
     this.stars = new Stars(this);
