@@ -11,14 +11,44 @@ var ParticleSystem = Class.extend({
 		this.active = false;
 		this.particleTypes = {
 			'engine': {
-				refreshAmount: 20,
-				amount: 300,
-				decay: 0.88,
+				refreshAmount: 50,
+				amount: 1000,
+				rate: 50,
+				r: 000,
+				g: 000,
+				b: 00,
+				size: 2,
+				step: function(t) {
+					if (t < 1) {
+						this.vel.x += (Math.random() - 0.5) * 5;
+						this.vel.y += (Math.random() - 0.5) * 5;
+					}
+					this.a *= 0.9;
+					if (t < 10) {
+						var h = (t) * 10;
+						this.r = 100 + Math.random() * 155 - h;
+						this.g = 100 + Math.random() * 155 - h;
+					} else {
+						this.r = 150;
+						this.g = 150;
+						this.b = 150;
+						this.size = 3;
+					}
+					this.vel.x += Math.random() - 0.5;
+					this.vel.y += Math.random() - 0.5;
+				}
 			},
 			'explosion': {
-				refreshAmount: 10,
-				amount: 150,
-				decay: 0.85,
+				r: 255,
+				g: 100,
+				b: 100,
+				rate: 30,
+				step: function(t) {
+					this.a *= 0.88;
+					this.r -= 2;
+					this.g--;
+					this.b--;
+				},
 			}
 		};
 		this.opts = this.particleTypes[type];
@@ -29,24 +59,21 @@ var ParticleSystem = Class.extend({
 		if (!this.active) return;
 		if (this.parent) {
 			this.pos = this.parent.pos.clone();
-			this.pos.add(this.parent.physics.vel.clone().scale(0.5));
 			var x = this.xOffset + Math.cos(this.parent.rotation.clone().add(90).toRadians()) * 13;
 			var y = this.yOffset + Math.sin(this.parent.rotation.clone().add(90).toRadians()) * 13;
 			this.pos.x += x;
 			this.pos.y += y;
 		}
-		if (this.particles.length === 0) {
-			for (var i = 0; i < this.opts.amount; i++) {
-				this.createParticle();
-			}
-		}
+
 		if (this.particles.length >= this.opts.amount) {
 			for (var i = 0; i < this.opts.refreshAmount; i++) {
 				this.particles.shift();
 				this.createParticle();
 			}
 		} else {
-			this.createParticle();
+			for (var i = 0; i < this.opts.rate; i++) {
+				this.createParticle();
+			}
 		}
 	},
 	setParent: function(entity, xOffset, yOffset) {
@@ -56,18 +83,23 @@ var ParticleSystem = Class.extend({
 	},
 	createParticle: function() {
 		if (this.parent) {
-			var vel = this.parent.physics.vel.clone();
 			var pos = this.pos.clone();
+			pos.add(this.parent.physics.vel.clone().scale(-1).scale((Math.random() - 0.5) * 3));
+			console.log(pos);
 			var v = new Vector((Math.random() - 0.5), Math.random() - 0.5);
 			v.scale(2);
-			vel.add(v);
-			var direction = Math.random() * 360;
-			this.particles.push(new Particle(this.game, this.pos.x, this.pos.y, 1, vel.x, vel.y, this.opts.decay, direction));
+
+			var p = $.extend({
+				vel: vel
+			}, this.opts);
+			this.particles.push(new Particle(this.game, pos.x, pos.y, p));
 		} else {
 			var vel = new Vector((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 5);
 			var pos = this.pos.clone();
-			var direction = Math.random() * 360;
-			this.particles.push(new Particle(this.game, this.pos.x, this.pos.y, 1, vel.x, vel.y, this.opts.decay, direction));
+			var p = $.extend({
+				vel: vel
+			}, this.opts);
+			this.particles.push(new Particle(this.game, this.pos.x, this.pos.y, p));
 		}
 	},
 	render: function(ctx, screen) {
