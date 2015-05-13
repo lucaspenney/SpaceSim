@@ -26,8 +26,7 @@ var Bullet = Entity.extend({
         });
         this.physics.on('post-collide', function(entity) {
             if (entity instanceof Ship) {
-                this.game.entityFactory.create('Explosion', this.game, entity.pos.x, entity.pos.y);
-                entity.destroy();
+                entity.takeDamage(34);
             }
             this.destroy();
         });
@@ -45,6 +44,10 @@ var Bullet = Entity.extend({
         this._super(ctx, screen);
         //this.physics.bounds.render(ctx, screen);
     },
+    getOwner: function() {
+        if (this.owner) return this.owner;
+        return {};
+    },
     toJSON: function() {
         return {
             classname: "Bullet",
@@ -55,7 +58,7 @@ var Bullet = Entity.extend({
             },
             rotation: this.rotation,
             physics: this.physics,
-            _owner: this.owner,
+            _owner: this.getOwner().id,
         };
     }
 });

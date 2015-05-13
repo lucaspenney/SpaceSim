@@ -7,7 +7,7 @@ var Weapon = Class.extend({
 		this.lastFireTime = Date.now();
 		this.missileFireRate = 1000;
 		this.bulletFireRate = 100;
-		this.mode = "missile";
+		this.mode = "bullet";
 	},
 	fire: function() {
 		if (this.mode === "missile") {
@@ -22,7 +22,7 @@ var Weapon = Class.extend({
 				}
 				this.lastFireTime = Date.now();
 			}
-		} else {
+		} else if (this.mode === "bullet") {
 			if (Date.now() - this.lastFireTime > this.bulletFireRate) {
 				var bullet = this.parent.game.entityFactory.create('Bullet', this.parent.game, this.parent.pos.x, this.parent.pos.y);
 				if (bullet) {

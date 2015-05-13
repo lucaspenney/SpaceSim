@@ -33,6 +33,7 @@ var Ship = Entity.extend({
 		this.engine = new Engine(this);
 		this.weapon = new Weapon(this);
 		this.landed = false;
+		this.health = 100;
 		var _this = this;
 		this.physics.on('post-collide', function(entity) {
 			if (entity instanceof Planet) {
@@ -106,6 +107,13 @@ var Ship = Entity.extend({
 	setInput: function(input) {
 		this.input = input;
 	},
+	takeDamage: function(damage) {
+		this.health -= damage;
+		if (this.health <= 0) {
+			this.game.entityFactory.create('Explosion', this.game, this.pos.x, this.pos.y);
+			this.destroy();
+		}
+	},
 	toJSON: function() {
 		return {
 			classname: "Ship",
@@ -115,6 +123,7 @@ var Ship = Entity.extend({
 			rotation: this.rotation,
 			engine: this.engine,
 			landed: this.landed,
+			health: this.health,
 			_player: this.player.id,
 		};
 	}
