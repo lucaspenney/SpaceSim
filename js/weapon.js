@@ -5,9 +5,9 @@ var Weapon = Class.extend({
 	init: function(parent) {
 		this.parent = parent;
 		this.lastFireTime = Date.now();
-		this.missileFire = 1000;
+		this.missileFireRate = 1000;
 		this.bulletFireRate = 100;
-		this.mode = "bullet";
+		this.mode = "missile";
 	},
 	fire: function() {
 		if (this.mode === "missile") {
