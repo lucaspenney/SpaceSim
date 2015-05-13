@@ -15,22 +15,22 @@ var BlackHole = require('./blackhole');
 
 var Ship = Entity.extend({
 	init: function(game, id, x, y) {
-		this.width = 30;
-		this.height = 30;
+		this.width = 32;
+		this.height = 42;
 		this._super(game, id, x, y);
 		this.game = game;
 		this.rotation = new Angle();
 		this.input = {};
-		this.sprite = new Sprite(this, "img/ship1.png");
+		this.sprite = new Sprite(this, "img/ship7.png");
 		this.physics = new Physics(this.game, this, new BoundingCircle(this.game, this, 20));
 		this.physics.collidesWith = ['Asteroid', 'Planet', 'Ship', 'Black Hole'];
 		this.physics.mass = 10;
-		this.physics.maxVelocity = 8;
+		this.physics.maxVelocity = 20;
 		this.layer = 100;
 		this.trail = new Trail(this.game, this);
 		this.turnThrust = 0.4;
 		this.mainThrust = 0.25;
-		this.engine = new Engine(this);
+		this.engine = new Engine(this, 20);
 		this.weapon = new Weapon(this);
 		this.landed = false;
 		this.health = 100;

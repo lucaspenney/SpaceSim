@@ -2,7 +2,7 @@ var Class = require('./class');
 var ParticleSystem = require('./particlesystem');
 
 var Engine = Class.extend({
-    init: function(ship) {
+    init: function(ship, offset) {
         this.ship = ship;
         this.game = ship.game;
         this.mainOn = false;
@@ -11,7 +11,7 @@ var Engine = Class.extend({
         this.fuel = 1000;
         this.maxFuel = 1000;
         this.particles = new ParticleSystem(this.game, this.ship.pos.x, this.ship.pos.y, 'engine')
-        this.particles.setParent(this.ship, 0, 0);
+        this.particles.setParent(this.ship, 0, 0, offset);
     },
     hasFuel: function() {
         if (this.fuel <= 0) {

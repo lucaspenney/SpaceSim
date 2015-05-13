@@ -11,6 +11,7 @@ var ParticleSystem = Class.extend({
 		this.type = type;
 		this.active = false;
 		this.pid = 0;
+		this.rotationalOffset = 0;
 		this.particleTypes = {
 			'engine': {
 				refreshAmount: 50,
@@ -91,8 +92,8 @@ var ParticleSystem = Class.extend({
 		if (!this.active) return;
 		if (this.parent) {
 			this.pos = this.parent.pos.clone();
-			var x = this.xOffset + Math.cos(this.parent.rotation.clone().add(90).toRadians()) * 12;
-			var y = this.yOffset + Math.sin(this.parent.rotation.clone().add(90).toRadians()) * 12;
+			var x = this.xOffset + Math.cos(this.parent.rotation.clone().add(90).toRadians()) * this.rotationalOffset;
+			var y = this.yOffset + Math.sin(this.parent.rotation.clone().add(90).toRadians()) * this.rotationalOffset;
 			this.pos.x += x;
 			this.pos.y += y;
 
@@ -109,10 +110,11 @@ var ParticleSystem = Class.extend({
 			}
 		}
 	},
-	setParent: function(entity, xOffset, yOffset) {
+	setParent: function(entity, xOffset, yOffset, rOffset) {
 		this.parent = entity;
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
+		this.rotationalOffset = rOffset;
 	},
 	createParticle: function() {
 		if (this.parent) {
