@@ -81,6 +81,10 @@ var Player = Entity.extend({
 			_this.needSpawn = true;
 		}, 1000);
 	},
+	getShip: function() {
+		if (this.ship) return this.ship;
+		else return {};
+	},
 	toJSON: function() {
 		return {
 			classname: "Player",
@@ -88,7 +92,7 @@ var Player = Entity.extend({
 			pos: this.pos,
 			needSpawn: this.needSpawn,
 			radar: this.radar,
-			_ship: this.ship,
+			_ship: this.getShip().id,
 		};
 	}
 });

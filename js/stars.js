@@ -24,7 +24,7 @@ Stars.prototype.init = function(screen) {
     }, {
         stars: [],
         amount: 200,
-        scale: 0.6,
+        scale: 0.5,
         size: 1,
     }, {
         stars: [],

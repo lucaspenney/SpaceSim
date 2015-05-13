@@ -66,7 +66,7 @@ var Connection = Class.extend({
                 //First, underscore prefixed properties are entity references, reference them
                 if (prop.indexOf("_") !== -1) {
                     _.forEach(entities, function(gEnt) {
-                        if (gEnt.id === value.id) {
+                        if (gEnt.id === value) {
                             entObj[prop.replace("_", "")] = gEnt;
                             return false;
                         }
@@ -104,7 +104,7 @@ var Connection = Class.extend({
         this.updateTime = Date.now() - start;
         this.lastUpdate = Date.now();
         this.client.lastUpdate = Date.now();
-        this.client.game.lastTick = Date.now();
+        this.client.game.lastTick = Date.now() - this.updateTime;
         this.client.render();
     },
     send: function(packetId) {

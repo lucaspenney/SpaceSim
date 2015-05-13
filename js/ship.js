@@ -15,8 +15,8 @@ var BlackHole = require('./blackhole');
 
 var Ship = Entity.extend({
 	init: function(game, id, x, y) {
-		this.width = 32;
-		this.height = 32;
+		this.width = 30;
+		this.height = 30;
 		this._super(game, id, x, y);
 		this.game = game;
 		this.rotation = new Angle();
@@ -33,6 +33,7 @@ var Ship = Entity.extend({
 		this.engine = new Engine(this);
 		this.weapon = new Weapon(this);
 		this.landed = false;
+		this.health = 100;
 		var _this = this;
 		this.physics.on('post-collide', function(entity) {
 			if (entity instanceof Planet) {
@@ -84,6 +85,7 @@ var Ship = Entity.extend({
 			this.landed = false;
 		}
 		this.physics.update();
+		this.engine.update();
 	},
 	render: function(ctx, screen, audio) {
 		//this.trail.render(ctx, screen);
@@ -105,6 +107,13 @@ var Ship = Entity.extend({
 	setInput: function(input) {
 		this.input = input;
 	},
+	takeDamage: function(damage) {
+		this.health -= damage;
+		if (this.health <= 0) {
+			this.game.entityFactory.create('Explosion', this.game, this.pos.x, this.pos.y);
+			this.destroy();
+		}
+	},
 	toJSON: function() {
 		return {
 			classname: "Ship",
@@ -114,6 +123,8 @@ var Ship = Entity.extend({
 			rotation: this.rotation,
 			engine: this.engine,
 			landed: this.landed,
+			health: this.health,
+			_player: this.player.id,
 		};
 	}
 });

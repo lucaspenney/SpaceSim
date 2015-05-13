@@ -25,7 +25,6 @@ var Missile = Entity.extend({
         this.height = 35;
         this.sprite = new Sprite(this, "img/missile.png");
         this.physics = new Physics(this.game, this, new BoundingBox(this.game, this));
-        //this.physics.setVelocity(Math.random(), (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10);
         this.physics.collidesWith = ['Asteroid', 'Planet', 'Ship'];
         this.physics.mass = 10;
         this.physics.maxVelocity = 8;
@@ -40,7 +39,7 @@ var Missile = Entity.extend({
             if (entity instanceof Ship) {
                 entity.destroy();
             }
-            this.game.entityFactory.create('Explosion', this.game, entity.pos.x, entity.pos.y);
+            this.game.entityFactory.create('Explosion', this.game, this.pos.x, this.pos.y);
             this.destroy();
         });
         this.owner = null;
@@ -112,6 +111,10 @@ var Missile = Entity.extend({
         }
         //this.physics.bounds.render(ctx, screen);
     },
+    getOwner: function() {
+        if (this.owner) return this.owner;
+        else return {};
+    },
     toJSON: function() {
         return {
             classname: "Missile",
@@ -124,7 +127,7 @@ var Missile = Entity.extend({
             physics: this.physics,
             engine: this.engine,
             fuel: this.fuel,
-            _owner: this.owner,
+            _owner: this.getOwner(),
         };
     }
 });
