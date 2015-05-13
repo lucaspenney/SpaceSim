@@ -15,8 +15,8 @@ var BlackHole = require('./blackhole');
 
 var Ship = Entity.extend({
 	init: function(game, id, x, y) {
-		this.width = 32;
-		this.height = 32;
+		this.width = 30;
+		this.height = 30;
 		this._super(game, id, x, y);
 		this.game = game;
 		this.rotation = new Angle();
@@ -84,6 +84,7 @@ var Ship = Entity.extend({
 			this.landed = false;
 		}
 		this.physics.update();
+		this.engine.update();
 	},
 	render: function(ctx, screen, audio) {
 		//this.trail.render(ctx, screen);
@@ -114,6 +115,7 @@ var Ship = Entity.extend({
 			rotation: this.rotation,
 			engine: this.engine,
 			landed: this.landed,
+			_player: this.player.id,
 		};
 	}
 });

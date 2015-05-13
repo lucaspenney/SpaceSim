@@ -66,7 +66,7 @@ var Connection = Class.extend({
                 //First, underscore prefixed properties are entity references, reference them
                 if (prop.indexOf("_") !== -1) {
                     _.forEach(entities, function(gEnt) {
-                        if (gEnt.id === value.id) {
+                        if (gEnt.id === value) {
                             entObj[prop.replace("_", "")] = gEnt;
                             return false;
                         }

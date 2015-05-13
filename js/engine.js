@@ -33,10 +33,13 @@ var Engine = Class.extend({
         this.fuel += amount;
         if (this.fuel > this.maxFuel) this.fuel = this.maxFuel;
     },
-    render: function(ctx, screen, audio) {
+    update: function() {
         if (this.mainOn && this.fuel > 0) {
             this.particles.turnOn();
         } else this.particles.turnOff();
+    },
+    render: function(ctx, screen, audio) {
+
         this.particles.render(ctx, screen);
     },
     toJSON: function() {
@@ -45,6 +48,7 @@ var Engine = Class.extend({
             leftOn: this.leftOn,
             rightOn: this.rightOn,
             fuel: this.fuel,
+            particles: this.particles,
         };
     }
 });

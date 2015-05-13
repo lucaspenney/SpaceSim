@@ -1,6 +1,7 @@
 var Class = require('./class');
 var Vector = require('./vector');
 var Particle = require('./particle');
+if (!_) var _ = require('lodash-node');
 
 var ParticleSystem = Class.extend({
 	init: function(game, x, y, type) {
@@ -9,25 +10,27 @@ var ParticleSystem = Class.extend({
 		this.particles = [];
 		this.type = type;
 		this.active = false;
+		this.pid = 0;
 		this.particleTypes = {
 			'engine': {
 				refreshAmount: 50,
 				amount: 1000,
 				rate: 50,
-				r: 000,
-				g: 000,
-				b: 00,
+				r: 255,
+				g: 225,
+				b: 140,
 				size: 2,
 				step: function(t) {
 					if (t < 1) {
 						this.vel.x += (Math.random() - 0.5) * 5;
 						this.vel.y += (Math.random() - 0.5) * 5;
 					}
-					this.a *= 0.9;
-					if (t < 10) {
-						var h = (t) * 10;
-						this.r = 100 + Math.random() * 155 - h;
-						this.g = 100 + Math.random() * 155 - h;
+					this.a *= 0.88;
+					if (t < 2) {
+						var h = (t) * 20;
+						this.r = 255 + Math.random() * 20 - h;
+						this.g = 210 + Math.random() * 40 - h;
+						this.b = 130 + Math.random() * 75 - h;
 					} else {
 						this.r = 150;
 						this.g = 150;
@@ -38,17 +41,46 @@ var ParticleSystem = Class.extend({
 					this.vel.y += Math.random() - 0.5;
 				}
 			},
+			'engine2': {
+				refreshAmount: 100,
+				amount: 1000,
+				rate: 100,
+				r: 200,
+				g: 200,
+				b: 255,
+				size: 2,
+				step: function(t) {
+					if (t < 1) {
+						this.vel.x += (Math.random() - 0.5) * 5;
+						this.vel.y += (Math.random() - 0.5) * 5;
+					}
+					this.a *= 0.8;
+					if (t < 10) {
+						var h = (t) * 15;
+						this.r -= Math.random() * 10;
+						this.g -= Math.random() * 10;
+						this.b -= Math.random() * 10;
+					}
+					this.vel.x += Math.random() - 0.5;
+					this.vel.y += Math.random() - 0.5;
+				}
+			},
 			'explosion': {
-				r: 255,
-				g: 100,
-				b: 100,
-				rate: 30,
+				r: 200,
+				g: 200,
+				b: 200,
+				rate: 200,
+				refreshAmount: 0,
+				amount: 2000,
 				step: function(t) {
 					this.a *= 0.88;
-					this.r -= 2;
-					this.g--;
-					this.b--;
+					this.r -= (Math.random() - 0.5) * 100;
+					this.g -= (Math.random() - 0.5) * 100;
+					this.b -= Math.random() * 100;
+					this.vel.x += (Math.random() - 0.5) * 8;
+					this.vel.y += (Math.random() - 0.5) * 8;
 				},
+
 			}
 		};
 		this.opts = this.particleTypes[type];
@@ -59,10 +91,11 @@ var ParticleSystem = Class.extend({
 		if (!this.active) return;
 		if (this.parent) {
 			this.pos = this.parent.pos.clone();
-			var x = this.xOffset + Math.cos(this.parent.rotation.clone().add(90).toRadians()) * 13;
-			var y = this.yOffset + Math.sin(this.parent.rotation.clone().add(90).toRadians()) * 13;
+			var x = this.xOffset + Math.cos(this.parent.rotation.clone().add(90).toRadians()) * 12;
+			var y = this.yOffset + Math.sin(this.parent.rotation.clone().add(90).toRadians()) * 12;
 			this.pos.x += x;
 			this.pos.y += y;
+
 		}
 
 		if (this.particles.length >= this.opts.amount) {
@@ -84,23 +117,20 @@ var ParticleSystem = Class.extend({
 	createParticle: function() {
 		if (this.parent) {
 			var pos = this.pos.clone();
-			pos.add(this.parent.physics.vel.clone().scale(-1).scale((Math.random() - 0.5) * 3));
-			console.log(pos);
-			var v = new Vector((Math.random() - 0.5), Math.random() - 0.5);
-			v.scale(2);
-
-			var p = $.extend({
+			pos.add(this.parent.physics.vel.clone().scale(-5 * (Math.random())));
+			var p = _.merge({
 				vel: vel
 			}, this.opts);
 			this.particles.push(new Particle(this.game, pos.x, pos.y, p));
 		} else {
-			var vel = new Vector((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 5);
+			var vel = new Vector((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 3);
 			var pos = this.pos.clone();
-			var p = $.extend({
+			var p = _.merge({
 				vel: vel
 			}, this.opts);
 			this.particles.push(new Particle(this.game, this.pos.x, this.pos.y, p));
 		}
+		this.pid++;
 	},
 	render: function(ctx, screen) {
 		this.update();
@@ -119,6 +149,13 @@ var ParticleSystem = Class.extend({
 	turnOff: function() {
 		this.active = false;
 	},
+	toJSON: function() {
+		return {
+			pos: this.pos,
+			active: this.active,
+			_parent: this.parent.id,
+		};
+	}
 });
 
 module.exports = ParticleSystem;

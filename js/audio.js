@@ -11,7 +11,7 @@ var Audio = Class.extend({
         this.sounds["background"] = new Howl({
             urls: ['sound/background2.ogg'],
             volume: 0.4,
-            autoplay: true,
+            //autoplay: true,
             loop: true,
             buffer: true,
         });

@@ -1,10 +1,11 @@
 var Vector = require('./vector');
 
+
 function Particle(game, x, y, args) {
 	this.game = game;
 	this.x = x;
 	this.y = y;
-	this.props = $.extend({
+	this.props = _.merge({
 		r: 255,
 		g: 255,
 		b: 255,
