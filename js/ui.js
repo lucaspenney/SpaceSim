@@ -28,6 +28,13 @@ var UI = Class.extend({
                 return (screen.focusedEntity.ship.engine.fuel / 1000);
             }, 'Fuel'));
 
+        //Shields meter
+        //Fuel meter
+        this.components.push(new UIMeter(screen.width / 1.185, screen.height - (screen.height / 15), screen.width / 12, screen.height / 35,
+            function() {
+                if (!screen.focusedEntity || !screen.focusedEntity.ship) return 1;
+                return (screen.focusedEntity.ship.health / 100);
+            }, 'Shields'));
 
     },
     render: function(ctx, screen) {
