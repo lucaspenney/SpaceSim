@@ -24,7 +24,7 @@ var PlanetTypes = [{
 var Planet = Entity.extend({
     init: function(game, id, x, y) {
         var planet = PlanetTypes[Math.floor(Math.random() * PlanetTypes.length)];
-        this.width = Math.floor(Math.random() * 450) + 325;
+        this.width = Math.floor(Math.random() * 400) + 375;
         this.height = this.width;
         this._super(game, id, x, y);
         this.radius = ((this.width / planet.width) * planet.diameter) / 2;

@@ -159,6 +159,12 @@ Vector.prototype = {
   getAbsoluteValue: function() {
     return (Math.abs(this.x) + Math.abs(this.y));
   },
+  getMaxValue: function() {
+    return Math.max(this.x, this.y);
+  },
+  getAbsoluteMaxValue: function() {
+    return Math.max(Math.abs(this.x), Math.abs(this.y));
+  },
   toJSON: function() {
     return {
       x: this.x,

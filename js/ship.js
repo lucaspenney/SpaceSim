@@ -25,7 +25,7 @@ var Ship = Entity.extend({
 		this.physics = new Physics(this.game, this, new BoundingCircle(this.game, this, 20));
 		this.physics.collidesWith = ['Asteroid', 'Planet', 'Ship', 'Black Hole'];
 		this.physics.mass = 10;
-		this.physics.maxVelocity = 20;
+		this.physics.maxVelocity = 16;
 		this.layer = 100;
 		this.trail = new Trail(this.game, this);
 		this.turnThrust = 0.4;
@@ -59,6 +59,8 @@ var Ship = Entity.extend({
 	},
 	update: function() {
 		this._super();
+		//Scale thrust down towards 0 as speed approaches maxvelocity
+		this.mainThrust = ((1 - (this.physics.vel.getAbsoluteMaxValue() / this.physics.maxVelocity)) * 0.2);
 		this.engine.mainOn = false;
 		if (this.input.up) {
 			if (this.engine.useFuel(2)) {
@@ -81,7 +83,7 @@ var Ship = Entity.extend({
 		}
 
 		if (this.landed) {
-			this.engine.addFuel(2);
+			this.engine.addFuel(3);
 			this.landed = false;
 		}
 		this.physics.update();
