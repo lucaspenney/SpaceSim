@@ -23,7 +23,10 @@ var Audio = Class.extend({
             urls: ['sound/engine.wav'],
             loop: true,
             volume: 0.5,
-            buffer: true,
+        });
+        this.sounds["bullet"] = new Howl({
+            urls: ['sound/laser.wav'],
+            volume: 0.5,
         });
         this.game.on('entity.destroyed', function(entity) {
             var sounds = entity.sounds;

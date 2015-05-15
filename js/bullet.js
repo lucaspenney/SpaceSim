@@ -31,6 +31,7 @@ var Bullet = Entity.extend({
             }
             this.destroy();
         });
+        this.sounds = {};
         //this.trail = new Trail(this.game, this, 6, 0);
         this.needFlash = 0;
     },
@@ -40,7 +41,7 @@ var Bullet = Entity.extend({
     update: function() {
         this.physics.update();
     },
-    render: function(ctx, screen) {
+    render: function(ctx, screen, audio) {
         //this.trail.render(ctx, screen);
         this._super(ctx, screen);
         if (this.flashSprite.loaded && this.needFlash < 3 && this.owner) {
@@ -51,6 +52,12 @@ var Bullet = Entity.extend({
             var x = Math.cos(this.owner.rotation.clone().subtract(90).toRadians()) * 27;
             var y = Math.sin(this.owner.rotation.clone().subtract(90).toRadians()) * 27;
             this.flashSprite.draw(ctx, screen, this.owner.pos.x + x, this.owner.pos.y + y);
+            if (!this.sounds.bullet) {
+                this.sounds.bullet = true;
+                audio.playSound("bullet", this, function(id) {
+                    this.sounds.bullet = id;
+                });
+            }
         }
         //this.physics.bounds.render(ctx, screen);
     },
