@@ -6,8 +6,9 @@ var Weapon = Class.extend({
 		this.parent = parent;
 		this.lastFireTime = Date.now();
 		this.missileFireRate = 1000;
-		this.bulletFireRate = 100;
+		this.bulletFireRate = 150;
 		this.mode = "bullet";
+		this.rotationalOffset = -10;
 	},
 	fire: function() {
 		if (this.mode === "missile") {
@@ -24,7 +25,12 @@ var Weapon = Class.extend({
 			}
 		} else if (this.mode === "bullet") {
 			if (Date.now() - this.lastFireTime > this.bulletFireRate) {
-				var bullet = this.parent.game.entityFactory.create('Bullet', this.parent.game, this.parent.pos.x, this.parent.pos.y);
+				var pos = this.parent.pos.clone().add(this.parent.physics.vel.clone().scale(3));
+				var x = Math.cos(this.parent.rotation.clone().add(90).toRadians()) * this.rotationalOffset;
+				var y = Math.sin(this.parent.rotation.clone().add(90).toRadians()) * this.rotationalOffset;
+				pos.x += x;
+				pos.y += y;
+				var bullet = this.parent.game.entityFactory.create('Bullet', this.parent.game, pos.x, pos.y);
 				if (bullet) {
 					var x = Math.cos(this.parent.rotation.clone().subtract(90).toRadians());
 					var y = Math.sin(this.parent.rotation.clone().subtract(90).toRadians());

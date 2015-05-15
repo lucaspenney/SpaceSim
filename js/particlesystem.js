@@ -96,7 +96,6 @@ var ParticleSystem = Class.extend({
 			var y = this.yOffset + Math.sin(this.parent.rotation.clone().add(90).toRadians()) * this.rotationalOffset;
 			this.pos.x += x;
 			this.pos.y += y;
-
 		}
 
 		if (this.particles.length >= this.opts.amount) {
@@ -120,9 +119,13 @@ var ParticleSystem = Class.extend({
 		if (this.parent) {
 			var pos = this.pos.clone();
 			pos.add(this.parent.physics.vel.clone().scale(-5 * (Math.random())));
-			var p = _.merge({
+			var x = this.xOffset + Math.cos(this.parent.rotation.clone().add(90).toRadians()) * this.rotationalOffset;
+			var y = this.yOffset + Math.sin(this.parent.rotation.clone().add(90).toRadians()) * this.rotationalOffset;
+			var vel = new Vector(x, y).scale(0.075);
+			var p = _.merge({}, {
 				vel: vel
 			}, this.opts);
+
 			this.particles.push(new Particle(this.game, pos.x, pos.y, p));
 		} else {
 			var vel = new Vector((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 3);

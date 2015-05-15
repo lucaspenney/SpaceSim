@@ -156,6 +156,9 @@ Vector.prototype = {
   absoluteLessThan: function(n) {
     return Math.abs(this.x) + Math.abs(this.y) < n;
   },
+  getAbsoluteValue: function() {
+    return (Math.abs(this.x) + Math.abs(this.y));
+  },
   toJSON: function() {
     return {
       x: this.x,

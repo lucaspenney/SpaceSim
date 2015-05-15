@@ -4,17 +4,18 @@ var Sprite = require('./sprite');
 var BoundingBox = require('./boundingbox');
 var Trail = require('./trail');
 var Ship = require('./ship');
+var Vector = require('./vector');
 
 var Bullet = Entity.extend({
     init: function(game, id, x, y) {
         this._super(game, id, x, y);
-        this.width = 6;
-        this.height = 18;
         this.sprite = new Sprite(this, "img/bullet.png");
+        this.flashSprite = new Sprite(this, "img/muzzleflash.png");
+        this.flashSprite.alpha = 0.5;
         this.physics = new Physics(this.game, this, new BoundingBox(this.game, this));
         this.physics.collidesWith = ['Asteroid', 'Planet', 'Ship'];
         this.physics.mass = 2;
-        this.physics.maxVelocity = 16;
+        this.physics.maxVelocity = 24;
         this.owner = null;
         this.physics.on('pre-collide', function(entity) {
 
@@ -31,7 +32,7 @@ var Bullet = Entity.extend({
             this.destroy();
         });
         //this.trail = new Trail(this.game, this, 6, 0);
-        var _this = this;
+        this.needFlash = 0;
     },
     setOwner: function(owner) {
         this.owner = owner;
@@ -42,6 +43,15 @@ var Bullet = Entity.extend({
     render: function(ctx, screen) {
         //this.trail.render(ctx, screen);
         this._super(ctx, screen);
+        if (this.flashSprite.loaded && this.needFlash < 3 && this.owner) {
+            this.needFlash++;
+            this.flashSprite.width = 36;
+            this.flashSprite.height = 74;
+            this.rotation = this.owner.rotation.clone();
+            var x = Math.cos(this.owner.rotation.clone().subtract(90).toRadians()) * 27;
+            var y = Math.sin(this.owner.rotation.clone().subtract(90).toRadians()) * 27;
+            this.flashSprite.draw(ctx, screen, this.owner.pos.x + x, this.owner.pos.y + y);
+        }
         //this.physics.bounds.render(ctx, screen);
     },
     getOwner: function() {
