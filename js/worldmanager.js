@@ -83,18 +83,15 @@ var WorldManager = Class.extend({
                     range += 500;
                 }
                 entity.ship = _this.game.entityFactory.create('Ship', _this.game, p.x, p.y);
-                entity.ship.player = entity;
+                entity.ship.owner = entity;
                 entity.needSpawn = false;
+                _this.game.entityFactory.create('Bot', _this.game, p.x + 40, p.y + 40);
             }
         });
     },
     createRandomEntity: function(x, y) {
         var classnames = ["Planet", "Black Hole"];
         var choice = classnames[Math.floor(Math.random() * classnames.length)];
-        //Override for now
-        if (Math.random() > 0.8) {
-            choice = "Black Hole";
-        } else choice = "Planet";
         this.game.entityFactory.create(choice, this.game, x, y);
     },
     getRandomClient: function(clients) {

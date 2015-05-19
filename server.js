@@ -45,6 +45,7 @@ var Server = Class.extend({
 		this.frameTime = 0;
 		this.lastUpdate = 0;
 		this.tick();
+		this.game.entityFactory.create("Bot", this.game, 0, 0);
 	},
 	onConnect: function(ws) {
 		var _this = this;

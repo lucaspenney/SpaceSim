@@ -42,7 +42,7 @@ var Ship = Entity.extend({
 				var angle = new Angle().fromRadians(Math.atan2(y, x));
 				var difference = this.rotation.clone().subtractAngle(angle);
 				if (this.physics.vel.absoluteGreaterThan(2) || (difference.degrees < 55 || difference.degrees > 125)) {
-					if (this.player) this.player.requestRespawn();
+					if (this.owner) this.owner.requestRespawn();
 					this.game.entityFactory.create('Explosion', this.game, this.pos.x, this.pos.y);
 					this.destroy();
 				} else {
@@ -52,7 +52,7 @@ var Ship = Entity.extend({
 				}
 			} else if (entity instanceof BlackHole) {
 				this.destroy();
-				this.player.requestRespawn();
+				this.owner.requestRespawn();
 			}
 		});
 		this.lastFireTime = 0;
@@ -116,6 +116,10 @@ var Ship = Entity.extend({
 			this.destroy();
 		}
 	},
+	getOwner: function() {
+		if (this.owner) return this.owner;
+		else return {};
+	},
 	toJSON: function() {
 		return {
 			classname: "Ship",
@@ -126,7 +130,7 @@ var Ship = Entity.extend({
 			engine: this.engine,
 			landed: this.landed,
 			health: this.health,
-			_player: this.player.id,
+			_owner: this.getOwner().id,
 		};
 	}
 });
